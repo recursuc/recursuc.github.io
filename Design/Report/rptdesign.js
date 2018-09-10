@@ -94,7 +94,7 @@
 	        var onHanlde = $F.bind(this, this.onHandle),
                 fontFamily = ["@Fixedsys", "@MingLiU", "@PMingLiU", "@SyStem", "华文彩云", "华文细黑", "华文新魏", "华文行楷", "华文中宋", "@新宋体", "隶书", "Basemic Symbol", "Book Antiaua", "Arial Black", "Comic sams MS", "Copperplate"],
                 fontSize = ["8", "9", "10", "11", "12", "13", "14", "16", "18", "20", "24", "26", "28", "30", "32"],
-                i = 0, hcScript = document.scripts, len = hcScript.length, hnScript, sPath='', iPos;//"report/"
+                i = 0, hcScript = document.scripts, len = hcScript.length, hnScript, sPath="report/", iPos;
             /*
 	        while (i < len) {
 	            hnScript = hcScript[i]; iPos = hnScript.src.indexOf("rptdesign.js");
@@ -107,28 +107,28 @@
              sPath + "skin/blue/images/rpt_tab_cell_insert_before.gif"
             */
 	        this.operBtns = [
-					["img", "上添加行", sPath + "skin/blue/images/rpt_tab_cell_insert_before.gif", ["onclick"], [onHanlde, "addRowUp"], ""],
-					["img", "下添加行", sPath + "skin/blue/images/rpt_tab_cell_insert_after.gif", ["onclick"], [onHanlde, "addRowDown"], ""],
-                    ["img", "删除行", sPath + "skin/blue/images/rpt_tab_row_delete.gif", ["onclick"], [onHanlde, "delRows"], ""],
-					["img", "左添加列", sPath + "skin/blue/images/rpt_tab_col_insert_before.gif", ["onclick"], [onHanlde, "addColLeft"], ""],
-					["img", "右添加列", sPath + "skin/blue/images/rpt_tab_col_insert_after.gif", ["onclick"], [onHanlde, "addColRight"], ""],
-					["img", "删除列", sPath + "skin/blue/images/rpt_tab_col_delete.gif", ["onclick"], [onHanlde, "delCols"], ""],
-					["img", "取消单元格合并", sPath + "skin/blue/images/rpt_tab_cell_split.gif", ["onclick"], [onHanlde, "splitCells"], ""],
-					["img", "合并单元格", sPath + "skin/blue/images/rpt_tab_cell_merge.gif", ["onclick"], [onHanlde, "mergeCells"], ""],
-					["img", "居左", sPath + "skin/blue/images/rpt_left_align.gif", ["onclick"], [onHanlde, "setVAlignL"], ""],
-					["img", "居中", sPath + "skin/blue/images/rpt_v_center_align.gif", ["onclick"], [onHanlde, "setVAlignC"], ""],
-					["img", "居右", sPath + "skin/blue/images/rpt_right_align.gif", ["onclick"], [onHanlde, "setVAlignR"], ""],
-					["img", "上对齐", sPath + "skin/blue/images/rpt_top_align.gif", ["onclick"], [onHanlde, "setHAlignT"], ""],
-					["img", "垂直居中", sPath + "skin/blue/images/rpt_h_center_align.gif", ["onclick"], [onHanlde, "setHAlignC"], ""],
-					["img", "下对齐", sPath + "skin/blue/images/rpt_bottom_align.gif", ["onclick"], [onHanlde, "setHAlignB"], ""],
-					["img", "加粗", sPath + "skin/blue/images/rpt_bold.gif", ["onclick"], [onHanlde, "setFontWeight"], ""],
-					["img", "倾斜", sPath + "skin/blue/images/rpt_italic.gif", ["onclick"], [onHanlde, "setItalic"], ""],
-					["img", "下划线", sPath + "skin/blue/images/rpt_underline.gif", ["onclick"], [onHanlde, "setUnderLine"], ""],
-					["color", "字体颜色", sPath + "skin/blue/images/text_color.gif", ["onchange"], [onHanlde, "selColor"], "color {hash:true,pickerFaceColor:'transparent',pickerFace:3,pickerBorder:1,pickerInsetColor:'black'}"],
-					["color", "背景色", sPath + "skin/blue/images/color_fill.gif", ["onchange"], [onHanlde, "selBColor"], "color {hash:true,pickerFaceColor:'transparent',pickerFace:3,pickerBorder:1,pickerInsetColor:'black'}"],
-					["color", "边框颜色", sPath + "skin/blue/images/border_color.gif", ["onchange"], [onHanlde, "setBorderColor"], "color {hash:true,pickerFaceColor:'transparent',pickerFace:3,pickerBorder:1,pickerInsetColor:'black'}"],
-					//["img", "边框设置", sPath + "skin/blue/images/arrow.gif", ["onclick"], [onHanlde, "setBorderLineType"], ""],
-					//["img", "边框样式", sPath + "skin/blue/images/eb_line2.gif", ["onclick"], [onHanlde, "SetBorder"], ""],
+					["img", "上添加行", sPath + "/images/rpt_tab_cell_insert_before.gif", ["onclick"], [onHanlde, "addRowUp"], ""],
+					["img", "下添加行", sPath + "/images/rpt_tab_cell_insert_after.gif", ["onclick"], [onHanlde, "addRowDown"], ""],
+                    ["img", "删除行", sPath + "/images/rpt_tab_row_delete.gif", ["onclick"], [onHanlde, "delRows"], ""],
+					["img", "左添加列", sPath + "/images/rpt_tab_col_insert_before.gif", ["onclick"], [onHanlde, "addColLeft"], ""],
+					["img", "右添加列", sPath + "/images/rpt_tab_col_insert_after.gif", ["onclick"], [onHanlde, "addColRight"], ""],
+					["img", "删除列", sPath + "/images/rpt_tab_col_delete.gif", ["onclick"], [onHanlde, "delCols"], ""],
+					["img", "取消单元格合并", sPath + "/images/rpt_tab_cell_split.gif", ["onclick"], [onHanlde, "splitCells"], ""],
+					["img", "合并单元格", sPath + "/images/rpt_tab_cell_merge.gif", ["onclick"], [onHanlde, "mergeCells"], ""],
+					["img", "居左", sPath + "/images/rpt_left_align.gif", ["onclick"], [onHanlde, "setVAlignL"], ""],
+					["img", "居中", sPath + "/images/rpt_v_center_align.gif", ["onclick"], [onHanlde, "setVAlignC"], ""],
+					["img", "居右", sPath + "/images/rpt_right_align.gif", ["onclick"], [onHanlde, "setVAlignR"], ""],
+					["img", "上对齐", sPath + "/images/rpt_top_align.gif", ["onclick"], [onHanlde, "setHAlignT"], ""],
+					["img", "垂直居中", sPath + "/images/rpt_h_center_align.gif", ["onclick"], [onHanlde, "setHAlignC"], ""],
+					["img", "下对齐", sPath + "/images/rpt_bottom_align.gif", ["onclick"], [onHanlde, "setHAlignB"], ""],
+					["img", "加粗", sPath + "/images/rpt_bold.gif", ["onclick"], [onHanlde, "setFontWeight"], ""],
+					["img", "倾斜", sPath + "/images/rpt_italic.gif", ["onclick"], [onHanlde, "setItalic"], ""],
+					["img", "下划线", sPath + "/images/rpt_underline.gif", ["onclick"], [onHanlde, "setUnderLine"], ""],
+					["color", "字体颜色", sPath + "/images/text_color.gif", ["onchange"], [onHanlde, "selColor"], "color {hash:true,pickerFaceColor:'transparent',pickerFace:3,pickerBorder:1,pickerInsetColor:'black'}"],
+					["color", "背景色", sPath + "/images/color_fill.gif", ["onchange"], [onHanlde, "selBColor"], "color {hash:true,pickerFaceColor:'transparent',pickerFace:3,pickerBorder:1,pickerInsetColor:'black'}"],
+					["color", "边框颜色", sPath + "/images/border_color.gif", ["onchange"], [onHanlde, "setBorderColor"], "color {hash:true,pickerFaceColor:'transparent',pickerFace:3,pickerBorder:1,pickerInsetColor:'black'}"],
+					//["img", "边框设置", sPath + "/images/arrow.gif", ["onclick"], [onHanlde, "setBorderLineType"], ""],
+					//["img", "边框样式", sPath + "/images/eb_line2.gif", ["onclick"], [onHanlde, "SetBorder"], ""],
                     ["select", "字体", "", ["onchange"], [onHanlde, "SetFont"], fontFamily],
 					["select", "字体大小", "", ["onchange"], [onHanlde, "SetFontSize"], fontSize]
 	        ];
