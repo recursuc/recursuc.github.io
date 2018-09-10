@@ -94,7 +94,7 @@
 	        var onHanlde = $F.bind(this, this.onHandle),
                 fontFamily = ["@Fixedsys", "@MingLiU", "@PMingLiU", "@SyStem", "华文彩云", "华文细黑", "华文新魏", "华文行楷", "华文中宋", "@新宋体", "隶书", "Basemic Symbol", "Book Antiaua", "Arial Black", "Comic sams MS", "Copperplate"],
                 fontSize = ["8", "9", "10", "11", "12", "13", "14", "16", "18", "20", "24", "26", "28", "30", "32"],
-                i = 0, hcScript = document.scripts, len = hcScript.length, hnScript, sPath="report/", iPos;
+                i = 0, hcScript = document.scripts, len = hcScript.length, hnScript, sPath='', iPos;//"report/"
             /*
 	        while (i < len) {
 	            hnScript = hcScript[i]; iPos = hnScript.src.indexOf("rptdesign.js");
