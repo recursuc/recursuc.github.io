@@ -52,7 +52,7 @@
                     case "select-one":
                         var len = elem.options.length;
                         while (len--) {
-                            if (elem.options[i].value == value) {
+                            if (elem.options[len].value == value) {
                                 elem.selectdIndex = i;
                                 break;
                             }
