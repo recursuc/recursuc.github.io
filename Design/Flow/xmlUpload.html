@@ -1,0 +1,131 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+	<head>
+		<title>选择导入文件</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<style type="text/css">
+.tdA {
+	background-color: #f1f8fe;
+	border-bottom: 1px solid #cde0e6;
+	border-right: 1px solid #cde0e6;
+	color: #333;
+}
+
+.tdB {
+	background-color: #fbfcff;
+	border-bottom: 1px solid #cde0e6;
+	border-right: 1px solid #cde0e6;
+	color: #333;
+}
+
+.tdC {
+	background-color: #78b7e3;
+	border-bottom: 1px solid #cde0e6;
+	border-right: 1px solid #cde0e6;
+	color: #333;
+}
+</style>
+		<script src="../../../Javascripts/jquery/jquery-1.7.1.js" type="text/javascript"></script>
+		<script type="text/javascript" src="../../../Javascripts/common/sys_common_valid_library.js"></script>
+		<script type="text/javascript">
+var fileForm = new Object();
+function submitForm() {
+    var form = document.forms['uploadForm'];
+	if(!checkfm(form)){
+		return;
+	}
+    //把form的原始数据缓存起来
+    fileForm.f = form;
+    fileForm.a = form.getAttribute("action");  //form.action 为一个静态的对象，所以这里要使用getAttribute方法取值
+    fileForm.t = form.target;
+    //请求服务器端
+    form.target = "check_file_frame";
+    form.action = "servlet/workflowUploadServlet";
+    //其实上面的action已经会执行submit操作，这步可有可无
+    form.submit(); 
+  return false;
+}
+
+function checkfm(form){
+//	var logofile = form.file.value;
+//alert("check")
+//	if($.trim(logofile)!=""){
+//		alert("4343434")
+//		var ext = logofile.substring(logofile.length-3).toLowerCase();
+//		alert("rwer");
+//		if (ext!="xml"){
+//			alert("只允许上传XML文件");
+//			return false; 
+//		}
+//	}
+	return true;
+}
+
+function ajax_callback(result, newFileName) {
+	  //还原form属性
+	  fileForm.f.target = fileForm.t;
+	  fileForm.f.setAttribute("action", fileForm.a);
+	  //处理结果
+	  if(result=='02'){
+		  alert("系统超时,请重新登录");
+		  parent.window.location.href = parent.window.location.href;
+		  return;
+	  }
+	  if(result == "0"){
+		  window.returnValue = newFileName;
+		  window.close();
+	  } else if( result == "1"){
+		  alert(result);
+	  }
+	  return ;
+	} 
+	
+</script>
+	</head>
+	<body id="mainbody">
+		<iframe name="check_file_frame" style="display: none;"></iframe>
+		<form id="uploadForm" name="uploadForm"
+			action="servlet/workflowUploadServlet"
+			method="post"
+			enctype="multipart/form-data">
+			<table width="100%" height="95%" cellspacing="0" cellpadding="0" border="0" align="center"
+				style="Z-INDEX: 20; ">
+				<tbody>
+					<tr>
+						<td class="tdA">
+							&nbsp;&nbsp;
+							<label
+								style="Z-INDEX: 20; POSITION: static; TEXT-ALIGN: right; FONT-STYLE: normal; WIDTH: 108px; DISPLAY: inline; FONT-FAMILY: 宋体; HEIGHT: 14px; FONT-SIZE: 14px; TOP: 0px; LEFT: 0px">
+								选择要导入的XML文件 : 
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<td class="tdB">
+							&nbsp;&nbsp;
+							<div align="left"
+								style="Z-INDEX: 20;   POSITION: static;   ">
+								&nbsp;&nbsp;
+								<input type="file" name="file" size="35" style="width:300px;">
+								<!--					<input type="submit" name="Submit" value="上传">-->
+							</div>
+							
+						</td>
+					</tr>
+					<tr align="center">
+						<!--				 <div align="center" id="buttonArea" style="position:absolute; width:100%;">-->
+						<td >
+						<input type="button" onclick="submitForm()" value="确定"
+								style="width: 60px;" class="divButtons_Button" id="OK" />
+							&nbsp;&nbsp;
+							<input type='button' value="取消" id="btnCancel"
+								class="divButtons_Button" style="width: 60px;"
+								onclick="window.close();" />
+						</td>
+						<!--					</div>-->
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</body>
+</html>

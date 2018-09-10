@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title></title>
+<link href="../../../publicJS/grid/css/jquery-ui-1.8.1.css" rel="stylesheet" type="text/css" />
+<link href="../../../publicJS/grid/css/ui.jqgrid.css" rel="stylesheet" type="text/css" />
+<!--<link href="../../../publicJS/grid/css/ui.multiselect.css" rel="stylesheet" type="text/css" />-->
+<link href="../../sfk/tab/sfk_tab.css" rel="stylesheet" />
+
+<style type="text/css">
+        body
+        {
+            overflow: hidden;
+            padding: 0px;
+            margin: 0px;
+        }
+        
+        .frmContainer
+        {
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            background-color: white;
+        }
+        .fixedTable
+        {
+            width: 3px;
+        }
+        .fixedTable, .topTable, .leftTable
+        {
+            border-collapse: separate; /*;separate;默认为 separate*/
+            empty-cells: show;
+            table-layout: fixed;
+            position: absolute;
+            border-collapse: collapse \9;
+        }
+        .fixedTable
+        {
+            border-left: 1px solid gray;
+        }
+        .fixedTable tr
+        {
+            height: 19px;
+        }
+        
+        .fixedTable td
+        {
+            border-left-width: 0px;
+            border-top-width: 0px;
+            border-bottom: 1px solid gray;
+            border-right: 1px solid gray;
+            text-align: center;
+            font-size: 10px; /* overflow: hidden; word-break: break-all; word-wrap: break-word;*/
+        }
+        
+        .topTable td
+        {
+            border-left-width: 0px;
+            border-top-width: 0px;
+            border-right: 1px solid gray;
+            font-size: 12px;
+            overflow: hidden; /*word-break: break-all; word-wrap: break-word;*/
+        }
+        
+        /*
+        .tbTopHead td
+        {
+            border-right: 1px solid gray;
+            border-bottom: 1px solid #6699ff;
+          
+                    width: 60px;
+                 font-size: 13px;
+        }*/
+        .leftTable td
+        {
+            border-left-width: 0px;
+            border-top-width: 0px;
+            border-bottom: 1px solid gray;
+            border-right: 1px solid gray; /*#6699ff*/
+            width: 34px;
+            font-size: 13px;
+            overflow: hidden;
+            text-align: center;
+        }
+        
+        .mpb
+        {
+            margin: 0px;
+            padding: 0px;
+            border: 0px;
+        }
+        
+        .sheetsContainer
+        {
+            position: absolute;
+            left: 35px;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            background-color: white;
+        }
+        
+        .sheetPane
+        {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            overflow: hidden;
+        }
+        
+        .divTopHead > table, .sheetPane > table
+        {
+            width: 3px;
+        }
+        .button
+        {
+        	border: 1px solid #CCC;
+			background: url(../../../images/btn_bg.gif) repeat-x;
+			cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div id="frmContainer" style="width: 100%; height: 100%;" align="center">
+        <div id="runTab" style="position: relative; margin: 0px auto; width: auto; height: 100%;">
+            <div class="header">
+                <ul class="nav">
+                </ul>
+            </div>
+            <form>
+	            <div class="mpb" style="width: 100%;">            
+	            </div>
+            </form>
+        </div>
+    </div>
+    
+<script src="../../sfk/sfk.js"></script>
+<script src="../../sfk/tab/sfk_tab.js"></script>
+<script src="querylist.js" type="text/javascript"></script>
+
+<script src="../../../publicJS/jquery/jquery-1.7.1.min.js" type="text/javascript"></script>
+<!--<script src="../../../publicJS/grid/js/jquery-ui-1.8.1.custom.min.js" type="text/javascript"></script>-->
+<script src="../../../publicJS/grid/js/grid.locale-cn.js" type="text/javascript"></script>
+<!--<script src="../../../publicJS/grid/js/ui.multiselect.js" type="text/javascript"></script>-->
+<script src="../../../publicJS/grid/js/jquery.jqGrid.js" type="text/javascript"></script>
+
+<script src="../Form/DatePicker/WdatePicker.js" type="text/javascript"></script>
+<script type="text/javascript">
+	$P.ready(function () {
+	   var request = $U.params,
+	       oDate = new Date(),
+	       currDateTime = oDate.getFullYear() + "-" + (oDate.getMonth() + 1) + "-" + oDate.getDate() + " " + oDate.getHours() + ":" + oDate.getMinutes() + ":" + oDate.getSeconds();
+	
+	    window.sQueryList = QueryList.create({
+	        container: "frmContainer",
+	        id: request["queryid"] || "574",
+	        currDate: currDateTime
+	    });
+	 });
+</script>
+</body>
+</html>

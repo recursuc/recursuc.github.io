@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>统计图向导</title>
+    <style type="text/css">
+        body
+        {
+            margin: 0px;
+            padding: 0px;
+        }
+        ul
+        {
+            padding: 0px;
+            text-align: right;
+        }
+        ul li
+        {
+            display: inline;
+            list-style-type: none;
+            padding-right: 7px;
+        }
+        #chartSetDiv
+        {
+            width: 100%;
+        }
+    </style>
+</head>
+<body >
+    <div id="chartSetDiv">
+        <iframe id="chartSetPage" src="#" width="100%" height="100%"></iframe>
+    </div>
+    <div id="btDiv">
+        <ul>
+            <li>
+                <input type="button" value="上一步" /></li>
+            <li>
+                <input type="button" value="下一步" /></li>
+            <li>
+                <input type="button" value="完　成" /></li>
+            <li>
+                <input type="button" value="取　消" /></li>
+        </ul>
+    </div>
+    <script src="../../../publicJS/jquery/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="../../../publicJS/customDialog/lhgdialog.js" type="text/javascript"></script>
+    <script src="../../../publicJS/customDialog/showModalDialog.js?s=default,classic,chrome,aero,facebook"
+        type="text/javascript"></script>
+    <script type="text/javascript" language="javascript">
+        var pWin = window.dialogArgs[0] || window.dialogArguments[0]; oCharts = window.charts || pWin.oCharts,
+           oCell = pWin && pWin.document.getElementById("tbData").rows[pWin.oTdPos.x].childNodes[pWin.oTdPos.y],
+           oCurrChart = window.dialogArgs[1] || window.dialogArguments[1];
+        oCell && oCurrChart.setTargetCellId($(oCell).attr("id")),isAddChart=false;
+
+        $(document).ready(function () {
+            var eContent = $("#chartSetPage")[0],
+                ePreBtn = $("li:eq(0)").children()[0],
+                eNextBtn = $("li:eq(1)").children()[0],
+                eSubmitBtn = $("li:eq(2)").children()[0],
+                eCancelBtn = $("li:eq(3)").children()[0],
+                arrUrls = ["chartTypeSelect.htm", "chartDataManage.htm", "graph/" + pWin.charts.aChartType[oCurrChart.type].toLowerCase() + ".htm"],
+                iCurrStep = 0;
+            // $("#chartSetPage")[0].Chart = oCurrChart;
+            $(eSubmitBtn).attr("disabled", true);
+            $(ePreBtn).bind("click", function () {
+                iCurrStep > 0 ? (iCurrStep--, $(eContent).attr("src", arrUrls[iCurrStep]), iCurrStep === 0 ? $(ePreBtn).attr("disabled", "disabled") : 0) : 0;
+                $(eNextBtn).removeAttr("disabled");
+            });
+            $(eNextBtn).bind("click", function () {
+                if (iCurrStep === 1) {
+                    if (!$("#chartSetPage")[0].contentWindow.submitDataSelect()) {
+                        return;
+                    }
+                    if (oCurrChart.getDatas().length > 0) {
+                        $(eSubmitBtn).attr("disabled", false);
+                    }
+                };
+                iCurrStep < 3 ? (iCurrStep++, $(eContent).attr("src", arrUrls[iCurrStep]), iCurrStep === 2 ? $(eNextBtn).attr("disabled", "disabled") : 2) : 3;
+                if (iCurrStep === 2) {
+                    $(eContent).attr("src", "graph/" + pWin.charts.aChartType[oCurrChart.type] + ".htm");
+                    $(eContent).load(function () {
+                        oCurrChart.attWin = this.contentWindow;
+                    })
+                }
+                $(ePreBtn).removeAttr("disabled");
+            });
+            $(eSubmitBtn).bind("click", function () {
+                var data = oCurrChart.getData();
+                if (data) {
+                    oCharts.addChart(oCurrChart);
+                    isAddChart = true;
+                    window.close();
+                } else {
+                    alert("数据源没选定！");
+                }
+            });
+            $(eCancelBtn).bind("click", function () {
+                isAddChart = false;
+                window.close();
+            });
+            $(eContent).attr("src", arrUrls[iCurrStep]);
+            $(ePreBtn).attr("disabled", "disabled");
+            $("#chartSetDiv").height(parseInt(getDialogParent().bodyHeight) - 90);
+            $(document.documentElement).keydown(function (ev) {
+                var oSrc = ev.target, iCode = ev.keyCode, sTagName = oSrc.tagName.toLowerCase(), sType = oSrc.type;
+                if (iCode == 8 && sType != "text" && sTagName != "textarea") {
+                    ev.preventDefault();
+                }
+            });
+        });
+        function getDialogParent() {
+            var frameObj = frameElement, dgFr = frameObj.lhgDG;
+            while (frameObj && frameObj.contentWindow && !dgFr && frameObj != top) {
+                frameObj = frameObj.contentWindow.parent.frameElement;
+                if (!frameObj) return;
+                dgFr = frameObj.lhgDG;
+            }
+            return frameObj;
+        }
+        $(window).unload(function (ev) {
+            if (!isAddChart) {
+                oCurrChart.release(pWin);
+            }
+        });
+        
+    </script>
+</body>
+</html>

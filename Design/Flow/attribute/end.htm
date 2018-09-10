@@ -1,0 +1,187 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="../../../sfk/panel/sfk_panel.css" rel="stylesheet" type="text/css" />
+    <link href="../../../sfk/accordion/sfk_accordion.css" rel="stylesheet" type="text/css" />
+    <link href="../../../sfk/tab/sfk_tab.css" rel="stylesheet" type="text/css" />
+    <script src="../../../sfk/sfk.js" type="text/javascript"></script>
+    <script src="../../../sfk/panel/sfk_panel.js" type="text/javascript"></script>
+    <script src="../../../sfk/accordion/sfk_accordion.js" type="text/javascript"></script>
+    <style type="text/css">
+        .attrTable
+        {
+            table-layout: fixed;
+            font-size: 11px;
+            border-collapse: collapse;
+            position: static;
+            text-align: left;
+            width: 100%;
+        }
+        
+        .attrTable td
+        {
+            overflow: hidden;
+        }
+        .attrTable td input
+        {
+            width: 105px;
+        }
+    </style>
+</head>
+<body style="background: rgb(240,240,240); margin: 0px;">
+    <form>
+    <div id="txtContainer" style="margin: 0px 3px; height: 80%;">
+        <ul class="acc_nav" id="barContainer">
+            <li>
+                <div>
+                    <div class="title">
+                        基本属性<div class="oper">
+                            <a href="#" panel="1">un</a></div>
+                    </div>
+                    <div class="content">
+                        <table class="attrTable" border="1" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td style="width: 60px;">
+                                    节点名称：
+                                </td>
+                                <td>
+                                    <input type="text" wlAttr="Name" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <div class="title">
+                        应用接口<div class="oper">
+                            <a href="#" panel="1">un</a>
+                        </div>
+                    </div>
+                    <div class="content">
+                    前置API配置
+                        <table name="beforeAPI" id="beforeAPI" class="attrTable" border="1" cellpadding="0" cellspacing="0" >
+                            <tr>
+                                <td style="width:60px">
+                                    类型：
+                                </td>
+                                <td>
+                                    <select id="inovkeType"  wlAttr="BeforeAPIType" name="inovkeType">
+                                    	<option value="Null">无</option>
+                                        <option value="JAR">JAR</option>
+                                        <option value="webService">web服务</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr id="trUrlPath">
+                                <td>
+                                    服务地址：
+                                </td>
+                                <td>
+                                    <input id="urlPath" type="text" wlAttr="BeforeAPIPath"  name="urlPath"/>
+                                </td>
+                            </tr>
+                            <tr id="trClassName">
+                                <td>
+                                    引用类名：
+                                </td>
+                                <td>
+                                    <input id="className" type="text" wlAttr="BeforeAPIClass" name="className"/>
+                                </td>
+                            </tr>
+                            <tr id="trMethodName">
+                                <td>
+                                    调用方法名：
+                                </td>
+                                <td>
+                                    <input id="methodName" type="text" wlAttr="BeforeAPIMethod" name="methodName"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    参数：
+                                </td>
+                                <td>
+                                    <input style="width: 20px;vertical-align: middle;" type="checkbox" wlAttr="BeforeAPIPara" />流程主信息
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    </form>
+    <script type="text/javascript">
+    window.onload = function () {
+        var doc = document,
+	        url = window.location.href,
+	        tid = url.substring(url.indexOf("=") + 1, url.length),
+	        accor = new Accordion({
+	            target: doc.getElementById("barContainer"),
+	            container: doc.getElementById("txtContainer"),
+	            titleStyle: {},
+	            contentStyle: {},
+	            mode: 1,
+	            active: false
+	        });
+		
+        window.endObj = parent.workflow.getFigure(tid);
+        window.end = endObj.ExtAttributes;
+        window.flag = false;
+
+        SetForm();
+    }
+    
+    function changeAttr(element){
+    	var newVal = element.value, 
+    		oldVal = element.getAttribute("source"), 
+    		wlAttr = element.getAttribute("wlAttr"),
+    		eType = element.type;
+    	if(eType == "checkbox"){
+    		newVal = element.checked ? "FlowInfo" : "";
+    	}
+   		parent.workflow.getCommandStack().execute(new parent.draw2d.CommandAttribute(endObj, wlAttr, newVal, oldVal));
+       	element.setAttribute("source", newVal);    	
+    }
+    
+    function SetForm() {
+        var form = document.forms[0], element, wlAttr, attrVal;
+        for (var i = form.length - 1; i >= 0; i--) {
+            element = form[i],
+            wlAttr = element.getAttribute("wlAttr");
+            if(wlAttr != null)
+            	attrVal = end["" + wlAttr + ""];
+            switch (element.type) {
+                case "text":
+                case "select-one":
+                    element.value = attrVal;
+                    !flag && (addEvent(element, "change", wlAttr), element.setAttribute("source", attrVal));
+                    break;
+                case "checkbox":
+                    if (attrVal != "")
+                        element.checked = true;
+                    !flag && (addEvent(element, "click", wlAttr), element.setAttribute("source", attrVal));
+                    break;
+            }
+        }
+        window.flag = true;
+    }
+
+    function addEvent(element, type, wlAttr) {
+        $E.on(element, type, function () {
+        	if(wlAttr == "BeforeAPIPara")
+        		end["" + wlAttr + ""] = element.checked ? "FlowInfo" : "";
+        	else
+        		end["" + wlAttr + ""] = element.value;
+        });
+        $E.on(element, "change", function(){
+        	changeAttr(element);
+        });
+    }
+    </script>
+</body>
+</html>

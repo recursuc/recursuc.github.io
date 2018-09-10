@@ -1,0 +1,18 @@
+﻿<p  style="font-size:12px;font-weight:bold;color:Red;">输入的内容必须是函数名或者匿名函数体。</p>
+<p><i>比如：</i></p>
+<p>
+function(ev,bar){
+<br />
+        var obj = bar[0];<br/>
+        var x   = bar[1];<br/>
+        var y   = bar[2];<br/>
+        var w   = bar[3];<br/>
+        var h   = bar[4];<br/>
+        var idx = bar[5];<br/>
+        var data=obj.data.toString(); <br/>
+        var d=data.split(',');<br/>
+        alert(d[idx]);<br/>
+<br/>
+}
+</p>
+<p>默认传入两个参数：事件源对象和一个数组，数组包括：当前图对象，当前图对象的位置宽高，当前事件源的索引值.</p>

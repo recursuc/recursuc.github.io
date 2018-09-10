@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+	<head>
+		<meta name="author" content="Darko Bunic"/>
+		<meta name="description" content="Drag and drop table content with JavaScript"/>
+		<meta name="viewport" content="width=device-width, user-scalable=no"/><!-- "position: fixed" fix for Android 2.2+ -->
+		<link rel="stylesheet" href="style.css" type="text/css" media="screen" />
+		<script type="text/javascript">
+			var redips_url = '/javascript/drag-and-drop-content-shift/';
+		</script>
+		<script type="text/javascript" src="../header.js"></script>
+		<script type="text/javascript" src="../redips-drag.js"></script>
+		<script type="text/javascript" src="script.js"></script>
+		<title>Example 21: Shift table content</title>
+	</head>
+	<body>
+		<!-- tables inside this DIV could contain drag-able content  -->
+		<div id="drag">
+			<!-- first table -->
+			<table>
+				<colgroup>
+					<col width="100"/>
+					<col width="100"/>
+					<col width="100"/>
+					<col width="100"/>
+					<col width="100"/>
+					<col width="100"/>
+				</colgroup>
+				<tbody>
+					<tr>
+						<td><div class="drag">A</div></td>
+						<td><div class="drag">B</div></td>
+						<td><div class="drag">C</div></td>
+						<td><div class="drag">D</div></td>
+						<td><div class="drag">E</div></td>
+						<td><div class="drag">F</div></td>
+					</tr>
+					<tr>
+						<td><div class="drag">G</div></td>
+						<td><div class="drag">H</div></td>
+						<td><div class="drag">I</div></td>
+						<td><div class="drag">J</div></td>
+						<td><div class="drag">K</div></td>
+						<td><div class="drag">L</div></td>
+					</tr>
+					<tr>
+						<td><div class="drag">M</div></td>
+						<td><div class="drag">N</div></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><div class="drag">O</div></td>
+						<td><div class="drag">P</div></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><div class="drag">Q</div></td>
+						<td><div class="drag">R</div></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+			<!-- second table with clone element and trash -->
+			<table>
+				<colgroup>
+					<col width="100"/>
+					<col width="100"/>
+				</colgroup>
+				<tbody>
+					<tr>
+						<!-- clone cell is forbidden for any element -->
+						<td class="mark"><div class="drag clone orange">C</div></td>
+						<!-- trash cell -->
+						<td class="trash">Trash</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<div class="mycontrols">
+				<!-- animation checkbox -->
+				<input type="checkbox" class="checkbox" onclick="toggle_animation(this)" title="Enable / disable animation" checked=""/>Animation
+				<br/>
+				<!-- shift after element is deleted checkbox -->
+				<input type="checkbox" class="checkbox" onclick="toggle_shift_after(this)" title="Enable / disable content shifting after element is deleted" checked=""/>Shift content (after element is deleted)
+				<br/>
+				<!-- confirm before delete object -->
+				<input type="checkbox" class="checkbox" onclick="toggle_confirm(this)" title="Show confirm delete dialog"/>Show confirm delete dialog
+				<br/>
+				<br/>
+				<!-- shift modes -->
+				<span class="text">Shift options:</span>
+				<br/>
+				<input type="radio" name ="shift_mode" onclick="shift_option(this)" title="Horizontal1" value="horizontal1" checked="true"/>horizontal 1 - element shift can affect more rows<br/>
+				<input type="radio" name ="shift_mode" onclick="shift_option(this)" title="Horizontal1" value="horizontal2"/>horizontal 2 - each row is treated separately<br/>
+				<input type="radio" name ="shift_mode" onclick="shift_option(this)" title="Horizontal1" value="vertical1"/>vertical 1 - element shift can affect more columns<br/>
+				<input type="radio" name ="shift_mode" onclick="shift_option(this)" title="Horizontal1" value="vertical2"/>vertical 2 - each column is treated separately
+			</div>
+		</div>
+	</body>
+</html>

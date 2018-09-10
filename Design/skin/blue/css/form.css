@@ -1,0 +1,52 @@
+BODY {
+	SCROLLBAR-FACE-COLOR: #cccccc; SCROLLBAR-HIGHLIGHT-COLOR: #cccccc; SCROLLBAR-SHADOW-COLOR: #999999; SCROLLBAR-3DLIGHT-COLOR: #999999; SCROLLBAR-ARROW-COLOR: #999999; SCROLLBAR-TRACK-COLOR: #cccccc; SCROLLBAR-DARKSHADOW-COLOR: #cccccc
+}
+
+/*交叉表样式*/
+.ct_cap
+{
+    BACKGROUND-COLOR:#D0B830;
+}
+
+.ct_capstat
+{
+    BACKGROUND-COLOR:#D0B830;
+    FONT-WEIGHT:BOLD;
+}
+
+.ct_valcol
+{
+    BACKGROUND-COLOR:#D0B830;
+}
+.ct_valrow
+{
+    BACKGROUND-COLOR:#10B830;
+}
+
+.ct_valstat
+{
+    BACKGROUND-COLOR:#D0B830;
+    FONT-WEIGHT:BOLD;
+}
+		
+
+/* 页签控件样式 */
+.dynamic-tab-pane-control .tab-page {}
+.dynamic-tab-pane-control h2 {
+	text-align:	center;
+	width:		auto;
+}
+.dynamic-tab-pane-control h2 a {
+	display:	inline;
+	width:		auto;
+}
+.dynamic-tab-pane-control a:hover {
+	background: transparent;
+}
+/**
+*默认字号为12px
+**/		
+#SKbillsheet  
+{
+	font-size:12px;
+}

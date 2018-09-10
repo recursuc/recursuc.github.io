@@ -1,0 +1,227 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+    <style type="text/css"> 
+body,h1,p,blockquote,dl,dt,dd,ul,ol,li,input{margin:0 0 0 5;padding:0;} 
+</style> 
+    <script language="javascript" type="text/javascript" src="../../../../Javascripts/jquery/jquery-1.7.1.js"></script>
+    <script language="javascript" type="text/javascript" src="../../../../Javascripts/common/tree/dtree.js"></script>
+    <link href="../../../../Javascripts/common/tree/dtree.css" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript" language="javascript">
+        //当前用户对象集合
+        var userList = new Array();
+        var dd = new dTree("dd"),
+    	path="../../../../Javascripts/common/tree/img/";
+        dd.config.showCheckbox = true;
+        dd.icon = {
+            root: path+'base.gif',
+            empty: path+'empty.gif',
+            line: path+'line.gif',
+            join: path+'join.gif',
+            joinBottom: path+'joinbottom.gif',
+            plus: path+'plus.gif',
+            plusBottom: path+'plusbottom.gif',
+            minus: path+'minus.gif',
+            minusBottom: path+'minusbottom.gif',
+            nlPlus: path+'nolines_plus.gif',
+            nlMinus: path+'nolines_minus.gif'
+        };
+        var icon= path+"treeTop.gif",iconopen=path+"treebottom.gif";
+            
+		    function SelectUser() {
+		        var strchecked = "";
+		        var strCheckedName = "";
+		        try {
+		            var typeTree = document.getElementById("typeTree");
+		            if (typeTree && typeTree.value != "select") {
+		               var strSelectedDatas = dd.collect(false, false);
+		               if (strSelectedDatas != "") {
+		                   //debugger;
+		                   var tempArray = strSelectedDatas.split(';');
+		                   for (var i = 0; i < tempArray.length; i++) {
+		                       var temp = tempArray[i].split(':');
+		                       //var checkFlag = temp[0]
+		                       //// 空的，或者灰色打勾的，不用算
+		                       //if (checkFlag == "2" || checkFlag == "3")
+		                       //    continue;
+		                       var selectedValue = temp[0];
+		                       if (selectedValue.split('*')[2] == "User") {
+		                           strchecked += selectedValue.split('*')[0] + ",";
+		                           strCheckedName += selectedValue.split('*')[1] + ",";
+		                       }
+		                   }
+		               }
+		           } else {
+		               //获取搜索结果的选中值
+		               var userChecks = document.getElementsByName("selectUserId");
+		               for (var i = 0; i < userChecks.length; i++) {
+		                   if (userChecks[i].checked) {
+		                       strchecked += userChecks[i].value.split(';')[0] + ",";
+		                       strCheckedName += userChecks[i].value.split(';')[1] + ",";
+		                    }
+		               }
+		           }
+		        }
+		        catch (e) {
+		        }
+		        return strchecked.substring(0,strchecked.length-1)+"*"+strCheckedName.substring(0,strCheckedName.length-1);
+		    }
+            
+            //检索用户
+		    function SelectUserList(val) {
+		        var bak = [];
+		        for (var i = 0, leng = this.userList.length; i < leng; i++) { 
+		            
+		            //判断input的数据是否与数据源里的数据一致(首字联动)
+		            if (!!val && val.length <= this.userList[i].Name.length && this.userList[i].Name.substr(0, val.length) == val) {
+		                bak.push(this.userList[i]);
+		            }
+		        }
+		        
+		        //加载检索列表
+		        var strhtml = "";
+		        for (var i = 0; i < bak.length; i++) {
+		            strhtml += SelectItem(bak[i]);
+		        }
+		        td_selectItems.innerHTML = strhtml;
+		    }
+
+		    //搜索后选项对象
+		    function SelectItem(user) {
+		        var htmls = " <li onmouseover=\"this.style.background='#d6dff7';\" onmouseout=\"this.style.background='';\" >"
+		                    + "<lable><input type=\"checkbox\" name='selectUserId' value=" + user.Id +";"+user.Name+ " />" + user.Name + "</lable></li>"; 
+		                    return htmls;
+		    }
+
+		    //用户对象
+		    function User(userId, userName) {
+		        this.Id = userId;
+		        this.Name = userName;
+		    }
+		    
+		    function enter() {
+		        if (window.event.keyCode == 13)//enter的KEYCODE的值是13，通过监听可以控制。
+		        {
+		            window.event.returnValue = false;
+		        }
+		    }
+		    
+		    var queryStrings=function() {//get url querystring
+		        var params=document.location.search,reg=/(?:^\?|&)(.*?)=(.*?)(?=&|$)/g,temp,args={};
+		        while((temp=reg.exec(params))!=null) args[temp[1]]=decodeURIComponent(temp[2]);
+		        return args;
+		    };
+		    var args = queryStrings();
+		    
+		    $(document).ready( function () {
+		    	debugger;
+		    	var treeTypeVal = (typeof args.typeTree != "undefined" ? args.typeTree : "node");//树的展现分组类型
+		    	var userIds = (typeof args.userIds != "undefined" ? args.userIds : "");//处理人ID集合字符串
+		    	var userNames = (typeof args.userNames != "undefined" ? args.userNames : "");//处理人名称集合字符串
+		    	var isRememberSendUser = (typeof args.isRememberSendUser != "undefined" ? args.isRememberSendUser : "0");//记录发送人选项，0未选中
+		    	var allowAddAccepter = (typeof args.allowAddAccepter != "undefined" ? args.allowAddAccepter : "0");// 是否允许查看所有用户
+		    	
+	     	    var nodeType=(typeof args.nodeType!="undefined"?args.nodeType:"0");//判断节点类型（是否开始节点）
+	     	    var nodeId=(typeof args.nodeId!="undefinded"?args.nodeId:"0");
+	     	    var eventStepId=(typeof args.eventStepId!="undefinded"?args.eventStepId:"0");
+		    	
+		    	document.getElementById("typeTree").value = treeTypeVal;
+		    	document.getElementById("hid_userIds").value = userIds;
+		    	document.getElementById("hid_userNames").value = userNames;
+		    	document.getElementById("hid_AllowAddAccepter").value = isRememberSendUser;
+		    	document.getElementById("hid_IsRememberSendUser").value = allowAddAccepter;
+		    	document.getElementById("hid_nodeType").value=nodeType;
+		    	document.getElementById("hid_nodeId").value=nodeId;
+		    	document.getElementById("hid_eventStepId").value=eventStepId;
+		    	
+		    	
+		    	//处理用户源数据
+			    var userStr = "";
+			    var backJavaScript = "";
+		    	
+		    	var sXML = "<?xml version=\"1.0\" encoding=\"utf-8\"?><RAD><Doc><Data><Param ParamType=\"InitUserSelect\" UserIds=\"" 
+		    			+ userIds + "\" UserNames=\"" + userNames +"\" NodeType=\"" + nodeType+"\" NodeId=\""+nodeId+"\" EventStepId=\""+eventStepId+"\" IsRememberSendUser=\"" + isRememberSendUser + "\" AllowAddAccepter=\""
+		    			+ allowAddAccepter +"\" TreeType=\"" + treeTypeVal + "\"></Param></Data><Result><ResCode></ResCode><ResDetail></ResDetail></Result></Doc></RAD>";
+	        	$.ajax({
+	                type: "post",
+	                url: "workFlowRunAction!initUserSelect",
+	                async: false,
+	                contentType: 'xml',
+	                data: $.parseXML(sXML),
+	                processData: false,
+	                success: function (xmlResult) {
+	                	backJavaScript = $(xmlResult).find("BackJavaScript").text();
+	                	userStr = $(xmlResult).find("UserStr").text();
+	                	var treeData = $(xmlResult).find("TreeData").text();
+	                	
+	                	if(treeData != ""){
+			                var nodes = eval("([" + treeData + "])");
+	                        for (var i = 0; i < nodes.length; i++) {
+	                            var node = nodes[i];
+	                            dd.add(node.id, node.parentId, node.name, '', '', "", icon, iconopen);
+	                        }
+	
+	                        document.getElementById("treeTd").innerHTML = dd.toString();
+	                	}
+	                },
+	                error: function (jqXHR, textStatus, errorThrown) {
+	        	        alert('Failure: ' + textStatus);
+	        	    }
+	            });
+		    	
+			    if (userStr != "") {
+			        var userArrays = userStr.split(';');
+			        for (var i = 0; i < userArrays.length; i++) {
+			            //转成用户对象
+			            var userArray = userArrays[i].split(',');
+			            if (userArray.length == 2) {
+			                var user = new User(userArray[0], userArray[1]);
+			                userList.push(user);
+			            }
+			        }
+			    }
+			    
+			    if(backJavaScript != ""){
+			    	eval(backJavaScript);
+			    }
+		    });
+		</script>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <input type="hidden" id="hid_userIds" name="hid_userIds" />
+        <input type="hidden" id="hid_userNames" name="hid_userNames" />
+        <input type="hidden" id="typeTree" value="" />
+        <input type="hidden" id="hid_AllowAddAccepter" name="hid_AllowAddAccepter" /><!--是否允许查看全部用户-->
+        <input type="hidden" id="hid_IsRememberSendUser" name="hid_IsRememberSendUser" />
+        
+        <input type="hidden" id="hid_nodeType" name="hid_nodeType"/>
+        <input type="hidden" id="hid_nodeId" name="hid_nodeId"/>
+        <input type="hidden" id="hid_eventStepId" name="hid_eventStepId"/>
+        
+        <div id="div_selecttree" style="width: 100%; height: 325px;">
+        	<div id="treeTd">
+                                
+            </div>
+        </div>
+	    <div id="div_select" style="width: 100%; display: none">
+	        <table cellpadding="0" cellspacing="0" style="width: 98%;">
+	            <tr>
+	                <td style="width: 100%;">
+	                    <input type="text" id="txt_select" value="请输入需要搜索的用户姓名..." onkeydown="enter()" onclick="if(this.value=='请输入需要搜索的用户姓名...')this.value='';this.style.color ='#000000';"
+	                        onkeyup="SelectUserList(this.value);" style="width: 100%; color: #CCCCCC" />
+	                </td>
+	            </tr>
+	            <tr>
+	                <td style="width: 100%;">
+	                    <ul id="td_selectItems">
+	                    </ul>
+	                </td>
+	            </tr>
+	        </table>
+	    </div>
+    </form>
+</body>
+</html>

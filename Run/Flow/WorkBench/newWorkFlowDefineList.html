@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="../../../SysAdmin/grid/css/jquery-ui-1.8.1.css" rel="stylesheet" type="text/css" />
+    <link href="../../../SysAdmin/grid/css/ui.jqgrid.css" rel="stylesheet" type="text/css" />
+    <link href="../../../SysAdmin/grid/css/ui.multiselect.css" rel="stylesheet" type="text/css" />
+
+    <script src="../../../../Javascripts/jquery/jquery-1.7.1.js" type="text/javascript"></script>
+    <script src="../../../SysAdmin/grid/js/jquery-ui-1.8.1.custom.min.js" type="text/javascript"></script>
+    <script src="../../../SysAdmin/grid/js/jquery.layout.js" type="text/javascript"></script>
+    <script src="../../../SysAdmin/grid/js/grid.locale-cn.js" type="text/javascript"></script>
+    <script src="../../../SysAdmin/grid/js/ui.multiselect.js" type="text/javascript"></script>
+    <script src="../../../SysAdmin/grid/js/jquery.jqGrid.js" type="text/javascript"></script>
+    <script src="../../../SysAdmin/grid/js/jquery.tablednd.js" type="text/javascript"></script>
+    <script src="../../../SysAdmin/grid/js/jquery.contextmenu.js" type="text/javascript"></script>
+    
+    <script src="../../../../Javascripts/jqueryapp/lhgdialog/lhgdialog.js?s=blue/default,blue/classic" type="text/javascript"></script>
+	<script src="../../../../Javascripts/jqueryapp/lhgdialog/showModalDialog.js" type="text/javascript"></script>
+	<script src="../js/flowapp.js"></script>
+</head>
+<body>
+    <table id="loglist"></table>
+    <div id="pagelist"></div>
+    <script type="text/javascript">
+    var flowClassId = 0;
+    function startFlow(flowDefineId){
+		createEvent(flowDefineId);
+	}
+    	$(document).ready(function(){
+    		 var href = document.location.href;
+             var paramStr = href.substring(href.indexOf('?') + 1);
+             var params = paramStr.split('&');
+             for (var i = 0; i < params.length; i++) {
+                 var para = params[i].split('=');
+                 if (para[0] == 'FlowClassId') 
+                	 flowClassId = para[1];
+             }
+    		 jQuery("#loglist").jqGrid({
+    	            url: "workFlowDefineAction.aspx?method=getFlowDefineByClass&flowClassId="+flowClassId,
+    	            datatype: "json",
+    	            height: 410,
+    	            rowNum: 20,
+    	            rowList: [ 10, 20, 30],
+    	            colNames: ['流程名称', '流程状态', '流程类型', '流程分类', '操作'],
+    	            colModel: [
+    	   		        { name: 'name', index: 'name', width: 120, align: "center" },
+    	   		        { name: 'flowState', index: 'flowState', width: 100, align: "center" },
+    	   		        { name: 'flowType', index: 'flowType', width: 120, align: "center" },
+    	                { name: 'flowClass', index: 'flowClass', width: 120, align: "center" },
+    	                { name: 'op', index: 'op', width: 80, align: "center", sortable: false, search: false }
+    	   	        ],
+    	            multiselect: true,
+    	            pager: "#pagelist",
+    	            viewrecords: true,
+    	            caption: "流程列表",
+    	            jsonReader: {
+    	                root: "rows",
+    	                page: "page",
+    	                total: "total",
+    	                records: "records",
+    	                repeatitems: false,
+    	                cell: "cell",
+    	                id: "id"
+    	            },
+    	            loadonce: true,
+    	            editurl: "workFlowDefineAction.aspx?method=deleteFlow",
+    	            gridComplete: function () { $("#gbox_loglist").css("margin", "0 auto") }
+    	        });
+
+    	        jQuery("#loglist").jqGrid('navGrid', '#pagelist', 
+    	        		{ add: false, edit: false, searchtext: "查找", deltext: "删除选中流程", refreshtext: "刷新"  },
+    	        		{}, {}, {}, { multipleSearch: true });
+    	});
+    </script>
+</body>
+</html>

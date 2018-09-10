@@ -1,0 +1,1 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="save_xml_to_server.aspx.cs" Inherits="ReportSystem.Application.Design.Form.Handle.save_xml_to_server" %>

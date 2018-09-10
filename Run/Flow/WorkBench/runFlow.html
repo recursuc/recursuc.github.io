@@ -1,0 +1,199 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html id="Html1" xmlns="http://www.w3.org/1999/xhtml" runat="server">
+<head>
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title id="flowTitle"></title>
+    <link rel="stylesheet" type="text/css" href="../../../../Skins/Blue/Style/Style_MainContent.css" />
+    <link href="../Skins/Blue/Style/xMenuBar.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        *
+        {
+            font-size: 13px;
+        }
+        .btn
+        {
+            margin-right: 5px;
+            width: 76px;
+            height: 25px;
+            text-align: right;
+            line-height: 25px;
+            cursor: pointer;
+            float: left;
+            border-right: solid 1px #52A3DF;
+        }
+        .btnHidden
+        {
+            margin: 0px 3px 0px 3px;
+            width: 76px;
+            height: 25px;
+            text-align: right;
+            line-height: 25px;
+            cursor: hand;
+            border-right: solid 1px #52A3DF;
+            margin-bottom: 5px;
+        }
+        .selbtn
+        {
+            margin-right: 5px;
+            cursor: pointer;
+            width: 17px;
+            height: 25px;
+            background-image: url(../Skins/Blue/Image/xMenuBar/min.gif);
+            float: left;
+        }
+        .menuArea
+        {
+            display: inline;
+        }
+        
+        .leftBtn div
+        {
+            float: left;
+        }
+        
+        .html-body-overflow
+        {
+            background: white;
+            overflow-x: hidden;
+            overflow-y: hidden;
+            width: 100%;
+            height: 100%;
+        }
+        body
+        {
+            margin: 0px;
+        }
+        /* Let's get this party started */
+        ::-webkit-scrollbar
+        {
+            width: 5px;
+        }
+        
+        /* Track */
+        ::-webkit-scrollbar-track
+        {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+            -webkit-border-radius: 10px;
+            border-radius: 10px;
+        }
+        
+        /* Handle */
+        ::-webkit-scrollbar-thumb
+        {
+            -webkit-border-radius: 10px;
+            border-radius: 10px;
+            background: rgba(221,221,221,0.5);
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+        }
+        ::-webkit-scrollbar-thumb:window-inactive
+        {
+            background: rgba(221,221,221,0.4);
+        }
+    </style>
+    <script language="javascript" type="text/javascript" src="../../../../Javascripts/jquery/jquery-1.7.1.js"></script>
+    <script language="javascript" type="text/javascript" src="../js/runFlowCore.js"></script>
+	<script language="javascript" type="text/javascript" src="../../../../Javascripts/jqueryapp/lhgdialog/lhgdialog.js?s=blue/default,blue/classic"></script>
+	<script language="javascript" type="text/javascript" src="../../../../Javascripts/jqueryapp/lhgdialog/showModalDialog.js"></script>
+    <!--script language="javascript" type="text/javascript" src="../../../../Javascripts/BusinessJS.js"></script-->
+    <script language="javascript" type="text/javascript" src="../../../../Javascripts/xMenuBar.js"></script>
+    <script language="javascript" type="text/javascript" src="../../../../Javascripts/jquery/jquery.ui.touch-punch.js"></script>
+</head>
+<body class="html-body-overflow">
+    <form id="form1" runat="server">
+    <div id="middlediv" style="overflow: auto; text-align: center">
+        <iframe type="text/html" id="RunFlowForm" name="RunFlowForm" src=""
+            marginheight='0' marginwidth='0' frameborder='0' width="100%" height="100%"></iframe>
+    </div>
+    <table id="btnTb" border="0" cellspacing="0" cellpadding="0" width="100%">
+        <tr>
+            <td align="left" class="leftBtn" id="leftBtn">
+            </td>
+            <td align="right" id="rightBtn">
+            </td>
+        </tr>
+    </table>
+    <div id="divMask" style="border: solid 1px blue; position: absolute; z-index: 9999998;
+        filter: alpha(opacity=50); background-color: #0477F7; width: 100%; height: 100%;
+        top: 0px; left: 0px; display: none">
+    </div>
+    <input type="hidden" name="FlowType" id="FlowType" value="" /><!-- 流程类型 -->
+    <input type="hidden" name="FlowDataMode" id="FlowDataMode" value="" /><!-- 流程数据模式 单表单：SingleForm 多表单：MultiForm -->
+    <input type="hidden" name="EventStepId" id="EventStepId" value="" /><!-- 流转步骤ID -->
+    <input type="hidden" name="formInfValue" id="formInfValue" value="" /><!-- 当前步骤表单Id,Datakey,State,MainTable -->
+    <input type="hidden" name="businessFormId" id="businessFormId" value="" /><!-- 表单簿ID -->
+    <input type="hidden" name="WorkFlowNodeName" id="WorkFlowNodeName" value="" /><!--定量管理系统定制变量-->
+    </form>
+    <script language="javascript" type="text/javascript">
+      function getDialogFrameInfo() { 
+        var info = { "h": 400, "w": 500 }, frameObj = frameElement;
+        while (frameObj && frameObj !=top) {
+            if (frameObj.bodyHeight) {
+                info.h = frameObj.bodyHeight;
+                info.w = frameObj.bodyWidth;
+                break;
+            }
+            frameObj = frameObj.contentWindow.parent.frameElement;
+        }
+        return info;
+    }
+    
+      var queryStrings=function() {//get url querystring
+          var params=document.location.search,reg=/(?:^\?|&)(.*?)=(.*?)(?=&|$)/g,temp,args={};
+          while((temp=reg.exec(params))!=null) args[temp[1]]=decodeURIComponent(temp[2]);
+          return args;
+      };
+      var args = queryStrings();
+      $(window).load(function () {
+    	  var middlediv =document.getElementById('middlediv'),
+			  initInfo=getDialogFrameInfo(),
+			  btnTb=document.getElementById('btnTb');
+          middlediv.style.height = parseInt(initInfo.h)-60;
+          
+		  var eventStepId = (typeof args.EventStepId != "undefined" ? args.EventStepId : "");
+		  var state = (typeof args.State != "undefined" ? args.State : "");;
+		  var isView = (typeof args.IsView != "undefined" ? args.IsView : "0");;
+		  var isHistoryBox = (typeof args.isHistoryBox != "undefined" ? args.isHistoryBox : "0");;
+		  var eventWorkId = (typeof args.EventWorkId != "undefined" ? args.EventWorkId : "");;
+		  
+		  $("#EventStepId").val(eventStepId);
+		  
+		  var sXML = "<?xml version=\"1.0\" encoding=\"utf-8\"?><RAD><Doc><Data><Param ParamType=\"InitRunFlow\" EventStepId=\""
+				  + eventStepId +"\" IsView=\"" + isView + "\" IsHistoryBox=\"" + isHistoryBox + "\" State=\"" 
+				  + state + "\"></Param></Data><Result><ResCode></ResCode><ResDetail></ResDetail></Result></Doc></RAD>";
+      	  $.ajax({
+              type: "post",
+              url: "workFlowRunAction!initRunFlow",
+              async: false,
+              contentType: 'xml',
+              data: $.parseXML(sXML),
+              processData: false,
+              success: function (xmlResult) {
+              	var flowData = $(xmlResult).find("Param");
+              	var activityNodePath = flowData.attr("ActivityNodePath");
+              	if(activityNodePath == ""){
+	              	$("#FlowType").val(flowData.attr("FlowType"));
+	              	$("#FlowDataMode").val(flowData.attr("FlowDataMode"));
+	              	$("#formInfValue").val(flowData.attr("FormInfValue"));
+	              	$("#businessFormId").val(flowData.attr("BusinessFormId"));
+	              	$("#WorkFlowNodeName").val(flowData.attr("WorkFlowNodeName"));
+	              	$("#RunFlowForm").attr("src",flowData.attr("RunFrameUrl"));
+	              	//$("#flowTitle").text(flowData.attr("Title"));
+	              	
+	              	$("#leftBtn").html($(xmlResult).find("OperationBtnHtmlA").text());
+	              	$("#rightBtn").html($(xmlResult).find("OperationBtnHtmlB").text());
+	              	eval($(xmlResult).find("MenuBarLoadJs").text());
+              	}else{
+              		window.location.href = activityNodePath;
+              	}
+              },
+              error: function (jqXHR, textStatus, errorThrown) {
+      	        alert('Failure: ' + textStatus);
+      	    }
+          });
+	  });
+   
+    </script>
+</body>
+</html>

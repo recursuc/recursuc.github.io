@@ -1,0 +1,427 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <style type="text/css">
+    .x-tab-panel-body .x-panel-body {
+        padding:10px;
+    }
+    </style>
+
+    <link rel="Stylesheet" type="text/css" href="../skins/blue/css/form.css" />
+    <link rel="Stylesheet" type="text/css" href="../../ext/resources/css/ext-all.css" />
+    <link rel="Stylesheet" type="text/css" href="../../ext/resources/css/xtheme-gray.css" />
+    <link rel="Stylesheet" type="text/css" href="../../ext/resources/css/tabs.css" />
+    <script type="text/javascript">
+        document.styleSheets[0].addRule(".xpSpin", "behavior: url(../../htc/numedit.htc)", 0);
+    </script>
+</head>
+<body onload="uf_open()" style="overflow:hidden; margin:3px;font-size:13px;padding:0px;">
+    <div id="SKbillsheet">
+        <div id="tabs">
+            <div id="ab" class="x-hide-display">
+                <table style="font-size: 12px;width:100%;">
+                    <tr>
+                        <td>
+                            <!-- 布局信息 -->
+                            <table style="font-size: 12px;width:100%;">
+                                <tr>
+                                    <td colspan= "4" style="font-weight:bold; color:#15428b;">布局信息</td>
+                                </tr>
+                                <tr>
+                                    <td colspan= "4"><hr style=" color:#8db2e3; width:100%; height:1px;" /></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <table  style="font-size: 12px;width:100%;">
+                                            <tr>
+                                                <td style="width:25%;">水平对齐方式:</td>
+                                                <td style="width:25%;">
+                                                    <select id="SKDBcombobox1" style="display: block; FONT-SIZE: 12px; WIDTH: 79px; HEIGHT: 25px; BACKGROUND-COLOR: #ffffff" >
+                                                        <option value="left" selected>左对齐</option>
+                                                        <option value="right">右对齐</option>
+                                                        <option value="center">水平居中</option>
+                                                    </select>
+                                                </td>
+                                                <td style="width:25%">
+                                                    垂直对齐方式:
+                                                </td>
+                                                <td style="width:25%">
+                                                    <select id="SKDBcombobox2" style="display: block;font-size: 12px;width: 79px; height: 25px; background-color: #ffffff" >
+                                                        <option value="top" selected>顶边对齐</option>
+                                                        <option value="center">相对垂直居中</option>
+                                                        <option value="baseline">基线</option>
+                                                        <option value="bottom">相对底线对齐</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td  style="width:25%">
+                                                    行跨距:
+                                                </td>
+                                                <td  style="width:25%">
+                                                    <div Class='xpSpin' DefaultValue="" id="NumEdit1" field="undefined" dataset="undefined"  Min="0" value"undefined" align="left" style='align:left;  width:78px; height:22px;' NextNum="1" Max="32000" fontsize="12px" fontstyle="" fontfamily="" backgroundcolor="" color="" fontweight="" enabled="否" display="block" left="92px"  top="74px" width="78px" height="22px"></div>
+                                                </td>
+                                                <td  style="width:25%">
+                                                    列跨距:
+                                                </td>
+                                                <td  style="width:25%">
+                                                    <div Class='xpSpin' DefaultValue="" id="NumEdit2" field="undefined" dataset="undefined"  Min="0" value"undefined" align="left" style='align:left;width:78px; height:22px;' NextNum="1" Max="32000" fontsize="12px" fontstyle="" fontfamily="" backgroundcolor="" color="" fontweight="" enabled="否" display="block" left="92px"  top="99px" width="78px" height="22px"></div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="4">
+                                                    <table style="font-size: 12px;width:100%;">
+                                                        <tr>
+                                                            <td style="width:15%">
+                                                                <div id="SKDBcheckbox1"
+                                                                    style="display: block; font-size: 12px; width: 80px; font-family: 宋体;height: 20px; 
+                                                                    text-align: left; background-color: #ffffff" noWrap  
+                                                                    value="否" onclick="uf_ischeck()" divtype="checkbox" truevalue="是" falsevalue="否"><input type="checkbox" onclick="radio_checkbox_click()"/><span>指定宽度</span></div>
+                                                            </td>
+                                                            <td style="width:25%">
+                                                                <input type="text" id="FCDBedit1"  
+                                                                    style="font-size: 12px;width: 55px;height: 20px;text-align: left; medium: "  value CanSelect="false" />
+                                                            </td>
+                                                            <td style="text-align:left; width:60%">
+                                                                <fieldset id="SKDBRadioGroup1" style="display: block;font-size: 12px;width: 130px;height: 30px; background-color: #ffffff" controltype="radio" value="-1" china readOnly="false" legend>
+                                                                    <legend>单位</legend>
+                                                                    <input type="radio" value=1 name="RGSKDBRadioGroup1" text="像素" onclick="SKDBRadioGroup1.value=RGSKDBRadioGroup2[0].value;"/>
+                                                                    <span onclick="RGSKDBRadioGroup1[0].checked=true;SKDBRadioGroup1.value=RGSKDBRadioGroup1[0].value;RGSKDBRadioGroup1[0].focus();">像素</span>
+                                                                    <input type="radio" value=2 name="RGSKDBRadioGroup1" text="百分比" onclick="SKDBRadioGroup1.value=RGSKDBRadioGroup2[1].value;"/>
+                                                                    <span onclick="RGSKDBRadioGroup1[1].checked=true;SKDBRadioGroup1.value=RGSKDBRadioGroup1[1].value;RGSKDBRadioGroup1[1].focus();">百分比</span>
+                                                                </fieldset>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="width:15%">
+                                                                <div id=SKDBcheckbox2 
+                                                                style="display: block; font-size: 12px;width: 80px; font-family: 宋体;height: 20px; 
+                                                                text-align: left;  background-color: #ffffff" noWrap 
+                                                                value="否" onclick="uf_ischeck()" divtype="checkbox" truevalue="是" 
+                                                                falsevalue="否"><input type="checkbox" onclick="radio_checkbox_click()"/><span>指定高度</span></div>
+                                                            </td>
+                                                            <td style="width:25%">
+                                                                <input type="text" id="FCDBedit2"
+                                                                    style="font-size: 12px;width: 55px;height: 20px;text-align: left; medium: " value CanSelect="false" />
+                                                            </td>
+                                                            <td style="text-align:left; width:60%">
+                                                                <fieldset id="SKDBRadioGroup2" style="display: block;font-size: 12px; width: 130px; height: 30px; background-color: #ffffff" readonly="false">
+                                                                    <legend>单位</legend>
+                                                                    <input type="radio" value=1 name="RGSKDBRadioGroup2" text="像素" onclick="SKDBRadioGroup2.value=RGSKDBRadioGroup2[0].value;"/>
+                                                                    <span onclick="RGSKDBRadioGroup2[0].checked=true;SKDBRadioGroup2.value=RGSKDBRadioGroup2[0].value;RGSKDBRadioGroup2[0].focus();">像素</span>
+                                                                    <input type="radio" value=2 name="RGSKDBRadioGroup2" text="百分比" onclick="SKDBRadioGroup2.value=RGSKDBRadioGroup2[1].value;"/>
+                                                                    <span onclick="RGSKDBRadioGroup2[1].checked=true;SKDBRadioGroup2.value=RGSKDBRadioGroup2[1].value;RGSKDBRadioGroup2[1].focus();">百分比</span>
+                                                                </fieldset>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Class名称:</td><td><input type="text" id="txtTdClassName" size ="15"  /></td>
+                                                <td>ID名称：</td><td ><input type="text" id="txtTdIdName" size ="15" /></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <!-- 边框信息 -->
+                            <table style="font-size: 12px;width:100%;">
+                                <tr>
+                                    <td colspan= "4" style="font-weight:bold; color:#15428b;">边框信息</td>
+                                </tr>
+                                <tr>
+                                    <td colspan= "4"><hr style=" color:#8db2e3; width:100%; height:1px;" /></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <table style="font-size: 12px;width:100%; border:1px; border-color:Green;">
+                                            <tr>
+                                                <td>
+                                                    <input type="button" id="borderColorButton" style="font-size: 12px;width: 24px;
+                                                    height: 24px; border:0px; border-style:none;background-color:#ffffff;"onclick="borderColor()"/>
+                                                </td>
+                                                <td style="width:80%;text-align:center;">
+                                                    <div id="borderColorShow" style="height:20px; width:100%; text-align:center;">边框颜色</div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <!-- 背景信息 -->
+                            <table style="font-size: 12px;width:100%;">
+                                <tr>
+                                    <td colspan= "3" style="font-weight:bold; color:#15428b;">背景信息</td>
+                                </tr>
+                                <tr>
+                                    <td colspan= "3"><hr style=" color:#8db2e3; width:100%; height:1px;" /></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <table style="font-size: 12px;width:100%; border:1px; border-color:Green;">
+                                            <tr>
+                                                <td>
+                                                    <input type="button" id="bgColorButton" style="font-size: 12px;width: 24px;
+                                                        height: 24px; border:0px; border-style:none;background-color:#ffffff;" onclick="uf_callColorDlg()"/>
+                                                </td>
+                                                <td style=" width:80%; border:1px; text-align:center;vertical-align:middle;">
+                                                    <div id="bgColorShow"  style="height:20px; width:100%; text-align:center;">背景颜色</div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div id="buttons" style="text-align:right;">
+            <table>
+                <tr>
+                    <td style="padding-right:20px;">
+                        <!-- 确定按钮 -->
+                        <button id="cmdOk" style="display: block; font-size: 12px; width: 65px;height: 21px; background-color: #ffffff; border-style:none; border:0px;" onclick="uf_ok()">
+                        </button>
+                    </td>
+                    <td style="padding-right:20px;">
+                        <!-- 取消按钮 -->
+                        <button id="cmdClose" style="display: block; font-size: 12px; width: 65px;height: 21px; background-color: #ffffff; border-style:none; border:0px;" onclick="CloseBill()">
+                        </button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- 浏览器颜色控件 -->
+        <object id="dlgHelper" classid="clsid:3050f819-98b5-11cf-bb82-00aa00bdce0b" width="0px"height="0px" viewastext></object>
+    </div>
+    <script type="text/javascript" src="../../ext/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="../../ext/ext-all.js"></script>
+    <script type="text/javascript" src="../../commonjs/public_api.js"></script>  
+    <script type="text/javascript" src="../js/f_core.js"></script>
+    <script type="text/javascript" src="../../commonjs/design_operation.js"></script> 
+    <script type="text/javascript" src="../../commonjs/property.js"></script>    
+    <script type="text/javascript" src="../../commonjs/opencommonform.js"></script>
+    <script type="text/javascript" src="../../commonjs/sys_common_valid_library.js"></script> 
+    
+    <script type="text/javascript" language="javascript">
+        Ext.onReady(function(){
+            var tabs = new Ext.TabPanel({
+                renderTo: 'tabs',
+                width: "100%",
+                height: ChangeTabsSize(),
+                activeTab: 0,
+                frame:true,
+                defaults:{autoHeight: "100%"},
+                items:[
+                    {contentEl:'ab', title: '  属性  '}
+                ]
+            });
+        });
+
+        //改变TAB的样式
+        function ChangeTabsSize() {
+            var PageWidth = document.body.clientWidth;
+            var PageHeight = 435;
+            var ButtonsHeight = document.getElementById("buttons").offsetHeight;
+            var TabsHeight = PageHeight - ButtonsHeight - 10;
+            return TabsHeight;
+        }
+
+        public_Form();
+
+        ////打开页面时,进行数据加载    
+        function uf_open() {
+            var obj = parent.designobj;
+            PropWinOnload.loadButtonImg();
+
+            //回填表格背景与边框颜色
+            if (typeof bgColorShow == "object") {
+                bgColorShow.style.backgroundColor = obj.style.backgroundColor;
+            }
+            if (typeof borderColorShow == "object") {
+                borderColorShow.style.backgroundColor = obj.style.borderColor;
+            }
+
+            if (!SysF_IsNoEmpty(obj.width)) {
+                SetCheckBoxValue(SKDBcheckbox1, '否')
+            } else {
+                SetCheckBoxValue(SKDBcheckbox1, '是');
+                FCDBedit1.value = parseInt(obj.width);
+            }
+            if (!SysF_IsNoEmpty(obj.height)) {
+                SetCheckBoxValue(SKDBcheckbox2, '否')
+            } else {
+                SetCheckBoxValue(SKDBcheckbox2, '是')
+                FCDBedit2.value = parseInt(obj.height);
+            }
+            var s1 = obj.width;
+            var s2 = s1.substring(s1.length, s1.length - 1)
+
+            if (s2 == "%") {
+                SetRadioValue(SKDBRadioGroup1, '2')
+                SetRadioValue(SKDBRadioGroup2, '2')
+            } else {
+                SetRadioValue(SKDBRadioGroup1, '1')
+                SetRadioValue(SKDBRadioGroup2, '1')
+            }
+            //回填单元格CLASS名称
+            if (typeof txtTdClassName == "object") SetTextValue(obj.className, txtTdClassName);
+            if (typeof txtTdIdName == "object" && obj.id != "") SetTextValue(obj.id, txtTdIdName);
+            if (!SysF_IsNoEmpty(obj.rowSpan)) {
+                NumEdit1.value = 1
+            } else {
+                NumEdit1.value = obj.rowSpan;
+            }
+            if (!SysF_IsNoEmpty(obj.colSpan)) {
+                NumEdit2.value = 1;
+            } else {
+                NumEdit2.value = obj.colSpan;
+            }
+
+            if (!SysF_IsNoEmpty(obj.vAlign)) {
+                SKDBcombobox2.value = "top";
+            } else {
+                SKDBcombobox2.value = obj.vAlign;
+            }
+
+            if (!SysF_IsNoEmpty(obj.align)) {
+                SKDBcombobox1.value = "left";
+            } else {
+                SKDBcombobox1.value = obj.align;
+            }
+            uf_ischeck();
+        }
+        
+        /******************* 确定提交 **********************/
+        function uf_ok() {
+            var obj = parent.designobj;
+            if (SysF_IsNoEmpty(FCDBedit1.value)) {
+                if (SKDBRadioGroup1.value == 1) {
+                    obj.width = FCDBedit1.value + "px";
+                } 
+                else {
+                    obj.width = FCDBedit1.value + "%"
+                }
+            }
+
+            if (SysF_IsNoEmpty(FCDBedit2.value)) {
+                if (SKDBRadioGroup1.value == 1) {
+                    obj.height = FCDBedit2.value + "px";
+                } 
+                else {
+                    obj.height = FCDBedit2.value + "%"
+                }
+            }
+            obj.vAlign = SKDBcombobox2.value;
+            obj.align = SKDBcombobox1.value
+            obj.rowSpan = NumEdit1.value;
+            obj.colSpan = NumEdit2.value;
+            obj.className = txtTdClassName.value;
+            if (txtTdIdName.value != "") {
+                obj.id = txtTdIdName.value; 
+            }
+          
+            window.close();
+        }
+        
+        function uf_ischeck() {
+            if (SKDBcheckbox1.value === "否") {
+                FCDBedit1.disabled = true;
+                SKDBRadioGroup1.disabled = true;
+            } else {
+                FCDBedit1.disabled = false;
+                SKDBRadioGroup1.disabled = false;
+            }
+            if (SKDBcheckbox2.value === "否") {
+                FCDBedit2.disabled = true;
+                SKDBRadioGroup2.disabled = true;
+            } else {
+                FCDBedit2.disabled = false;
+                SKDBRadioGroup2.disabled = false;
+            }
+        }
+
+        function radio_checkbox_click() {
+            var objInput;
+            var obj = event.srcElement;
+            if (obj.parentNode.disabled) return;
+            objInput = obj;
+            if (objInput == null) return;
+            if (objInput.type == "checkbox") {
+                obj.parentNode.value = objInput.checked ? obj.parentNode.truevalue : obj.parentNode.falsevalue;
+            } else {
+                objInput.checked = true;
+                obj.parentNode.value = objInput.value;
+            }
+        }
+
+        //选择背景颜色
+        function uf_callColorDlg() {
+            //获得当前表格对象
+            var obj = parent.designobj;
+            var sColor;
+            var sInitColor = obj.style.backgroundColor;
+            if (isSpace(sInitColor)) {
+                sInitColor = "white";
+            }
+            if (typeof sInitColor == "object") {
+                var s = sInitColor.value;
+            }
+            else {
+                var s = sInitColor;
+            }
+            sColor = dlgHelper.ChooseColorDlg(s);
+            sColor = sColor.toString(16);
+            if (sColor.length < 6) {
+                var sTempString = "000000".substring(0, 6 - sColor.length);
+                sColor = sTempString.concat(sColor);
+            }
+            //设置表格对象背景样式
+            obj.style.backgroundColor = "#" + sColor;
+            //设置样例样式
+            if (typeof bgColorShow == "object") {
+                bgColorShow.style.backgroundColor = "#" + sColor;
+            }
+        }
+
+        //设置表格边框样式
+        function borderColor() {
+            //获得当前表格对象
+            var obj = parent.designobj;
+            var sColor;
+            var sInitColor = obj.style.borderColor;
+            if (!SysF_IsNoEmpty(sInitColor)) sInitColor = "white"
+            if (typeof sInitColor == "object") {
+                var s = sInitColor.value;
+            }
+            else {
+                var s = sInitColor;
+            }
+            sColor = dlgHelper.ChooseColorDlg(s);
+            sColor = sColor.toString(16);
+            if (sColor.length < 6) {
+                var sTempString = "000000".substring(0, 6 - sColor.length);
+                sColor = sTempString.concat(sColor);
+            }
+            obj.style.borderColor = "#" + sColor;
+            if (typeof borderColorShow == "object") {
+                borderColorShow.style.backgroundColor = "#" + sColor;
+            }
+        }
+
+    </script>
+</body>
+</html>

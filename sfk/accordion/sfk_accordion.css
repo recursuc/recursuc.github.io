@@ -1,0 +1,44 @@
+﻿.acc_nav
+{
+    margin: 3px;
+    padding: 0px;
+    font-size: 12px; /*line-height: 20px;*/
+    font-family: Arial;
+    list-style: none; /*  float: left;   width: 100%;     border: 1px solid #CCC;*/
+}
+.acc_nav > li
+{
+    /*  width: 80px;height: 20px; float: left;*/
+    text-align: center;
+    width: 100%;
+    padding-bottom: 3px;
+}
+.acc_nav > li .title:hover
+{
+    background-color: #E7C04D;
+}
+.acc_nav > li a
+{
+    width: 100%;
+    color: White;
+    margin: 0xp;
+    text-overflow: ellipsis;
+}
+.acc_nav .oper a
+{
+    text-decoration: none;
+    float: left;
+    margin: 0px;
+    color: white;
+    font-weight: normal;
+    text-align: right;
+}
+
+.acc_nav > li .title
+{
+    height: 18px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+    border: 3px solid white;
+    border-radius: 8px;
+}
+

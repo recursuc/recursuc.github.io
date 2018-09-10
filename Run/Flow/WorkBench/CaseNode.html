@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>条件节点属性</title>
+    <link rel="stylesheet" href="../style/Style.css" type="text/css" />
+    <script src="../../../../Javascripts/jquery/jquery-1.7.1.js" type="text/javascript"></script>
+    <script  type="text/javascript" src="../js/Node.js"></script>
+    <script type="text/javascript">
+    var queryStrings=function() {//get url querystring
+        var params=document.location.search,reg=/(?:^\?|&)(.*?)=(.*?)(?=&|$)/g,temp,args={};
+        while((temp=reg.exec(params))!=null) args[temp[1]]=decodeURIComponent(temp[2]);
+        return args;
+    };
+    var args = queryStrings();
+    var arrowName = args.arrowName;
+
+		function showCondition(src) {
+			var src = src + "?arrowId="+arrowName;
+			window.showModalDialog(src,"condition", "dialogHeight:410px; dialogWidth: 1050px;  center: Yes; help: no; resizable: NO; status: no;");
+// 		        var objCondition = window.showModalDialog(, window, "dialogHeight:350px; dialogWidth:660px;help:no;center:yes;status:no;resizable:no;location:yes;scroll:no;dialogLeft:260;dialogTop:353");
+		}
+		$(document).ready(function(){
+			$("#txtName").val(arrowName);
+		});
+		function ok(){
+			var src = $("#conditionType").val();
+			showCondition(src);
+		}
+    </script>
+</head>
+<body bgcolor="#ffffff" text="#000000" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0">
+    <!-- Tab页 开始 -->
+<!--     <table width="98%" align="center" border="0" cellspacing="0" cellpadding="0" background="../images/title_out_bg.gif"> -->
+<!--         <tr> -->
+<!--             <td> -->
+<!--                 <table border="0" cellspacing="0" cellpadding="0" background="../images/sub_uncur_bg.gif" -->
+<!--                     style="cursor: hand" onclick="ChangeTab('General');" id="General" align="left"> -->
+<!--                     <tr> -->
+<!--                         <td width="14"> -->
+<!--                             <img src="../images/sub_uncur_left.gif" width="14" height="28" id="General1" alt="" /></td> -->
+<!--                         <td class="main_title">属性</td> -->
+<!--                         <td width="14" align="right"> -->
+<!--                             <img src="../images/sub_uncur_right.gif" width="14" height="28" id="General3" alt="" /></td> -->
+<!--                     </tr> -->
+<!--                 </table> -->
+<!--                 <table border="0" cellspacing="0" cellpadding="0" background="../images/sub_uncur_bg.gif" -->
+<!--                     style="cursor: hand" onclick="ChangeTab('Branch');" id="Branch" align="left"> -->
+<!--                     <tr> -->
+<!--                         <td width="14"> -->
+<!--                             <img src="../images/sub_uncur_left.gif" width="14" height="28" id="Branch1" alt="" /></td> -->
+<!--                         <td class="main_title">分支条件</td> -->
+<!--                         <td width="14" align="right"> -->
+<!--                             <img src="../images/sub_uncur_right.gif" width="14" height="28" id="Branch3" alt="" /></td> -->
+<!--                     </tr> -->
+<!--                 </table> -->
+<!--             </td> -->
+<!--         </tr> -->
+<!--     </table> -->
+    <!-- Tab页 结束 -->
+    <table width='98%' border='0' align='center' cellpadding='0' cellspacing='0' class='table11'
+        id="TableGeneral"  >
+        <tr >
+            <td  style="line-height: 40px;" align="right" width="30%" class='table_heading6'>&nbsp;&nbsp;流向名称：</td>
+            <td  style="line-height: 40px;" align="left" width="70%" class='table_heading6'>
+                <input type="text" style="width: 240px;" value="" id="txtName" name="txtName" readonly="readonly" />
+            </td>
+        </tr>
+        <tr>
+            <td  style="line-height: 40px;" align="right"  class='table_heading6'>&nbsp;&nbsp;条件类型：</td>
+            <td  style="line-height: 40px;" align="left"  class='table_heading6'>
+                <select id="conditionType" style="width: 240px;">
+                	<option value="Condition.html">根据表单数据配置</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+    <table width='98%' border='0' align='center' cellpadding='0' cellspacing='0' class='table11'>
+        <tr>
+            <td   style="line-height: 40px;" align='center' class='table_heading'>
+                <img src='../images/icon_modify1.gif' style="cursor: pointer" onclick="ok();" />&nbsp;&nbsp;<img
+                    src='../images/icon_cancel.gif' onclick="window.close()" 
+                    style="cursor: pointer" title="" />&nbsp;&nbsp;&nbsp;</td>
+        </tr>
+    </table>
+</body>
+</html>

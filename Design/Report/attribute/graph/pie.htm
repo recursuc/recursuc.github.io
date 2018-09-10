@@ -1,0 +1,949 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>饼图样式属性</title>
+    <link href="../../../../publicJS/jquery/css/jquery-ui-1.8.17.custom.css" rel="stylesheet"
+        type="text/css" />
+    <link href="../../../../publicJS/cluetip/jquery.cluetip.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        a
+        {
+            text-decoration: none;
+            padding-left: 20px;
+        }
+        a:hover
+        {
+            color: #c4d9f2;
+        }
+    </style>
+    <script src="../../../../publicJS/jquery/jquery-1.7.1.js" type="text/javascript"></script>
+    <script src="../../../../publicJS/cluetip/jquery.cluetip.all.js" type="text/javascript"></script>
+    <script src="../../../../publicJS/jquery-plugin/lazyload/jquery.lazyload.js" type="text/javascript"></script>
+    <script src="../../../../publicJS/jquery/ui/jquery-ui-1.8.17.custom.js" type="text/javascript"></script>
+    <script src="../../../../publicJS/jscolor-1.3.13/jscolor/jscolor.js" type="text/javascript"></script>
+    <script src="../../../../publicJS/customDialog/lhgdialog.min.js" type="text/javascript"></script>
+    <script src="../../../../publicJS/customDialog/showModalDialog.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var bExist = false, oChart = window.dialogArgs ? window.dialogArgs[0] : false || parent.oCurrChart;
+        $(function () {
+            $("#tabs").tabs().find(".ui-tabs-nav").sortable({ axis: "x" });
+            $('#tabs').bind('tabsshow', function (event, ui) {
+                $(ui.panel).show("blind", {}, 500, function () {
+                })
+            });
+            var arrAcc = ["accBgColor", "accTitle", "accInteractive"];
+            $.each(arrAcc, function () {
+                $("#" + this).accordion({
+                    active: 0,
+                    header: "h3",
+                    autoHeight: false,
+                    collapsible: true,
+                    animated: 'bounceslide'
+                });
+            });
+            addSeriesColors();
+            oChart.loadProps($("#tabs")[0]);
+            $(document.documentElement).keydown(function (ev) {
+                var oSrc = ev.target, iCode = ev.keyCode, sTagName = oSrc.tagName.toLowerCase(), sType = oSrc.type;
+                if (iCode == 8 && sType != "text" && sTagName != "textarea") {
+                    ev.preventDefault();
+                }
+            });
+        });
+
+        function addSeriesColors() {
+            var eSeriesTb = $("#seriesColorTb")[0], arrColors = oChart.getProperties("chart.colors"),
+             isInitColor = arrColors[0].indexOf("rgb") != -1 ? true : false,
+            eTr = null, eTd = null, arrSeries = oChart.getKeys(), l = arrColors.length < arrSeries.length ? arrSeries.length : arrColors.length, lForAdd = l,
+            defultColors = ['#0f0', '#00f', '#ff0', '#0ff'], i = 0, sCurColor = "", inpText = "";
+            for (i; i < l; i++) {
+                sCurColor = isInitColor ? arrColors[i + 1] : arrColors[i];
+                inpText = $("<input type='text' value='" + (sCurColor || (arrColors.push('#000000'), "#000000")) + "'onchange='changeSeriesColor()' />");
+                oTr = eSeriesTb.insertRow();
+                eTd = oTr.insertCell();
+                eTd.innerHTML = arrSeries[i] || "color" + (i + 1);
+                eTd = oTr.insertCell();
+                inpText.appendTo(eTd);
+                inpText[0].color = new jscolor.color(inpText[0], { hash: true, pickerFaceColor: 'transparent', pickerFace: 3, pickerBorder: 1, pickerInsetColor: 'black' });
+            }
+            isInitColor && arrColors.shift();
+            $(eSeriesTb).bind("mouseover", function (ev) {
+                var oTarget = ev.target, sTagName = oTarget.tagName.toLowerCase();
+                while (sTagName != "table" && sTagName != "tr") {
+                    oTarget = oTarget.parentNode;
+                    if (!oTarget || oTarget.nodeName == "#document") return;
+                    sTagName = oTarget.nodeName.toLowerCase();
+                }
+                if ($(oTarget).attr("id") == "selectedTr") return;
+                $(oTarget).css("background-color", "c4d9f2");
+                ev.preventDefault();
+            }).bind("mouseout", function (ev) {
+                var oTarget = ev.target, sTagName = oTarget.tagName.toLowerCase();
+
+                while (sTagName != "table" && sTagName != "tr") {
+                    oTarget = oTarget.parentNode;
+                    if (!oTarget || oTarget.nodeName == "#document") return;
+                    sTagName = oTarget.nodeName.toLowerCase();
+                }
+                if ($(oTarget).attr("id") == "selectedTr") return;
+                $(oTarget).css("background-color", "#ffffff");
+                ev.preventDefault();
+            }).bind("click", function (ev) {
+                var oTarget = ev.target, sTagName = oTarget.tagName.toLowerCase();
+                while (sTagName != "table" && sTagName != "tr") {
+                    oTarget = oTarget.parentNode;
+                    if (!oTarget || oTarget.nodeName == "#document") return;
+                    sTagName = oTarget.nodeName.toLowerCase();
+                }
+                $("#selectedTr").css("background-color", "#ffffff");
+                $("#selectedTr").attr("id", "");
+                $(oTarget).attr("id", "selectedTr");
+                $(oTarget).css("background-color", "#6699FF");
+            });
+            $("#addSeriesColor").bind("click", function () {
+                var inpText = $("<input type='text' value='" + (arrColors[l] || defultColors[l] || "#000000") + "'onchange='changeSeriesColor()'/>");
+                if (arrSeries.length == 0) {
+                    alert("请先选择数据源，再添加预留颜色！");
+                    return;
+                }
+                oTr = eSeriesTb.insertRow();
+                eTd = oTr.insertCell();
+                eTd.innerHTML = "color" + (lForAdd + 1);
+                eTd = oTr.insertCell();
+                inpText.appendTo(eTd);
+                inpText[0].color = new jscolor.color(inpText[0], { hash: true, pickerFaceColor: 'transparent', pickerFace: 3, pickerBorder: 1, pickerInsetColor: 'black' });
+                lForAdd++;
+                changeSeriesColor(true);
+            });
+            $("#delSeriesColor").bind("click", function () {
+                var eSelTr = $("#selectedTr")[0], iTrSel = 0;
+                if (!eSelTr) return;
+                iTrSel = eSelTr.rowIndex;
+                if (iTrSel > arrSeries.length) {
+                    eSeriesTb.deleteRow(iTrSel);
+                    changeSeriesColor(true);
+                }
+            });
+
+        }
+        function changeSeriesColor(isAdd) {
+            var oT = window.setTimeout(function () {
+                var arrTextColors = $("#seriesColorTb").find("input"), l = arrTextColors.length, i = 0,
+                sColor = "[";
+                for (i = 0; i < l; i++) {
+                    sColor += "'" + arrTextColors[i].value + "'";
+                    if (i != l - 1) {
+                        sColor += ",";
+                    }
+                }
+                sColor += "]";
+                oChart.setProperty($("#chartColor").attr("propname"), sColor);
+                if (!isAdd) oChart.drawTo(oChart.target);
+                window.clearTimeout(oT);
+            }, 250);
+        }
+
+        $(document).ready(function () {
+            var arrAttrShadow = ["txtShaColor", "txtShaOsx", "txtShaOsy", "txtShaBlur"],
+                arrAttrKeyShadow = ["txtKeyShaCol", "txtKeyShaBlur", "txtKeyShaOffX", "txtKeyShaOffY"],
+                arrAttrAnnotatable = ["txtAnnoCol"],
+               arrAttrGutter = ["chkPGBoxed"],
+               arrAttrKeyRou = [ "txtKeyLinewidth"],
+                arrAttrSlide = ["selSildeFrom"];
+            initAttr();
+
+            var arrAttr = { "#chkShadow": arrAttrShadow, "#chkKeyShadow": arrAttrKeyShadow, "#chkAnnotatable": arrAttrAnnotatable };
+            $.each(arrAttr, function (a, e) {
+                if ($(a).attr("checked") == "checked") {
+                    $.each(e, function () { $("#" + this).attr("disabled", false); });
+                }
+                else {
+                    $.each(e, function () { $("#" + this).attr("disabled", true); });
+                }
+                $(a).bind("click", function () {
+                    if ($(a)[0].checked == true) {
+                        $.each(e, function () { $("#" + this).attr("disabled", false); });
+                    }
+                    else {
+                        $.each(e, function () { $("#" + this).attr("disabled", true); });
+                    }
+                })
+            });
+            $("#chkPGBoxed").click(function () {
+                if ($("#chkPGBoxed").attr("checked") == "checked") {
+                    $("#chkKeyShadow").attr("disabled", false);
+                }
+                else {
+                    $("#chkKeyShadow").attr("disabled", true);
+                }
+            });
+            $("#selOpenEffects").bind("change", function () {
+                if ($("#selOpenEffects :selected").val() == "RGraph.Effects.jQuery.Slide.In") {
+                    $.each(arrAttrSlide, function () {
+                        $("#" + this).removeAttr("disabled");
+                    }
+                     );
+                }
+                else {
+                    $.each(arrAttrSlide, function () {
+                        $("#" + this).attr("disabled", "disabled");
+                    });
+                }
+            });
+
+            var isGutter = false;
+            var isHposition = false;
+
+            $("#txtKeyPositionX").change(function () {
+                ($("#txtKeyPositionX").val() != null && $("#txtKeyPositionX").val() != "") == true ? isHposition = true : isHposition = false;
+                if (isGutter == false) {
+                    isHposition == true ? $("#selKeyHal").attr("disabled", true) : $("#selKeyHal").attr("disabled", false);
+                }
+                else
+                    $("#selKeyHal").attr("disabled", true);
+            });
+            $("#selKeyPosi").change(function () {
+                if ($("#selKeyPosi :selected").val() == "gutter") {
+                    $.each(arrAttrGutter, function () { $("#" + this).attr("disabled", false); });
+                    $.each(arrAttrKeyRou, function () { $("#" + this).attr("disabled", true); });
+                    $("#selKeyHal").attr("disabled", true);
+                    $("#chkPGBoxed").attr("checked") == "checked" ? $("#chkKeyShadow").attr("disabled", false) : $("#chkKeyShadow").attr("disabled", true);
+                    isGutter = true;
+                }
+                else {
+                    $.each(arrAttrGutter, function () { $("#" + this).attr("disabled", true); });
+                    $.each(arrAttrKeyRou, function () { $("#" + this).attr("disabled", false); });
+                    $("#chkKeyShadow").attr("disabled", false);
+                    (isGutter == true && isHposition == true) == true ? $("#selKeyHal").attr("disabled", true) : $("#selKeyHal").attr("disabled", false);
+                    isGutter = false;
+                }
+            });
+            var arrExplain = $(".addexplain");
+            $.each(arrExplain, function () {
+                $(this).cluetip({
+                    cluetipClass: 'jtip',
+                    arrows: true,
+                    dropShadow: false,
+                    hoverIntent: false,
+                    sticky: true,
+                    mouseOutClose: true,
+                    closePosition: 'title',
+                    closeText: '<a style="font-size:12px;">关闭</a>',
+                    positionBy: 'bottomTop',
+                    height: '130px'
+                });
+                $("#txtZoomFactor").bind("change", function () {
+                    var that = this,
+                     oT = window.setTimeout(function () {
+                         changeState(that.value);
+                        window.clearTimeout(oT);
+                    }, 250);
+                });
+                function changeState(val) {
+                    if (val < 1) {
+                        $("#txtZoomFactorHB").attr("disabled", true);
+                        $("#txtZoomFactorVB").attr("disabled", true);
+                        $("#txtZoomFactorHS").attr("disabled", false);
+                        $("#txtZoomFactorVS").attr("disabled", false);
+                    } else {
+                        $("#txtZoomFactorHB").attr("disabled", false);
+                        $("#txtZoomFactorVB").attr("disabled", false);
+                        $("#txtZoomFactorHS").attr("disabled", true);
+                        $("#txtZoomFactorVS").attr("disabled", true);
+                    }
+                }
+                changeState($("#txtZoomFactor").val());
+            })
+            function initAttr() {
+                if ($("#selKeyPosi :selected").val() == "gutter") {
+                    $.each(arrAttrGutter, function () { $("#" + this).attr("disabled", false); });
+                    $.each(arrAttrKeyRou, function () { $("#" + this).attr("disabled", true); });
+                    $("#selKeyHal").attr("disabled", true);
+                }
+                else {
+                    $.each(arrAttrGutter, function () { $("#" + this).attr("disabled", true); });
+                    $.each(arrAttrKeyRou, function () { $("#" + this).attr("disabled", false); });
+                    $("#chkKeyShadow").attr("disabled", false);
+                    if ($("#txtKeyPositionX").val() != null)
+                        $("#txtKeyPositionX").val() != "" ? $("#selKeyHal").attr("disabled", true) : $("#selKeyHal").attr("disabled", false);
+                }
+                if ($("#chkPGBoxed").attr("checked") == "checked") {
+                    $("#chkKeyShadow").attr("disabled", false);
+                }
+                else {
+                    $("#chkKeyShadow").attr("disabled", true);
+                }
+               
+                if ($("#selOpenEffects :selected").val() == "RGraph.Effects.jQuery.Slide.In") {
+                    $.each(arrAttrSlide, function () { $("#" + this).removeAttr("disabled"); });
+                }
+                else {
+                    $.each(arrAttrSlide, function () { $("#" + this).attr("disabled", "disabled"); });
+                }
+            }
+        }); 
+
+    </script>
+    <style type="text/css">
+        /*demo page css*/
+        body
+        {
+            font: 80% "Trebuchet MS" , sans-serif;
+            margin: 0px;
+            padding: 0px;
+        }
+        .colorwell
+        {
+            width: 6em;
+            text-align: center;
+            cursor: pointer;
+        }
+        body .colorwell-selected
+        {
+            border: 2px solid #000;
+            font-weight: bold;
+        }
+        .ui-tabs .ui-tabs-panel
+        {
+            padding: 0px;
+        }
+        table
+        {
+            border-collapse: collapse;
+        }
+        table th
+        {
+            background-color: #87CEFA;
+            height: 14px;
+            border: 1px solid black;
+            width: 50%;
+        }
+        table td
+        {
+            text-align: center;
+            overflow: hidden;
+            border: 1px solid black;
+            width: 50%;
+        }
+        table tr
+        {
+            height: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div id="tabs">
+        <ul>
+            <li><a href="#tabs-1">背景颜色轴</a></li>
+            <li><a href="#tabs-2">标签文本标题</a></li>
+            <li><a href="#tabs-3">交互和事件</a></li>
+        </ul>
+        <div id="tabs-1">
+            <div id="accBgColor">
+                <div>
+                    <h3>
+                        <a name="background">背景属性</a>
+                    </h3>
+                    <div>
+                        <label for="txtStrokestyle" style="padding-right: 3.8em;">
+                            描边样式</label>
+                        <input type="text" class="color {hash:true,pickerFaceColor:'transparent',pickerFace:3,pickerBorder:1,pickerInsetColor:'black'}"
+                            id="txtStrokestyle" propname="chart.strokestyle" name="txtStrokestyle" value="#999"
+                            size="10" />
+                        <br />
+                        <label for="txtLineWidth" style="padding-right: 3.8em;">
+                            边框线宽</label>
+                        <input type="text" id="txtLineWidth" name="txtLineWidth" propname="chart.linewidth"
+                            authregexp="^(\d+|\d+\.\d+)$" warninfo="必须为正数！" size="10" value="" />
+                        <br />
+                    </div>
+                </div>
+                <div>
+                    <h3>
+                        <a name="colors">颜色属性</a></h3>
+                    <div>
+                        <!--  <label>
+                            strokestyle</label><img alt="" src="" propname="chart.strokestyle" />-->
+                        <div>
+                            <label>
+                                系列颜色设置</label>
+                            <br />
+                            <!--<textarea id="txaColors" cols="45" rows="3"
+                                    propname="chart.colors"></textarea>-->
+                            <input type="hidden" id="chartColor" propname="chart.colors" value="['#0f0', '#00f', '#ff0', '#0ff', '#0f0']" />
+                            <div style="width: 93%">
+                                <table style="width: 100%">
+                                    <tr>
+                                        <th>
+                                            系列名
+                                        </th>
+                                        <th>
+                                            系列值
+                                        </th>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div id="seriesColorDiv" style="width: 100%; height: 200px; overflow-y: scroll">
+                                <table id="seriesColorTb" style="width: 100%; table-layout: fixed">
+                                    <tr style="display: none">
+                                        <th style="width: 50%;">
+                                        </th>
+                                        <th style="width: 50%;">
+                                        </th>
+                                    </tr>
+                                </table>
+                            </div>
+                            <br />
+                            <button id="addSeriesColor">
+                                添加预留颜色</button>
+                            <button id="delSeriesColor">
+                                删除预留颜色</button>
+                            <div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h3>
+                        <a name="margins">边距</a></h3>
+                    <div>
+                        <label for="txtGutterLeft" style="padding-right: 2.2em;">
+                            图表左边距</label>
+                        <input type="text" id="txtGutterLeft" name="txtGutterLeft" value="" size="10" propname="chart.gutter.left"
+                            authregexp="^(\d+|\d+\.\d+)$" warninfo="必须为正数！" />
+                        <br />
+                        <label for="txtGutterRight" style="padding-right: 2.2em;">
+                            图表右边距</label>
+                        <input type="text" id="txtGutterRight" name="txtGutterRight" value="" size="10" propname="chart.gutter.right"
+                            authregexp="^-?\d+(\.\d*)?$" warninfo="应该为数字！" />
+                        <br />
+                        <label for="txtGutterTop" style="padding-right: 2.2em;">
+                            图表上边距</label>
+                        <input type="text" id="txtGutterTop" name="txtGutterTop" value="" size="10" propname="chart.gutter.top"
+                            authregexp="^-?\d+(\.\d*)?$" warninfo="应该为数字！" />
+                        <br />
+                        <label for="txtGutterBottom" style="padding-right: 2.2em;">
+                            图表下边距</label>
+                        <input type="text" id="txtGutterBottom" name="txtGutterBottom" value="" size="10"
+                            authregexp="^-?\d+(\.\d*)?$" warninfo="应该为数字！" propname="chart.gutter.bottom" />
+                        <br />
+                        <i>以上边距设置的都是最小边距</i>
+                        <br />
+                        <label for="txtChartWidth" style="padding-right: 3.3em;">
+                            图表宽度
+                        </label>
+                        <input type="text" id="txtChartWidth" name="txtChartWidth" value="" size="10" propname="chart.width"
+                            authregexp="^\d+(\.\d*)?$" warninfo="应该为正数！" />
+                        <br />
+                        <label for="txtChartHeight" style="padding-right: 3.3em;">
+                            图表高度
+                        </label>
+                        <input type="text" id="txtChartHeight" name="txtChartHeight" value="" size="10" propname="chart.height"
+                            authregexp="^\d+(\.\d*)?$" warninfo="应该为正数！" />
+                        <br />
+                        <label for="txtChartLeft" style="padding-right: 3.3em;">
+                            图表左部
+                        </label>
+                        <input type="text" id="txtChartLeft" name="txtChartLeft" value="" size="10" propname="chart.left"
+                            authregexp="^-?\d+(\.\d*)?$" warninfo="应该为数字！" />
+                        <br />
+                        <label for="txtChartTop" style="padding-right: 3.3em;">
+                            图表顶部
+                        </label>
+                        <input type="text" id="txtChartTop" name="txtChartTop" value="" size="10" propname="chart.top"
+                            authregexp="^-?(\d+|\d+\.\d+)$" warninfo="必须为数字！" />
+                        <br />
+                        <label for="txtChartAlign" style="padding-right: 1.3em;">
+                            图表对其方式
+                        </label>
+                        <select id="Select3" name="txtChartAlign" seq="0" propname="chart.align">
+                            <option value="center">居中</option>
+                            <option value="left">居左</option>
+                            <option value="right">居右</option>
+                        </select><br />
+                    </div>
+                </div>
+                <div>
+                    <h3>
+                        <a name="margins">动画特效</a></h3>
+                    <div>
+                        <div propname="AE_IN">
+                            <label style="padding-right: 2.2em;">
+                                进入：</label>
+                            <select id="Select2" name="effects" seq="0">
+                                <option value="RGraph.Effects.Fade.In">渐入</option>
+                                <option value="">无特效</option>
+                            </select><br />
+                            <label style="padding-right: 1.1em;">
+                                图特效：</label>
+                            <select id="selOpenEffects" name="effects" seq="1_0">
+                                <option value="RGraph.Effects.jQuery.Expand">缩放</option>
+                                <option value="RGraph.Effects.jQuery.Snap">劈裂</option>
+                                <option value="RGraph.Effects.jQuery.Reveal">浮入</option>
+                                <option value="RGraph.Effects.jQuery.HBlinds.Open">水平百叶窗打开</option>
+                                <option value="RGraph.Effects.jQuery.VBlinds.Open">垂直百叶窗打开</option>
+                                <option value="RGraph.Effects.jQuery.Slide.In">滑入</option>
+                                <option value="">无特效</option>
+                            </select><br />
+                            <div id="effectsParam">
+                                <div id="sildeFrom">
+                                    <label style="padding-right: 2.2em;">
+                                        起点：</label>
+                                    <select id="selSildeFrom" seq="1_1" disabled="disabled">
+                                        <option value="right">右</option>
+                                        <option value="top">上</option>
+                                        <option value="bottom">底</option>
+                                        <option value="left">左</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <label style="padding-right: 0em;">
+                                饼图特效：</label>
+                            <select id="Select1" name="effects" seq="2">
+                                <option value="RGraph.Effects.Pie.Grow">扩展</option>
+                                <option value="RGraph.Effects.Pie.Implode">爆裂</option>
+                                <option value="RGraph.Effects.Pie.RoundRobin">飞轮</option>
+                                <option value="RGraph.Effects.Pie.Wave">波动</option>
+                                <option value="">无特效</option>
+                            </select>
+                        </div>
+                        <br />
+                        <!--<div propName = "AE_OUT">
+                           <label style="padding-right: 2.2em;"> 退出：</label>
+                            <select id="Select3" name="effects" seq="0">
+                                <option value="RGraph.Effects.Fade.Out">渐出</option>
+                                <option value="">无特效</option>
+                            </select><br/>
+                            <label style="padding-right: 1.1em;"> 图特效：</label>
+                            <select id="selCloseEffects" name="effects" seq="1_0">
+                                <option value="RGraph.Effects.jQuery.Conceal">隐藏</option>
+                                <option value="RGraph.Effects.jQuery.HBlinds.Close">水平百叶窗关闭</option>
+                                <option value="RGraph.Effects.jQuery.VBlinds.Close">垂直百叶窗关闭</option>
+                                <option value="">无特效</option>
+                            </select><br/>
+                            <div id="divParam" >
+                                <div id="slide">
+                                  <label style="padding-right: 2.2em;"> 目标：</label>
+                                    <select id="selSlide" seq="1_1">
+                                        <option value="right">右</option>
+                                        <option value="top">上</option>
+                                        <option value="bottom">底</option>
+                                        <option value="left">左</option>
+                                        <option value="">无特效</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="tabs-2">
+            <div id="accTitle">
+                <div>
+                    <h3>
+                        <a name="labels and text">标签与文本</a></h3>
+                    <div>
+                        <span>
+                            <label for="txtTextCol" style="padding-right: 7.2em;">
+                                文本颜色
+                            </label>
+                            <input type="text" class="color {hash:true,pickerFaceColor:'transparent',pickerFace:3,pickerBorder:1,pickerInsetColor:'black'}"
+                                id="txtTextCol" name="txtTextCol" value="#000000" propname="chart.text.color"
+                                size="10" />
+                        </span>
+                        <br />
+                        <span>
+                            <label for="txtTextSize" style="padding-right: 7.2em;">
+                                文本大小
+                            </label>
+                            <input type="text" id="txtTextSize" name="txtTextSize" value="10" size="5" propname="chart.text.size"
+                                authregexp="^[0-7]?\d?$" warninfo="应该为数字且在0-79之间！" />
+                        </span>
+                        <br />
+                        <label for="selTxtFont" style="padding-right: 7.2em;">
+                            文本字体</label>
+                        <select id="selTxtFont" propname="chart.text.font">
+                            <option value="Verdana">Verdana</option>
+                            <option value="方正姚体">方正姚体</option>
+                            <option value="方正舒体">方正舒体</option>
+                            <option value="华文琥珀">华文琥珀</option>
+                            <option value="华文彩云">华文彩云</option>
+                            <option value="宋体">宋体</option>
+                            <option value="华文新魏">华文新魏</option>
+                            <option value="华文行楷">华文行楷</option>
+                            <option value="华文中宋">华文中宋</option>
+                        </select>
+                        <br />
+                        <!-- <label for="txtareaLabels" style="padding-right: 7.2em;">
+                            饼图文本</label>
+                        <textarea id="txtareaLabels" name="txtareaLabels" cols="10" rows="3" porpname="chart.labels">[]</textarea>
+                        <br />
+                        <span>
+                            <label for="chkLblSticks" style="padding-right: 4.8em;">
+                                饼图文本分枝
+                            </label>
+                            <input type="checkbox" id="chkLblSticks" name="chkLblSticks" value="" size="5" propname="chart.labels.sticks" /></span>
+                        <br />
+                        <span>
+                            <label for="txtLStiLength" style="padding-right: 2.9em;">
+                                饼图文本分枝长度
+                            </label>
+                        </span><span>
+                            <input type="text" id="txtLStiLength" name="txtLStiLength" value="" size="5" propname="chart.labels.sticks.length" authregexp="^\d+\.?\d+$" warninfo="必须为数字！" /></span>
+                        <br />
+                        <label for="txtLSCol" style="padding-right: 2.9em;">
+                            饼图文本分枝颜色
+                        </label>
+                        <input type="text" class="color {hash:true,pickerFaceColor:'transparent',pickerFace:3,pickerBorder:1,pickerInsetColor:'black'}"
+                            id="txtLSCol" name="txtLSCol" value="#aaa" propname="chart.labels.sticks.color"
+                            size="10" />
+                        <br />
+                        <label for="txtareaSegments" style="padding-right: 7.1em;">
+                            图形片段
+                        </label>
+                        <textarea id="txtareaSegments" name="txtareaSegments" cols="10" rows="2" propname="chart.segments">[]</textarea>-->
+                    </div>
+                </div>
+                <div>
+                    <h3>
+                        <a name="titles">标题</a></h3>
+                    <div>
+                        <label for="txtareaTitle" style="padding-right: 5.5em;">
+                            图形标题</label><br />
+                        <textarea id="txtareaTitle" name="txtareaTitle" propname="chart.title" cols="30"
+                            rows="2"></textarea>
+                        <br />
+                        <label for="selTitleFont" style="padding-right: 8.4em;">
+                            标题字体</label>
+                        <select id="selectFont" propname="chart.title.font">
+                            <option value="Verdana">Verdana</option>
+                            <option value="方正姚体">方正姚体</option>
+                            <option value="方正舒体">方正舒体</option>
+                            <option value="华文琥珀">华文琥珀</option>
+                            <option value="华文彩云">华文彩云</option>
+                            <option value="宋体">宋体</option>
+                            <option value="华文新魏">华文新魏</option>
+                            <option value="华文行楷">华文行楷</option>
+                            <option value="华文中宋">华文中宋</option>
+                        </select>
+                        <br />
+                        <label for="txtTitleSize" style="padding-right: 9em;">
+                            标题字体大小</label>
+                        <input type="text" id="txtTitleSize" name="txtTitleSize" size="5" propname="chart.title.size"
+                            authregexp="^[0-7]?\d?$" warninfo="应该为数字且在0-79之间！" />
+                        <br />
+                        <span>
+                            <label for="chkIsBold" style="padding-right: 6.7em;">
+                                标题字体是否加粗</label>
+                            <input type="checkbox" id="chkIsBold" name="chkIsBold" value="" checked="checked"
+                                propname="chart.title.bold" /></span>
+                        <br />
+                        <span>
+                            <label for="txtTitleBackground" style="padding-right: 7.5em;">
+                                标题背景色</label>
+                            <input type="text" id="txtTitleBackground" name="txtTitleBackground" class="color {hash:true,pickerFaceColor:'transparent',pickerFace:3,pickerBorder:1,pickerInsetColor:'black'}"
+                                propname="chart.title.background" size="10" /></span>
+                        <br />
+                        <label for="txtTitleHpos" style="padding-right: 2.8em;">
+                            标题中心距离图表左右边距</label>
+                        <input type="text" id="txtTitleHpos" name="txtTitleHpos" value="" size="5" propname="chart.title.hpos"
+                            authregexp="^(1|([0]\.\d{0,2})|0)$" warninfo="应该在0-1之间" />
+                        <br />
+                        <label for="txtTitleVpos" style="padding-right: 3.8em;">
+                            标题中心距离图表上边距</label>
+                        <input type="text" id="txtTitleVpos" name="txtTitleVpos" value="" size="5" propname="chart.title.vpos"
+                            authregexp="^(1|([0]\.\d{0,2})|0)$" warninfo="应该在0-1之间" />
+                        <br />
+                        <!--
+            <a name="chart.title.yaxis.position"></a>
+            <b>chart.title.yaxis.align</b><br />
+            Instead of using the option above you can instead use this option, specifying <i>left</i> or <i>right</i>.<br />
+            <i>Default: left</i><br /><br />
+-->
+                    </div>
+                </div>
+                <div>
+                    <h3>
+                        <a name="shadow">阴影</a></h3>
+                    <div>
+                        <label for="chkShadow" style="padding-right: 3.3em;">
+                            饼图阴影
+                        </label>
+                        <input type="checkbox" id="chkShadow" name="chkShadow" value="" propname="chart.shadow" />
+                        <br />
+                        <label for="txtShaColor" style="padding-right: 4.7em;">
+                            阴影色
+                        </label>
+                        <input type="text" class="color {hash:true,pickerFaceColor:'transparent',pickerFace:1,pickerBorder:1,pickerInsetColor:'black'}"
+                            id="txtShaColor" name="txtShaColor" value="#123456" propname="chart.shadow.color"
+                            size="10" disabled="disabled" />
+                        <br />
+                        <label for="txtShaOsx" style="padding-right: 1.5em;">
+                            阴影水平距离
+                        </label>
+                        <input type="text" id="txtShaOsx" name="txtShaOsx" value="" propname="chart.shadow.offsetx"
+                            authregexp="^(\d+|\d+\.\d+)$" warninfo="应该为正数" disabled="disabled" /><br />
+                        <label for="txtShaOsy" style="padding-right: 1.5em;">
+                            阴影竖直距离
+                        </label>
+                        <input type="text" id="txtShaOsy" name="txtShaOsy" value="" propname="chart.shadow.offsety"
+                            authregexp="^(\d+|\d+\.\d+)$" warninfo="应该为正数" disabled="disabled" /><br />
+                        <label for="txtShaBlur" style="padding-right: 2.5em;">
+                            阴影模糊度
+                        </label>
+                        <input type="text" id="txtShaBlur" name="txtShaBlur" value="" propname="chart.shadow.blur"
+                            authregexp="^(\d+|\d+\.\d+)$" warninfo="应该为正数" disabled="disabled" /><br />
+                    </div>
+                </div>
+                <div>
+                    <h3>
+                        <a name="key">系列属性</a></h3>
+                    <div>
+                        <!-- <label for="txtareaKey" style="padding-right: 7.3em;">
+                            键标识</label>
+                        <textarea id="txtareaKey" name="txtareaKey" cols="10" rows="3" porpname="chart.key">[]</textarea>
+                        <br />-->
+                        <label for="txtKeyBackground" style="padding-right: 5.5em;">
+                            键标识背景</label>
+                        <input type="text" id="txtKeyBackground" name="txtKeyBackground" class="color {hash:true,pickerFaceColor:'transparent',pickerFace:3,pickerBorder:1,pickerInsetColor:'black'}"
+                            value="#123456" propname="chart.key.background" />
+                        <br />
+                        <label style="padding-right: 2em;">
+                            标识水平对齐方式</label>
+                        <select propname="chart.key.halign" id="selKeyHal">
+                            <option value="right">右</option>
+                            <option value="left">左</option>
+                        </select>
+                        <br />
+                        <label style="padding-right: 3.2em;">
+                            键标识显示模式</label>
+                        <select propname="chart.key.position" style="width: 80px;" id="selKeyPosi">
+                            <option value="graph">竖</option>
+                            <option value="gutter">横</option>
+                        </select>
+                        <br />
+                        <label for="txtKeyLinewidth" style="padding-right: 3.2em;">
+                            键标识边框宽度
+                        </label>
+                        <input id="txtKeyLinewidth" name="txtKeyLinewidth" value="" size="10" propname="chart.key.linewidth"
+                            authregexp="^(\d+|\d+\.\d+)$" warninfo="必须为正数！" />
+                        <br />
+                        <i>此属性"包括键标识形状"只有当键标识显示模式为“竖”时才能进行设置</i>
+                        <br />
+                        <label for="txtKeyPositionX" style="padding-right: 3.2em;">
+                            键标识水平位置</label>
+                        <input type="text" id="txtKeyPositionX" name="txtKeyPositionX" value="" size="10"
+                            authregexp="^-?\d+(\.\d*)?$" warninfo="应该为数字！" propname="chart.key.position.x" />
+                        <br />
+                        <label for="txtKeyPositionY" style="padding-right: 3.2em;">
+                            键标识竖直位置</label>
+                        <input type="text" id="txtKeyPositionY" name="txtKeyPositionY" value="" size="10"
+                            authregexp="^-?\d+(\.\d*)?$" warninfo="应该为数字！" propname="chart.key.position.y" />
+                        <br />
+                        <label for="chkPGBoxed" style="padding-right: 0.9em">
+                            显示在图形外键标识是否有边框</label>
+                        <input type="checkbox" id="chkPGBoxed" name="chkPGBoxed" checked="checked" value=""
+                            propname="chart.key.position.gutter.boxed" />
+                        <br />
+                        <label for="chkKeyShadow" style="padding-right: 10.2em;">
+                            键标识阴影</label>
+                        <input type="checkbox" id="chkKeyShadow" name="chkKeyShadow" checked="checked" value=""
+                            propname="chart.key.shadow" />
+                        <br />
+                        <label for="txtKeyShaCol" style="padding-right: 3.2em;">
+                            键标识阴影颜色</label>
+                        <input id="txtKeyShaCol" name="txtKeyShaCol" value="#666" class="color {hash:true,pickerFaceColor:'transparent',pickerFace:3,pickerBorder:1,pickerInsetColor:'black'}"
+                            propname="chart.key.shadow.color" size="10" disabled="disabled" />
+                        <br />
+                        <label for="txtKeyShaBlur" style="padding-right: 2em;">
+                            键标识阴影模糊度</label>
+                        <input id="txtKeyShaBlur" name="txtKeyShaBlur" value="" size="10" propname="chart.key.shadow.blur"
+                            authregexp="^(\d+|\d+\.\d+)$" warninfo="必须为正数！" disabled="disabled" />
+                        <br />
+                        <label for="txtKeyShaOffX" style="padding-right: 2em;">
+                            键标识水平阴影度</label>
+                        <input id="txtKeyShaOffX" name="txtKeyShaOffX" value="" size="10" propname="chart.key.shadow.offsetx"
+                            authregexp="^(\d+|\d+\.\d+)$" warninfo="必须为正数！" disabled="disabled" />
+                        <br />
+                        <label for="txtKeyShaOffY" style="padding-right: 2em;">
+                            键标识竖直阴影度</label>
+                        <input id="txtKeyShaOffY" name="txtKeyShaOffY" value="" size="10" propname="chart.key.shadow.offsety"
+                            authregexp="^(\d+|\d+\.\d+)$" warninfo="必须为正数！" disabled="disabled" />
+                        <br />
+                        <label for="chkKeyRounded" style="padding-right: 8em;">
+                            键标识圆角边框</label>
+                        <input type="checkbox" id="chkKeyRounded" name="chkKeyRounded" value="" propname="chart.key.rounded" />
+                        <br />
+                        <label style="padding-right: 3.2em;">
+                            键标识图形形状</label>
+                        <select propname="chart.key.color.shape" style="width: 80px;">
+                            <option value="square">正方形</option>
+                            <option value="circle">圆形</option>
+                            <option value="line">直线</option>
+                        </select>
+                        <br />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="tabs-3">
+            <div id="accInteractive">
+                <div>
+                    <h3>
+                        <a name="interactive features">交互</a></h3>
+                    <div>
+                        <label for="txtareaContextmenu" style="padding-right: 1.1em;">
+                            图形菜单项</label><a href="#" class="addexplain" rel="explain/rightClick.htm"><i>设置说明</i></a>
+                        <textarea id="txtareaContextmenu" name="txtareaContextmenu" cols="45" rows="10" propname="chart.contextmenu"></textarea>
+                        <br />
+                        <!-- <label for="txtareaTooltips" style="padding-right: 4.5em;">
+                            线形图上提示条</label>
+                        <textarea id="txtareaTooltips" name="txtareaTooltips" cols="45" rows="2" propname="chart.tooltips">
+                        ['','','']
+                        </textarea><br />-->
+                        <!-- <label style="padding-right: 2em;">
+                            提示条显示效果</label>
+                        <select propname="chart.tooltips.effect" style="width: 112px;">
+                            <option value="fade">渐变</option>
+                            <option value="expand">展开</option>
+                            <option value="contract">收缩</option>
+                        </select><br />
+                        <label style="padding-right: 2em;">
+                            触发提示条事件</label>
+                        <select propname="chart.tooltips.event">
+                            <option value="onclick">点击</option>
+                            <option value="onmousemove">鼠标经过</option>
+                        </select>
+                        <br />
+                       <!-- <label for="txtToltipsCssClass">
+                            <span style="padding-right: 4.2em;">提示条样式</span></label>
+                        <input id="txtToltipsCssClass" name="txtToltipsCssClass" value="" size="20" propname="chart.tooltips.css.class" />
+                        <br />
+                        <label for="chkTolHighlight" style="padding-right: 5.7em;">
+                            提示条高度显示</label>
+                        <input type="checkbox" id="chkTolHighlight" name="chkTolHighlight" checked="checked"
+                            propname="chart.tooltips.highlight" />
+                        <br />-->
+                        <label for="chkAnnotatable" style="padding-right: 11em;">
+                            注解</label>
+                        <input type="checkbox" id="chkAnnotatable" name="chkAnnotatable" value="" propname="chart.annotatable"
+                            size="10" />
+                        <br />
+                        <label for="txtAnnoCol" style="padding-right: 9.3em;">
+                            注解颜色</label>
+                        <input type="text" id="txtAnnoCol" name="txtAnnoCol" class="color {hash:true,pickerFaceColor:'transparent',pickerFace:3,pickerBorder:1,pickerInsetColor:'black'}"
+                            value="#000" propname="chart.annotate.color" size="10" />
+                        <br />
+                        <!-- <label for="chkResizable" style="padding-right: 8.9em;">
+                            调节图形</label>
+                        <input type="checkbox" id="chkResizable" name="chkResizable" value="" propname="chart.resizable" />
+                        <br />
+                        <label for="txtRHBackground" style="padding-right: 5em;">
+                            调节图形手柄颜色</label>
+                        <input type="text" id="txtRHBackground" name="txtRHBackground" class="color {hash:true,pickerFaceColor:'transparent',pickerFace:3,pickerBorder:1,pickerInsetColor:'black'}"
+                            propname="chart.resize.handle.background" value="" size="10" />
+                        <br />
+                        <label for="txtareaRHAdjust" style="padding-right: 6.1em;">
+                            调节图形自适应</label>
+                        <textarea id="txtareaRHAdjust" name="txtareaRHAdjust" cols="10" rows="3" propname="chart.resize.handle.adjust"></textarea>
+                        <br />
+                        <label for="txtVariant" style="padding-right: 9.2em;">
+                            图形变体</label>
+                        <input id="txtVariant" name="txtVariant" value="" propname="chart.variant" />
+                        <br />
+                        <label for="txtVarDonutCol" style="padding-right: 5em;">
+                            图形圈形变体颜色</label>
+                        <input type="text" id="txtVarDonutCol" name="txtVarDonutCol" class="color {hash:true,pickerFaceColor:'transparent',pickerFace:3,pickerBorder:1,pickerInsetColor:'black'}"
+                            propname="chart.variant.donut.color" value="#FFF" size="10" />
+                        <br />-->
+                        <label for="txtareaExploded" style="padding-right: 9.2em;">
+                            图形分解</label>
+                        <textarea id="txtareaExploded" name="txtareaExploded" cols="30" rows="3" propname="chart.exploded">[]</textarea>
+                        <br />
+                        <i>设置成一个数组，比如：[10,10,10,10]表示各个区域离圆心的距离(单位px)</i>
+                        <!-- <label for="txtERMul" style="padding-right: 9.2em;">
+                            循环乘数</label>
+                        <input id="txtERMul" name="txtERMul" value="" propname="chart.effect.roundrobin.multiplier"
+                            authregexp="^(\d+|\d+\.\d+)$" warninfo="必须为正数！" />
+                        <br />-->
+                    </div>
+                    <div>
+                        <h3>
+                            <a name="zoom">缩放</a>
+                        </h3>
+                        <div>
+                            <!-- <label style="padding-right: 4.2em;">
+                            缩放模型</label>
+                        <select propname="chart.zoom.mode" style="width: 80px;">
+                            <option value="canvas">画布</option>
+                            <option value="thumbnail">缩略图</option>
+                        </select>
+                        <br />-->
+                            <label for="txtZoomFactor" style="padding-right: 4.2em;">
+                                缩放系数</label>
+                            <input type="text" id="txtZoomFactor" name="txtZoomFactor" value="" size="5" propname="chart.zoom.factor"
+                                authregexp="^(\d+|\d+\.\d+)$" warninfo="必须为正数！" />
+                            <br />
+                            <label style="padding-right: 2em;">
+                                水平放大方向</label>
+                            <select propname="chart.zoom.hdir" style="width: 80px;" id="txtZoomFactorHB">
+                                <option value="right">右</option>
+                                <option value="left">左</option>
+                                <option value="center">中间</option>
+                            </select>
+                            <br />
+                            <label style="padding-right: 2em;">
+                                竖直放大方向</label>
+                            <select propname="chart.zoom.vdir" style="width: 80px;" id="txtZoomFactorVB">
+                                <option value="down">下</option>
+                                <option value="up">上</option>
+                                <option value="center">中间</option>
+                            </select>
+                            <br />
+                            <label style="padding-right: 2em;">
+                                水平缩小方向</label>
+                            <select propname="chart.zoom.hdir" style="width: 80px;" id="txtZoomFactorHS" disabled="disabled">
+                                <option value="right">左</option>
+                                <option value="left">右</option>
+                                <option value="center">中间</option>
+                            </select>
+                            <br />
+                            <label style="padding-right: 2em;">
+                                竖直缩小方向</label>
+                            <select propname="chart.zoom.vdir" style="width: 80px;" id="txtZoomFactorVS" disabled="disabled">
+                                <option value="down">上</option>
+                                <option value="up">下</option>
+                                <option value="center">中间</option>
+                            </select>
+                            <br />
+                            <label for="txtZoomDelay" style="padding-right: 2em;">
+                                缩放延期时间</label>
+                            <input id="txtZoomDelay" name="txtZoomDelay" value="" size="5" propname="chart.zoom.delay"
+                                authregexp="^(\d+|\d+\.\d+)$" warninfo="必须为正数！" />
+                            <br />
+                            <label for="txtZoomFrames" style="padding-right: 4.2em;">
+                                缩放帧数</label>
+                            <input id="txtZoomFrames" name="txtZoomFrames" value="" size="5" propname="chart.zoom.frames"
+                                authregexp="^(\d+|\d+\.\d+)$" warninfo="必须为正数！" />
+                            <br />
+                            <label for="chkZoomBackground" style="padding-right: 4.1em;">
+                                缩放背景</label>
+                            <input type="checkbox" id="chkZoomBackground" name="chkZoomBackground" checked="checked"
+                                propname="chart.zoom.background" />
+                            <br />
+                            <label for="chkZoomShadow" style="padding-right: 4.1em;">
+                                缩放阴影</label>
+                            <input type="checkbox" id="chkZoomShadow" name="chkZoomShadow" checked="checked"
+                                propname="chart.zoom.shadow" />
+                            <br />
+                            <!-- <label for="txtZoomAction" style="padding-right: 3.2em;">
+                            缩略图效果</label>
+                        <input id="txtZoomAction" name="txtZoomAction" value="zoom" size="5" propname="chart.zoom.action" />-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+</html>

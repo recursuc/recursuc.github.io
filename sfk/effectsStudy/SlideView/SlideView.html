@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>SlideView 滑动展示效果</title>
+<script src="CJL.0.1.min.js"></script>
+<script>
+//httpwww.cnblogs.comcloudgamerarchive20100729SlideView.html
+//容器对象
+var SlideView = function(container, options){
+	this._initialize( container, options );
+	this._initContainer();
+	this._initNodes();
+	this.reset( this.options.defaultIndex );
+};
+SlideView.prototype = {
+  //初始化程序
+  _initialize: function(container, options) {
+	
+	var container = this._container = $$(container);//容器对象
+	this._timerDelay = null;//延迟计时器
+	this._timerMove = null;//移动计时器
+	this._time = 0;//时间
+	this._index = 0;//索引
+	
+	var opt = this._setOptions(options);
+	
+	this.interval = opt.interval | 0;
+	this.delay = opt.delay | 0;
+	this.duration = opt.duration | 0;
+	this.tween = opt.tween;
+	this.autoClose = !!opt.autoClose;
+	this.onShow = opt.onShow;
+	this.onClose = opt.onClose;
+	
+	//设置参数
+	var pos =this._pos = /^(bottom|top|right|left)$/.test( opt.mode.toLowerCase() ) ? RegExp.$1 : "left";
+	this._horizontal = /right|left/.test( this._pos );
+	this._reverse = /bottom|right/.test( this._pos );
+	
+	//获取滑动元素
+	var nodes = opt.nodes ? $$A.map( opt.nodes, function(n) { return n; } )
+		: $$A.filter( container.childNodes, function(n) { return n.nodeType == 1; });
+	//创建滑动对象集合
+	this._nodes = $$A.map( nodes, function(node){
+		var style = node.style;
+		return { "node": node, "style": style[pos], "position": style.position, "zIndex": style.zIndex };
+	});
+	
+	//设置程序
+	this._MOVE = $$F.bind( this._move, this );
+	
+	var CLOSE = $$F.bind( this.close, this );
+	this._LEAVE = $$F.bind( function(){
+		clearTimeout(this._timerDelay);
+		$$CE.fireEvent( this, "leave" );
+		if ( this.autoClose ) { this._timerDelay = setTimeout( CLOSE, this.delay ); }
+	}, this );
+	
+	$$CE.fireEvent( this, "init" );
+  },
+  //设置默认属性
+  _setOptions: function(options) {
+    this.options = {//默认值
+		nodes:			null,//自定义展示元素集合
+		mode:			"left",//方向
+		max:			0,//展示尺寸(像素或百分比)
+		min:			0,//收缩尺寸(像素或百分比)
+		delay:			100,//触发延时
+		interval:		20,//滑动间隔
+		duration:		20,//滑动持续时间
+		defaultIndex:	null,//默认展示索引
+		autoClose:		true,//是否自动恢复
+		tween:			function(t,b,c,d){ return -c * ((t=t/d-1)*t*t*t - 1) + b; },//tween算子
+		onShow:			function(index){},//滑动展示时执行
+		onClose:		function(){}//滑动关闭执行
+    };
+    return $$.extend(this.options, options || {});
+  },
+  //设置容器
+  _initContainer: function() {
+	//容器样式设置
+	var container = this._container, style = container.style, position = $$D.getStyle( container, "position" );
+	this._style = { "position": style.position, "overflow": style.overflow };//备份样式
+	if ( position != "relative" && position != "absolute" ) { style.position = "relative"; }
+	style.overflow = "hidden";
+	//移出容器时
+	$$E.addEvent( container, "mouseleave", this._LEAVE );
+	//设置滑动元素
+	var zIndex = 100, gradient = this._reverse ? -1 : 1;
+	this._each( function(o){
+		var style = o.node.style;
+		style.position = "absolute"; style.zIndex = zIndex += gradient;
+	});
+	
+	$$CE.fireEvent( this, "initContainer" );
+  },
+  //设置滑动对象
+  _initNodes: function() {
+	var len = this._nodes.length, maxIndex = len - 1,
+		type = this._horizontal ? "Width" : "Height", offset = "offset" + type,
+		clientSize = this._container[ "client" + type ],
+		defaultSize = Math.round( clientSize / len ),
+		//计算默认目标值的函数
+		getDefaultTarget = this._reverse
+			? function(i){ return defaultSize * ( maxIndex - i ); }
+			: function(i){ return defaultSize * i; },
+		max = this.options.max, min = this.options.min, getMax, getMin;
+	//设置参数函数
+	if ( max > 0 || min > 0 ) {//自定义参数值
+		//小数按百分比设置
+		if ( max > 0  ) {
+			max = Math.max( max <= 1 ? max * clientSize : Math.min( max, clientSize ), defaultSize );
+			min = ( clientSize - max ) / maxIndex;
+		} else {
+			min = Math.min( min < 1 ? min * clientSize : min, defaultSize );
+			max = clientSize - maxIndex * min;
+		}
+		getMax = function(){ return max; };
+		getMin = function(){ return min; };
+	} else {//根据元素尺寸设置参数值
+		getMax = function(o){ return Math.max( Math.min( o.node[ offset ], clientSize ), defaultSize ); };
+		getMin = function(o){ return ( clientSize - o.max ) / maxIndex; };
+	}
+	
+	//设置滑动对象
+	this._each( function(o, i){
+		//移入滑动元素时执行程序
+		var node = o.node, SHOW = $$F.bind( this.show, this, i );
+		o.SHOW = $$F.bind( function(){
+			clearTimeout(this._timerDelay);
+			this._timerDelay = setTimeout( SHOW, this.delay );
+			$$CE.fireEvent( this, "enter", i );
+		}, this );
+		$$E.addEvent( node, "mouseenter", o.SHOW );
+		//计算尺寸
+		o.current = o.defaultTarget = getDefaultTarget(i);//默认目标值
+		o.max = getMax(o); o.min = getMin(o);
+	});
+	
+	$$CE.fireEvent( this, "initNodes" );
+  },
+  
+  //根据索引滑动展示
+  show: function(index) {
+	this._setMove( index | 0 );
+	this.onShow( this._index );
+	this._easeMove();
+  },
+  //滑动到默认状态
+  close: function() {
+	this._setMove();
+	this.onClose();
+	this._easeMove();
+  },
+  //重置为默认状态或展开索引对应滑动对象
+  reset: function(index) {
+	clearTimeout(this._timerDelay);
+	if ( index == undefined ) {
+		this._defaultMove();
+	} else {
+		this._setMove(index);
+		this.onShow( this._index );
+		this._targetMove();
+	}
+  },
+  
+  //设置滑动参数
+  _setMove: function(index) {
+	var setTarget;//设置目标值函数
+	if ( index == undefined ) {//设置默认状态目标值
+		getTarget = function(o){ return o.defaultTarget; }
+	} else {//根据索引设置滑动目标值
+		var nodes = this._nodes, maxIndex = nodes.length - 1;
+		//设置索引
+		this._index = index = index < 0 || index > maxIndex ? 0 : index | 0;
+		//设置展示参数
+		var nodeShow = nodes[ index ], min = nodeShow.min, max = nodeShow.max;
+		getTarget = function(o, i){ return i <= index ? min * i : min * ( i - 1 ) + max; };
+		if ( this._reverse ) {
+			var get = getTarget;
+			index = maxIndex - index;
+			getTarget = function(o, i){ return get( o, maxIndex - i ); }
+		}
+	}
+	this._each( function(o, i){
+		o.target = getTarget(o, i);//设置目标值
+		o.begin = o.current;//设置开始值
+		o.change = o.target - o.begin;//设置变化值
+	});
+	$$CE.fireEvent( this, "setMove", index );
+  },
+  
+  //滑移程序
+  _easeMove: function() {
+	this._time = 0; this._move();
+  },
+  //移动程序
+  _move: function() {
+	if ( this._time < this.duration ){//未到达
+		this._tweenMove();
+		this._time++;
+		this._timerMove = setTimeout( this._MOVE, this.interval );
+	} else {//完成
+		this._targetMove();//防止计算误差
+		$$CE.fireEvent( this, "finish" );
+	}
+  },
+  
+  //tween移动函数
+  _tweenMove: function() {
+	this._setPos( function(o) {
+		return this.tween( this._time, o.begin, o.change, this.duration );
+	});
+	$$CE.fireEvent( this, "tweenMove" );
+  },
+  //目标值移动函数
+  _targetMove: function() {
+	this._setPos( function(o) { return o.target; } );
+	$$CE.fireEvent( this, "targetMove" );
+  },
+  //默认值移动函数
+  _defaultMove: function() {
+	this._setPos( function(o) { return o.defaultTarget; } );
+	$$CE.fireEvent( this, "defaultMove" );
+  },
+  //设置坐标值
+  _setPos: function(method) {
+	clearTimeout(this._timerMove);
+	var pos = this._pos;
+	this._each( function(o, i) {
+		o.node.style[ pos ] = (o.current = Math.round(method.call( this, o ))) + "px";
+	});
+  },
+  
+  //历遍滑动对象集合
+  _each: function(callback) {
+	$$A.forEach( this._nodes, callback, this );
+  },
+  
+  //销毁程序
+  dispose: function() {
+	clearTimeout(this._timerDelay);
+	clearTimeout(this._timerMove);
+	
+	$$CE.fireEvent( this, "dispose" );
+	
+	var pos = this._pos;
+	this._each( function(o) {
+		var style = o.node.style;
+		style[pos] = o.style; style.zIndex = o.zIndex; style.position = o.position;//恢复样式
+		$$E.removeEvent( o.node, "mouseenter", o.SHOW ); o.SHOW = o.node = null;
+	});
+	$$E.removeEvent( this._container, "mouseleave", this._LEAVE );
+	
+	$$D.setStyle( this._container, this._style );
+	
+	this._container = this._nodes = this._MOVE = this._LEAVE = null;
+	$$CE.clearEvent( this );
+  }
+};
+
+
+//自动展示扩展
+SlideView.prototype._initialize = (function(){
+	var init = SlideView.prototype._initialize,
+		reset = SlideView.prototype.reset,
+		methods = {
+			"init": function(){
+				this.autoDelay = this.options.autoDelay | 0;
+				
+				this._autoTimer = null;//定时器
+				this._autoPause = false;//暂停自动展示
+				//展示下一个滑动对象
+				this._NEXT = $$F.bind( function(){ this.show( this._index + 1 ); }, this );
+			},
+			"leave": function(){
+				this.autoClose = this._autoPause = false;
+				this._autoNext();
+			},
+			"enter": function(){
+				clearTimeout(this._autoTimer);
+				this._autoPause = true;
+			},
+			"finish": function(){
+				this._autoNext();
+			},
+			"dispose": function(){
+				clearTimeout(this._autoTimer);
+			}
+		},
+		prototype = {
+			_autoNext: function(){
+				if ( !this._autoPause ) {
+					clearTimeout(this._autoTimer);
+					this._autoTimer = setTimeout( this._NEXT, this.autoDelay );
+				}
+			},
+			reset: function(index) {
+				reset.call( this, index == undefined ? this._index : index );
+				this._autoNext();
+			}
+		};
+	return function(){
+		var options = arguments[1];
+		if ( options && options.auto ) {
+			//扩展options
+			$$.extend( options, {
+				autoDelay:	2000//展示时间
+			}, false );
+			//扩展属性
+			$$.extend( this, prototype );
+			//扩展钩子
+			$$A.forEach( methods, function( method, name ){
+				$$CE.addEvent( this, name, method );
+			}, this );
+		}
+		init.apply( this, arguments );
+	}
+})();
+
+
+//提示信息扩展
+SlideView.prototype._initialize = (function(){
+	var init = SlideView.prototype._initialize,
+		methods = {
+			"init": function(){
+				//坐标样式
+				this._tipPos = /^(bottom|top|right|left)$/.test( this.options.tipPos.toLowerCase() ) ? RegExp.$1 : "bottom";
+			},
+			"initNodes": function(){
+				var opt = this.options, tipTag = opt.tipTag, tipClass = opt.tipClass,
+					re = tipClass && new RegExp("(^|\\s)" + tipClass + "(\\s|$)"),
+					getTipNode =  function(node){
+						var nodes = node.getElementsByTagName( tipTag );
+						if ( tipClass ) {
+							nodes = $$A.filter( nodes, function(n){ return re.test(n.className); } );
+						}
+						return nodes[0];
+					};
+				//设置提示对象
+				var tipShow = opt.tipShow, tipClose = opt.tipClose,
+					offset = /right|left/.test( this._tipPos ) ? "offsetWidth" : "offsetHeight";
+				this._each( function(o) {
+					var node = o.node, tipNode = getTipNode(node);
+					node.style.overflow = "hidden";
+					tipNode.style.position = "absolute";
+					//创建提示对象
+					o.tip = {
+						"node": tipNode,
+						"show": tipShow != undefined ? tipShow : 0,
+						"close": tipClose != undefined ? tipClose : -tipNode[offset]
+					};
+				});
+			},
+			"setMove": function(index){
+				var maxIndex = this._nodes.length - 1;
+				this._each( function(o, i) {
+					var tip = o.tip;
+					if ( this._reverse ) { i = maxIndex -i; }
+					tip.target = index == undefined || index != i ? tip.close : tip.show;
+					tip.begin = tip.current; tip.change = tip.target - tip.begin;
+				});
+			},
+			"tweenMove": function(){
+				this._setTipPos( function(tip) {
+					return this.tween( this._time, tip.begin, tip.change, this.duration );
+				});
+			},
+			"targetMove": function(){
+				this._setTipPos( function(tip){ return tip.target; });
+			},
+			"defaultMove": function(){
+				this._setTipPos( function(tip){ return tip.close; });
+			},
+			"dispose": function(){
+				this._each( function(o){ o.tip = null; });
+			}
+		},
+		prototype = {
+			//设置坐标值函数
+			_setTipPos: function(method) {
+				var pos = this._tipPos;
+				this._each( function(o, i) {
+					var tip = o.tip;
+					tip.node.style[ pos ] = (tip.current = Math.round(method.call( this, tip ))) + "px";
+				});
+			}
+		};
+	return function(){
+		var options = arguments[1];
+		if ( options && options.tip == true ) {
+			//扩展options
+			$$.extend( options, {
+				tipPos:		"bottom",//提示位置
+				tipTag:		"*",//提示元素标签
+				tipClass:	"",//提示元素样式
+				tipShow:	null,//展示时目标坐标
+				tipClose:	null//关闭时目标坐标
+			}, false );
+			//扩展属性
+			$$.extend( this, prototype );
+			//扩展钩子
+			$$A.forEach( methods, function( method, name ){
+				$$CE.addEvent( this, name, method );
+			}, this );
+		}
+		init.apply( this, arguments );
+	}
+})();
+
+</script>
+</head>
+<body>
+<style type="text/css">
+.sv, .sv li {
+	padding:0;
+	margin:0;
+	list-style:none;
+}
+.sv {
+	width:500px;
+	height:100px;
+	font-size:20px;
+	color:#fff;
+}
+.sv li {
+	width:300px;
+	height:100px;
+}
+.sv span {
+	position:absolute;
+	padding:5px 10px;
+}
+.sv span.bottom {
+	right:0;
+	bottom:0;
+}
+
+</style>
+<ul id="idSlideView" class="sv">
+	<li style="background-color:#D32226;"> <span>0</span> <span class="bottom">0</span> </li>
+	<li style="background-color:#89C73E;"> <span>1</span> <span class="bottom">1</span> </li>
+	<li style="background-color:#875FBE;"> <span>2</span> <span class="bottom">2</span> </li>
+	<li style="background-color:#5C7CDA;"> <span>3</span> <span class="bottom">3</span> </li>
+	<li style="background-color:#E7AD00;"> <span>4</span> <span class="bottom">4</span> </li>
+</ul>
+<br>
+模式:
+<select id="idMode">
+	<option value="left">左边</option>
+	<option value="right">右边</option>
+</select>
+默认索引:
+<select id="idIndex">
+	<option value="">无</option>
+	<option value="0">0</option>
+	<option value="1">1</option>
+	<option value="2">2</option>
+	<option value="3">3</option>
+	<option value="4">4</option>
+</select>
+尺寸:
+<select id="idSize">
+	<option value="[0,0]">按元素尺寸</option>
+	<option value="[0.5,0]">展示占一半</option>
+	<option value="[200,0]">展示200px</option>
+	<option value="[0,0.1]">收缩占十分一</option>
+	<option value="[0,80]">收缩80px</option>
+</select>
+<br>
+关闭:
+<select id="idClose">
+	<option value="1">自动</option>
+	<option value="">不自动</option>
+</select>
+速度:
+<select id="idDuration">
+	<option value="20">默认</option>
+	<option value="10">快速</option>
+	<option value="40">慢速</option>
+</select>
+tween:
+<select id="idTween">
+	<option value="">默认</option>
+	<option value="1">反弹</option>
+</select>
+<br>
+<input id="idShow" type="button" value="手动展示">
+
+<div id="t"></div>
+
+
+
+<script>
+(function(){
+
+var container = $$("idSlideView"), show = $$("idShow"),
+	options = {
+		onShow: function(){
+			show.value = "手动关闭";
+			show.onclick = function(){ sv.close(); }
+		},
+		onClose: function(){
+			show.value = "手动展示";
+			show.onclick = function(){ sv.show(2); }
+		}
+	},
+	sv = new SlideView( "idSlideView", options );
+
+$$("idClose").onchange = function(){
+	options.autoClose = sv.autoClose = !!this.value;
+}
+
+$$("idDuration").onchange = function(){
+	options.duration = sv.duration = this.value | 0;
+}
+
+$$("idTween").onchange = function(){
+	options.tween = sv.tween = this.value == ""
+		? function(t,b,c,d){ return -c * ((t=t/d-1)*t*t*t - 1) + b; }
+		: function(t,b,c,d){
+			if ((t/=d) < (1/2.75)) {
+				return c*(7.5625*t*t) + b;
+			} else if (t < (2/2.75)) {
+				return c*(7.5625*(t-=(1.5/2.75))*t + .75) + b;
+			} else if (t < (2.5/2.75)) {
+				return c*(7.5625*(t-=(2.25/2.75))*t + .9375) + b;
+			} else {
+				return c*(7.5625*(t-=(2.625/2.75))*t + .984375) + b;
+			}
+		};
+}
+
+
+function Create(){
+	sv.dispose();
+	sv = new SlideView( "idSlideView", options );
+}
+
+$$("idMode").onchange = function(){
+	options.mode = this.value; Create();
+}
+
+$$("idSize").onchange = function(){
+	options.max = eval(this.value+"[0]");
+	options.min = eval(this.value+"[1]");
+	Create();
+}
+
+$$("idIndex").onchange = function(){
+	if( this.value != "" ){
+		options.defaultIndex = this.value | 0;
+	} else {
+		delete options.defaultIndex;
+	}
+	Create();
+}
+
+})()
+</script>
+<br>
+<br>
+<style type="text/css">
+.sv2, .sv2 li { padding:0; margin:0; list-style:none; }
+.sv2 {
+	width:500px;
+	height:300px;
+	font-size:12px;
+	line-height:1.5em;
+	border:1px solid #000;
+}
+.sv2 li {
+	width:299px;
+	height:300px;
+	background:#FFF;
+	border-right:1px solid #000;
+}
+.sv2 li.last { width:300px; border-right:0; }
+.sv2 li.last div { width:290px; }
+.sv2 li img{
+	width:299px;
+}
+.sv2 div {
+	background-color:#000;
+	opacity:0.6;
+	filter:alpha(opacity=60);
+	color:#FFF;
+	padding:5px;
+	width:289px;
+}
+.sv2 li a:link,
+.sv2 li a:visited,
+.sv2 li a:hover,
+.sv2 li a:active {
+	color:#F30;
+	font-weight:bold;
+	text-decoration:none;
+	padding-right:10px;
+}
+</style>
+图片滑动展示效果：
+<ul id="idSlideView2" class="sv2">
+	<li>
+		<div> <a href="http://shop33359573.taobao.com/">内裤蛋糕</a> 神秘浪漫的内裤蛋糕礼盒 </div>
+		<img src="http://images.cnblogs.com/cnblogs_com/cloudgamer/254820/o_1.jpg"> </li>
+	<li>
+		<div> <a href="http://item.taobao.com/item.htm?id=5017267585">内裤蛋糕</a> 送给最亲密的TA~~ </div>
+		<img src="http://images.cnblogs.com/cnblogs_com/cloudgamer/254820/o_2.jpg"> </li>
+	<li>
+		<div> <a href="http://item.taobao.com/item.htm?id=5356744381">内裤蛋糕</a> 超SWEET~~打开漂亮的礼品盒，甜蜜可爱的蛋糕呈现眼前 </div>
+		<img src="http://images.cnblogs.com/cnblogs_com/cloudgamer/254820/o_3.jpg"> </li>
+	<li>
+		<div> <a href="http://item.taobao.com/item.htm?id=5017188447">内裤蛋糕</a> 好Q哦！慢慢解开丝带，竟然是一条条漂亮的内裤 </div>
+		<img src="http://images.cnblogs.com/cnblogs_com/cloudgamer/254820/o_4.jpg"> </li>
+	<li class="last">
+		<div> <a href="http://item.taobao.com/item.htm?id=5012797009">内裤蛋糕</a> 超级SWEET又脸红耶！！！ </div>
+		<img src="http://images.cnblogs.com/cnblogs_com/cloudgamer/254820/o_5.jpg"> </li>
+</ul>
+<input id="idAuto" type="button" value="取消自动">
+<script>
+(function(){
+
+var options = { tip: true, auto: true, mode: "right" }, sv = new SlideView( "idSlideView2", options );
+
+$$("idAuto").onclick = function(){
+	sv.dispose();
+	if ( options.auto ) {
+		this.value = "自动展示"; options.auto = false;
+	} else {
+		this.value = "取消自动"; options.auto = true;
+	}
+	sv = new SlideView( "idSlideView2", options );
+}
+
+})()
+</script>
+<br>
+<br>
+<style type="text/css">
+.sv3 dl, .sv3 dt, .sv3 dd{ padding:0; margin:0; }
+.sv3 {
+	width:200px;
+	height:250px;
+	border:1px solid #BFC7D9;
+}
+.sv3 dl {
+	width:200px;
+	height:160px;
+	background:#EDF5FF;
+}
+.sv3 dt {
+	padding:5px 10px;
+	height:13px;
+	font-size:13px;
+	color:#000;
+	background:#E5ECF9;
+	border-top:1px solid #fff;
+	border-bottom:1px solid #BFC7D9;
+}
+.sv3 dl.on dt {
+	background:#3366CC;
+	color:#FFF;
+	font-weight:bold;
+}
+.sv3 dd {
+	padding:10px;
+	color:#333;
+	font-size:12px;
+	line-height:1.5em;
+}
+.sv3 dd a:link,
+.sv3 dd a:visited,
+.sv3 dd a:hover,
+.sv3 dd a:active { color:#333; display:block; text-align:right;}
+</style>
+仿口风琴（Accordion）效果：
+<div id="idSlideView3" class="sv3">
+	<dl>
+		<dt> 图片放大效果 </dt>
+		<dd> 这个效果也叫放大镜效果，最早好像在ppg出现的，之后就有了很多仿制品出来了。
+			好处是能在原图附近对图片进行局部放大查看，而且可以通过鼠标控制查看的部位。 <a href="http://www.cnblogs.com/cloudgamer/archive/2010/04/01/ImageZoom.html"> 查看全文 </a> </dd>
+	</dl>
+	<dl>
+		<dt> Lazyload 延迟加载效果 </dt>
+		<dd> Lazyload是通过延迟加载来实现按需加载，达到节省资源，加快浏览速度的目的。
+			网上也有不少类似的效果。 <a href="http://www.cnblogs.com/cloudgamer/archive/2010/02/01/LazyLoad.html"> 查看全文 </a> </dd>
+	</dl>
+	<dl>
+		<dt> 图片上传预览效果 </dt>
+		<dd> 图片上传预览是一种在图片上传之前对图片进行本地预览的技术。
+			使用户选择图片后能立即查看图片，而不需上传服务器，提高用户体验。 <a href="http://www.cnblogs.com/cloudgamer/archive/2009/12/22/ImagePreview.html"> 查看全文 </a> </dd>
+	</dl>
+	<dl>
+		<dt> Tween算法及缓动效果 </dt>
+		<dd> Flash做动画时会用到Tween类，利用它可以做很多动画效果，例如缓动、弹簧等等。
+			我这里要教大家的是怎么利用flash的Tween类的算法，来做js的Tween算法。 <a href="http://www.cnblogs.com/cloudgamer/archive/2009/01/06/Tween.html"> 查看全文 </a> </dd>
+	</dl>
+	<dl>
+		<dt> Table行定位效果 </dt>
+		<dd> 近来有客户要求用table显示一大串数据，由于滚动后就看不到表头，很不方便，所以想到这个效果。 <a href="http://www.cnblogs.com/cloudgamer/archive/2009/05/18/TableFixed.html"> 查看全文 </a> </dd>
+	</dl>
+</div>
+<script>
+new SlideView( "idSlideView3", { autoClose: false, defaultIndex: 0, min: 25, mode: "top", delay: 200,
+	onShow: function(index){ this._each(function(o, i){ o.node.className = i == index ? "on" : ""; }) }
+});
+</script>
+</body>
+</html>

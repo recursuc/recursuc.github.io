@@ -1,0 +1,215 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <style type="text/css">
+        A
+        {
+            font-size: 12px;
+        }
+        IMG
+        {
+            border-right-width: 0px;
+            border-top-width: 0px;
+            border-bottom-width: 0px;
+            border-left-width: 0px;
+        }
+        TD.icon
+        {
+            text-align: center;
+            width: 24px;
+            height: 24px;
+            vertical-align: middle;
+        }
+        TD.sp
+        {
+            text-align: center;
+            width: 8px;
+            height: 24px;
+            vertical-align: middle;
+        }
+        TD.xz
+        {
+            text-align: center;
+            width: 47px;
+            height: 24px;
+            vertical-align: middle;
+        }
+        TD.bq
+        {
+            text-align: center;
+            width: 49px;
+            height: 24px;
+            vertical-align: middle;
+        }
+        DIV A.n
+        {
+            padding-bottom: 2px;
+            line-height: 16px;
+            padding-left: 2px;
+            padding-right: 2px;
+            display: block;
+            height: 16px;
+            color: #000000;
+            text-decoration: none;
+            padding-top: 2px;
+        }
+        DIV A.n:hover
+        {
+            background: #e5e5e5;
+        }
+        .ico
+        {
+            text-align: center;
+            width: 24px;
+            height: 24px;
+            vertical-align: middle;
+        }
+        .ico2
+        {
+            text-align: center;
+            width: 27px;
+            height: 24px;
+            vertical-align: middle;
+        }
+        .ico3
+        {
+            text-align: center;
+            width: 25px;
+            height: 24px;
+            vertical-align: middle;
+        }
+        .ico4
+        {
+            text-align: center;
+            width: 8px;
+            height: 24px;
+            vertical-align: middle;
+        }
+        body
+        {
+            margin: 0px;
+            padding: 1px;
+        }
+        #divMask
+        {	
+	        filter:alpha(opacity:0);
+	        display: block;
+	        background-color: white;
+	        position:absolute;
+	        width:100%;
+	        height:100%;
+        }
+    </style>
+</head>
+<body onresize="changeEditorHeight()" onload="changeEditorHeight()">
+    <div id='divMask' onmousedown="showRight(this)" ondblclick="showAttr()"></div>
+    <table id="operationPanel" style="border-bottom: #c5c5c5 1px solid; border-left: #c5c5c5 1px solid; font-size: 12px;
+        border-top: #c5c5c5 1px solid; border-right: #c5c5c5 1px solid" border="0" cellspacing="0"
+        cellpadding="0" width="100%" background="../skins/editor_images/bg.gif">
+        <tbody>
+            <tr>
+                <td style="padding-left: 1px" height="26">
+                    <table border="0" cellspacing="0" cellpadding="0">
+                        <tbody>
+                            <tr>
+                                <td class="ico">
+                                    <img src="../skins/editor_images/21.gif" width="20" height="20">
+                                </td>
+                                <td class="ico">
+                                    <img src="../skins/editor_images/1.gif" width="20" height="20">
+                                </td>
+                                <td class="ico">
+                                    <img src="../skins/editor_images/2.gif" width="20" height="20">
+                                </td>
+                                <td class="ico">
+                                    <img src="../skins/editor_images/3.gif" width="20" height="20">
+                                </td>
+                                <td class="ico2">
+                                    <img src="../skins/editor_images/4.gif" width="25" height="20">
+                                </td>
+                                <td class="ico2">
+                                    <img src="../skins/editor_images/5.gif" width="25" height="20">
+                                </td>
+                                <td class="ico">
+                                    <img src="../skins/editor_images/6.gif" width="20" height="20">
+                                </td>
+                                <td class="ico">
+                                    <img src="../skins/editor_images/7.gif" width="20" height="20">
+                                </td>
+                                <td class="ico">
+                                    <img src="../skins/editor_images/8.gif" width="20" height="20">
+                                </td>
+                                <td class="ico3">
+                                    <img src="../skins/editor_images/16.gif" width="23" height="20">
+                                </td>
+                                <td class="ico2">
+                                    <img src="../skins/editor_images/17.gif" width="24" height="20">
+                                </td>
+                                <td class="ico">
+                                    <img src="../skins/editor_images/9.gif" width="20" height="20">
+                                </td>
+                                <td class="ico">
+                                    <img src="../skins/editor_images/10.gif" width="20" height="20">
+                                </td>
+                                <td class="ico">
+                                    <img src="../skins/editor_images/11.gif" width="20" height="20">
+                                </td>
+                                <td class="ico">
+                                    <img src="../skins/editor_images/12.gif" width="20" height="20">
+                                </td>
+                                <td class="ico">
+                                    <img src="../skins/editor_images/13.gif" width="20" height="20">
+                                </td>
+                                <td class="ico">
+                                    <img src="../skins/editor_images/14.gif" width="20" height="20">
+                                </td>
+                                <td class="ico">
+                                    <img src="../skins/editor_images/15.gif" width="20" height="20">
+                                </td>
+                                <td class="ico">
+                                    <img src="../skins/editor_images/20.gif" width="20" height="20">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div id="divEditor" style=" padding:0px; margin:0px; overflow:hidden;">
+        <table id="tableEditor" style="width:100%; height:100%; border-bottom:1px solid #C5C5C5; border-left:1px solid #C5C5C5;  border-right:1px solid #C5C5C5; border-top:0px solid #C5C5C5; " cellspacing="0" cellpadding="0">
+            <tr>
+                <td>
+                    <iframe class="HtmlEditor" id="HtmlEditor" name="HtmlEditor"  style=" height:100%;width: 100%;" 
+                    frameborder="0" marginheight="0" marginwidth="0" src="../f_blankpage.htm">
+                    </iframe>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script language="javascript" type="text/javascript">
+        function changeEditorHeight() {
+            var operationPanelHeight = document.getElementById("operationPanel").firstChild.firstChild.firstChild.height;
+            if (document.body.clientHeight > operationPanelHeight) {
+                document.getElementById("divEditor").style.height = document.body.clientHeight - operationPanelHeight;
+                document.getElementById("tableEditor").style.height = document.body.clientHeight - operationPanelHeight - 3;
+                document.getElementById("HtmlEditor").height = document.body.clientHeight - operationPanelHeight - 5;
+            }
+        }
+
+        function showAttr() {
+            parent.parent.Main.execScript("main_ondblclick()");
+        }
+
+        function showRight(obj) {
+            if (event.button == 2) {
+                var left = event.x + parseInt(obj.parentNode.parentNode.parentNode.parentWindow.frameElement.style.left);
+                var top = event.y + parseInt(obj.parentNode.parentNode.parentNode.parentWindow.frameElement.style.top);
+                parent.parent.Main.execScript("editor_onRightClick(" + left + "," + top + "," + obj.parentNode.parentNode.parentNode.parentWindow.frameElement.id + ")");
+            }
+            return;
+        }
+    </script>
+</body>
+</html>

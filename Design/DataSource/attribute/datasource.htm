@@ -1,0 +1,304 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>当前报表已引用数据集</title>
+    <style type="text/css">
+        #tbDataSet th
+        {
+            border-right: 1px solid Black;
+            font-weight: bold;
+            font-size: small;
+            height: 19px;
+        }
+        
+        #tbDataSet td
+        {
+            border-right: 1px solid Black;
+            border-bottom: 1px solid Black;
+            font-size: small;
+            height: 19px;
+        }
+        body
+        {
+            background-color: #BDC7D7;
+            margin: 0px;
+        }
+        .buttonCSS
+        {
+            background-color: #c4d9f2;
+            margin-left: 50px;
+        }
+        #tbDataSet tr
+        {
+            text-align: center;
+        }
+    </style>
+    <script src="../../../sfk/sfk.js" type="text/javascript"></script>
+    <script src="../datasource.js" type="text/javascript"></script>
+    <script src="../table_operate.js" type="text/javascript"></script>
+    <script src="../../../../publicJS/jquery/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="../../../../publicJS/customDialog/lhgdialog.js" type="text/javascript"></script>
+    <script src="../../../../publicJS/customDialog/showModalDialog.js" type="text/javascript"></script>
+</head>
+<body onunload="colseWidow()">
+    <div style="top: 20px; left: 10px; width: 802px; height: 320px; overflow: auto; background-color: #E6E6FA;
+        padding: 0px; border-left: 1px solid white; border-bottom: 1px solid white;"
+        onmouseover="ChangeColor(event)">
+        <table id="tbDataSet" cellpadding="0" cellspacing="0" style="table-layout: fixed;">
+            <tr align="center" style="background-image: url(../images/tb_title_bg.gif); height: 25px">
+                <th style="width: 20px">
+                </th>
+                <th style="width: 100px">
+                    数据集编号
+                </th>
+                <th style="width: 150px">
+                    名称
+                </th>
+                <th style="width: 100px">
+                    类型
+                </th>
+                <th style="width: 330px">
+                    数据库连接
+                </th>
+                <th style="width: 100px">
+                    操作
+                </th>
+            </tr>
+        </table>
+    </div>
+    <div style="position: absolute; left: 220px;">
+        <table>
+            <tr align="left">
+                <td>
+                    <!--<input type="button" id="Button1" value="添加新引用" onclick="AddRefDataset()" style="background-color: #c4d9f2;" />-->
+                    <img src="../images/new_ref.gif" style="cursor: pointer; margin-left: 60px; margin-top: 9px;"
+                        id="Button1" onclick="AddRefDataset()" />
+                </td>
+                <td>
+                    <!--<input type="button" id="Button5" value="确定" onclick="saveDataSource()" class="buttonCSS" />-->
+                    <img src="../images/new_cancel.gif" style="cursor: pointer; margin-left: 20px; margin-top: 9px;"
+                        id="Button5" onclick="saveDataSource()" />
+                </td>
+                <td>
+                    <!--<input type="button" id="Button4" value="取消" onclick="javascript: window.close()" class="buttonCSS" />-->
+                    <img src="../images/new_ok.gif" style="cursor: pointer; margin-left: 20px; margin-top: 9px;"
+                        id="Button4" onclick="javascript:window.close()" />
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script type="text/javascript">
+        var oDataSource = new DataSource(); //全局数据源
+        //var DateSetsArray = oDataSource.DataSets; //数据集数组
+        var dataSourceLength = 0;
+        var srcHasDataSource = false;
+        var oTable = null;
+        window.argsDom = window.dialogArgs[1];
+        //window.argsXMLStr = window.dialogArgs[2];
+        window.onload = function () {
+            var xmlDataSourse = window.dialogArgs[0];
+            if (xmlDataSourse) {
+                oDataSource = xmlDataSourse;
+                !xmlDataSourse.nodeType && (xmlDataSourse = $X.loadXML($O.getType(xmlDataSourse) == "string" ? xmlDataSourse : DataSource.prototype.serializeXml.call(xmlDataSourse)));
+                srcHasDataSource = true;
+                oTable = document.getElementById("tbDataSet");
+                var xnDataSource = xmlDataSourse.selectSingleNode("datasource");
+                for (var i = 0; i < xnDataSource.childNodes.length; i++) {
+                    var xnDataSet = xnDataSource.childNodes[i];
+                    var oDataSet = new DataSet();
+
+                    var newRow = oTable.insertRow(oTable.rows.length);
+                    var cell0 = newRow.insertCell(0);
+                    cell0.innerHTML = "";
+
+                    var cell1 = newRow.insertCell(1);
+                    oDataSet.DbId = cell1.innerHTML = xnDataSet.getAttribute("id");
+
+                    var cell2 = newRow.insertCell(2);
+                    oDataSet.Name = cell2.innerHTML = xnDataSet.getAttribute("name");
+
+                    var cell3 = newRow.insertCell(3);
+                    cell3.innerHTML = enumToStype(parseInt(xnDataSet.getAttribute("type")));
+                    oDataSet.Type = sTypeToEnum(cell3.innerHTML);
+
+                    oDataSet.Sql = xnDataSet.getAttribute("sql");
+                    var cell4 = newRow.insertCell(4);
+                    if (xnDataSet.getAttribute("connstring")) {
+                        cell4.innerHTML = xnDataSet.getAttribute("connstring").split(';').splice(0, 2).join(';') + ";";
+                        cell4.connString = oDataSet.ConnString = xnDataSet.getAttribute("connstring");
+                    } else {
+                        cell4.innerHTML = cell4.connString = "";
+                    }
+                    var cell5 = newRow.insertCell(5);
+                    cell5.innerHTML = "<span onclick='DelRefDataset()'><a href='#'>删除</a></span>"; //<span onclick='seeDataset()'><a href='#'>查看</a></span> 
+                    oDataSet.MainTable = xnDataSet.getAttribute("maintable");
+                    oDataSet.DataTablePrefix = xnDataSet.getAttribute("datatableprefix");
+                    oDataSet.State = xnDataSet.getAttribute("state");
+                    //oDataSource.DataSets.push(oDataSet);
+                    //DateSetsArray.push(oDataSet);
+                }
+            }
+            dataSourceLength = oDataSource.DataSets.length;
+        }
+
+        function addRows() {
+            var nowDateSourceLength = oDataSource.DataSets.length;
+            if (nowDateSourceLength > dataSourceLength) {
+                oTable = document.getElementById("tbDataSet");
+                for (var i = dataSourceLength; i < nowDateSourceLength; i++) {
+                    var dateSet = oDataSource.DataSets[i];
+                    var rows = oTable.rows.length;
+                    var newRow = oTable.insertRow(rows);
+                    var cell0 = newRow.insertCell(0);
+                    var cell1 = newRow.insertCell(1);
+                    var cell2 = newRow.insertCell(2);
+                    var cell3 = newRow.insertCell(3);
+                    var cell4 = newRow.insertCell(4);
+                    var cell5 = newRow.insertCell(5);
+                    cell1.innerHTML = dateSet.DbId;
+                    cell2.innerHTML = dateSet.Name;
+                    cell3.innerHTML = enumToStype(parseInt(dateSet.Type));
+                    cell4.innerHTML = dateSet.ConnString ? (dateSet.ConnString.split(';').splice(0, 2).join(';') + ";") : "";
+                    cell5.innerHTML = "<span onclick='DelRefDataset()'><a href='#'>删除</a></span>"; //<span onclick='seeDataset()'><a href='#'>查看</a></span> 
+                    //DateSetsArray.push(dateSet);
+                    dataSourceLength++;
+                }
+            }
+        }
+
+        function AddRefDataset() {
+            //            var modal = window.showModalDialog("datasetManageFrame.htm", [oDataSource, window.argsDom], "dialogHeight=570px;dialogWidth=1000px;");
+            //            addRows();
+
+            window.showCustomDialog("DataSource/attribute/datasetManageFrame.htm", [oDataSource, window.argsDom, oTable], "dialogWidth:1030px;dialogHeight:633px;overparent=yes;resizable:no;cover:yes;id=refDsSet;title:数据集设置", null, function () {
+                addRows();
+            });
+        }
+
+        function DelRefDataset() {
+            var oTr = document.getElementById("selected"),
+            	forms = window.dialogArgs[2], 
+            	cs, controls, ctype = ["text","textarea","richeditor","checkbox","checkboxlist","combobox","countersign","datetime","radio","webgrid"];
+            if (oTr != null) {
+                var cellText = oTr.cells[1].innerText;   //取到对应行中的Id编号列文本
+                if (window.confirm("确定要删除 ”" + oTr.cells[2].innerText + "“ 数据集吗？")) {
+                    for (var i = 0; i < dataSourceLength; i++) {
+                        var DateSet = oDataSource.DataSets[i];
+                        if (DateSet.DbId == cellText) {
+                            //DateSetsArray.splice(i, 1);
+                            oDataSource.DataSets.splice(i, 1);
+                            dataSourceLength--;
+                            for(var f = 0, len = forms.length; f < len; f++){
+                            	if(DateSet.DbId == forms[f].dsId){
+                            		forms[f].dsId = "";
+                            		controls = forms[f].mainTable.controls;
+                            		for(var c = 0, clen = ctype.length; c < clen; c++){
+                            			cs = controls[ctype[c]];
+                            			for(var ctrl in cs){
+	                            			if(cs[ctrl].cfgData){
+	                            				cs[ctrl].cfgData["DataSet"] = "";
+	                            				cs[ctrl].cfgData["DataTable"] = "";
+	                            				cs[ctrl].cfgData["DataColumn"] && (cs[ctrl].cfgData["DataColumn"] = "");
+	                            				cs[ctrl].cfgData["ValueColumn"] && (cs[ctrl].cfgData["ValueColumn"] = "");
+	                            				cs[ctrl].cfgData["TextColumn"] && (cs[ctrl].cfgData["TextColumn"] = "");
+	                            			}
+                            			}
+                            		}
+                            	}
+                            }
+                            break;
+                        }
+                    }
+                    oTr.parentNode.removeChild(oTr);
+                    if (dataSourceLength == 0) {
+                        srcHasDataSource = false;
+                    }
+                }
+            }
+            else {
+                alert("请选择删除行！");
+            }
+        }
+
+        function seeDataset() {
+            var oTr = document.getElementById("selected");
+            if (oTr != null) {
+                var cellText = oTr.cells[1].innerText;   //取到对应行中的Id编号列文本
+                var dsType = sTypeToEnum(oTr.cells[3].innerText);
+                var nowDsName = "";
+                switch (dsType) {
+                    case "0":
+                        {
+                            //nowDsName = window.showModalDialog("datasetSet.htm?dsid=" + cellText + "&isOnlySee=true&CurrentDsConn=" + oTr.cells[4].connString, window.argsDom, "dialogHeight=570px;dialogWidth=800px;");
+                            window.showCustomDialog("DataSource/attribute/datasetSet.htm?dsid=" + cellText + "&isOnlySee=true&CurrentDsConn" + oTr.cells[5].connString, window.argsDom, "dialogWidth:800px;dialogHeight:570px;overparent=yes;resizable:no;cover:yes;id=updateDsSet;title:数据集修改");
+                            break;
+                        }
+                    case "1":
+                        {
+                            nowDsName = window.showModalDialog("customDsSet.htm?dsid=" + cellText, null, "dialogHeight=450px;dialogWidth=800px;");
+                            break;
+                        }
+                    case "2":
+                        {
+                            nowDsName = window.showModalDialog("buildInDsSet.htm?dsid=" + cellText, null, "dialogHeight=450px;dialogWidth=800px;");
+                            break;
+                        }
+                    case "3":
+                        {
+                            nowDsName = window.showModalDialog("XmlDsSet.htm?dsid=" + cellText, null, "dialogHeight=450px;dialogWidth=800px;");
+                            break;
+                        }
+                    case "4":
+                        {
+                            nowDsName = window.showCustomDialog("DataSource/attribute/formDataSource/datasetSet.htm?dsid=" + cellText + "&isOnlySee=true&CurrentDsConn" + oTr.cells[5].connString, window.argsDom, "dialogWidth:800px;dialogHeight:570px;overparent=yes;resizable:no;cover:yes;id=updateDsSet;title:数据集修改");
+                            break;
+                        }
+                }
+                if (nowDsName) {
+                    var dataSet = oDataSource.DataSets[oTr.rowIndex - 1];
+                    dataSet.Name = oTr.cells[2].innerHTML = nowDsName;
+                    //oDataSource[oTr.rowIndex - 1] = dataSet;
+                }
+            }
+            else {
+                alert("请选择查看行！");
+            }
+        }
+
+        //设置选中行的背景色
+        function ChangeColor(e) {
+            var evt = e || window.event;
+            var oCell = evt.target || evt.srcElement;
+            if (oCell.nodeName.toLocaleLowerCase() != "td" || oCell.nodeName.toLocaleLowerCase() == "a") {
+                return;
+            }
+            var oTemp = document.getElementById("selected");
+            if (oTemp != null) {
+                oTemp.bgColor = "#E6E6FA";
+                oTemp.setAttribute("id", "");
+                oTemp.childNodes[0].innerText = "";
+            }
+            var oTr = oCell.parentNode;
+            oTr.bgColor = "#c8d9f0";
+            oTr.setAttribute("id", "selected");
+            oTr.childNodes[0].innerText = ">";
+        }
+
+        function saveDataSource() {
+            if (oDataSource && oDataSource.DataSets.length != 0 || window.confirm("您还没有选择数据集，是否退出？")) {
+
+                window.returnValue = [oDataSource, window.argsDom, oDataSource ? oDataSource.serializeXml() : null];
+                window.close();
+            }
+        }
+
+        function colseWidow() {
+            if (srcHasDataSource) {
+                saveDataSource();
+            }
+        }
+
+
+    </script>
+</body>
+</html>

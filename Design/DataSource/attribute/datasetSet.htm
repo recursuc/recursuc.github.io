@@ -1,0 +1,1570 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>类型设置</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <!--<script src="../js/public_function.js" type="text/javascript"></script>-->
+    <script src="../../../sfk/sfk.js" type="text/javascript"></script>
+    <script src="../../../../publicJS/jquery/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="../../../../publicJS/customDialog/lhgdialog.js" type="text/javascript"></script>
+    <script src="../../../../publicJS/customDialog/showModalDialog.js" type="text/javascript"></script>
+    <style type="text/css">
+        table
+        {
+            border-collapse: collapse; /*默认为 separate*/
+            empty-cell: show; /*默认为 hide*/
+        }
+        #tbList td
+        {
+            border-right: 1px solid gray;
+            border-bottom: 1px solid gray;
+            font-size: small;
+            height: 19px;
+        }
+        
+        #tbTab td
+        {
+            border-right: 1px solid gray;
+            cursor: pointer;
+            width: 80px;
+            text-align: center;
+        }
+        
+        #Table1 td
+        {
+            border-bottom: 1px solid #D0D0C8;
+            border-right: 1px solid #D0D0C8;
+            height: 18px;
+        }
+        
+        #Table2 td
+        {
+            border-bottom: 1px solid #D0D0C8;
+            border-right: 1px solid #D0D0C8;
+            height: 18px;
+        }
+        
+        #Table3 td
+        {
+            border-bottom: 1px solid #D0D0C8;
+            border-right: 1px solid #D0D0C8;
+            height: 18px;
+        }
+        
+        #Table4 td
+        {
+            border-bottom: 1px solid #D0D0C8;
+            border-right: 1px solid #D0D0C8;
+            height: 18px;
+        }
+        .isSelcted
+        {
+            color: Red;
+        }
+        body
+        {
+            background-color: #BDC7D7;
+        }
+         #btnRun,#argsAttr
+        {
+            color: #000000 !important;
+            box-shadow: inset 0px 0.3em 0.3em rgba(255,254,255,0.6), inset 0px -0.1em 0.3em rgba(0,0,0,0.15), 0px 0.1em 3px hsl(208,50%,55%), 0px 0.2em 1px hsl(208,50%,40%), 0px 0.5em 5px rgba(0,0,0,0.2);
+            background-color: hsl(200, 90%, 85%);
+            border-top-left-radius:0.5em 1em;
+            border-top-right-radius:0.5em 1em;
+            border-bottom-left-radius:0.5em 1em;
+            border-bottom-right-radius:0.5em 1em;
+            cursor: pointer;
+        }
+        #btnRun:hover,#argsAttr:hover
+        {
+           background-color:#73B0E5;
+        }
+    </style>
+</head>
+<body style="overflow: hidden">
+    <div id="dsNameDiv">
+        <table style="font-size: 12px">
+            <tr>
+                <td align="center">
+                    <strong>数据集名称:</strong>
+                </td>
+                <td>
+                    <input id="dsName" type="text" />
+                </td>
+                <td align="center">
+                    <strong>数据源连接:</strong>
+                </td>
+                <td id="dsConnStr">
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="dsSetDiv">
+        <table width="100%" border="2" style="font-size: small">
+            <tr>
+                <td>
+                    <!-- <strong>已选择数据表：</strong>
+                    <br />
+                    <div id="selectedDTList" style="cursor: hand; overflow-x: auto; overflow-y: scroll;
+                        width: 140px; height: 100px; border: 1px black solid;" ondblclick="deleteSelectedDtName(event)">
+                    </div>
+                    <hr style="border: 1px white solid;" />-->
+                    <strong>双击选择数据表：</strong>
+                    <br />
+                    <div id="divTableList" style="cursor: pointer; overflow-x: auto; overflow-y: auto;
+                        width: 195px; height: 475px; border: 1px black solid;" ondblclick="tdTableList_click(event)"
+                        onmouseover="mouseoverEvent()" onmouseout="mouseoutEvent()">
+                    </div>
+                </td>
+                <td>
+                    <table id="tbSqlInfo" border="1" cellspacing="0" cellpadding="0" width="100% " style="height: 100%">
+                        <tr style="text-align: left; vertical-align: top;">
+                            <td colspan="2">
+                                <textarea id="txtArea" cols="84" rows="10" style="border: 1px black solid; overflow:auto;"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="40px">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <input id="btnRun" type="button" value="运行SQL" onclick="RunSqlQuery()" />
+                                        </td>
+                                        <td>
+                                            <input id="argsAttr" type="button" value="详细属性" onclick="argsAttributeSet()" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td>
+                                影响行数：<input id="txtTotal" type="text" value="0" />
+                            </td>
+                        </tr>
+                        <tr style="height: 100%">
+                            <td id="tdDataPanel" colspan="2">
+                                <div style="vertical-align: top;" onselectstart="return false">
+                                    <table id="tbTab" onclick="tdTab_onclick(event)">
+                                        <tr>
+                                            <td id="tdTab_selected" bgcolor="#FFE8A6">
+                                                已选数据表
+                                            </td>
+                                            <td bgcolor="white">
+                                                已选字段
+                                            </td>
+                                            <td bgcolor="white">
+                                                关联配置
+                                            </td>
+                                            <td bgcolor="white">
+                                                数据展示
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div id="div1" style="overflow: auto; height: 300px; width: 600px;" onclick="javascript:document.getElementById('slSetFatherTable').style.display='none'"
+                                    onscroll="scrollVertical(event)">
+                                    <table id="Table1" style="width: 100%; table-layout: fixed; word-break: break-all;">
+                                        <tr style="font-weight: bold; color: white;" bgcolor="#43577B" align="center">
+                                            <td style="border-right: 1px solid white;">
+                                                数据库表名
+                                            </td>
+                                            <td style="border-right: 1px solid white;">
+                                                中文名
+                                            </td>
+                                            <td style="border-right: 1px solid white; width: 100px;">
+                                                父表
+                                            </td>
+                                            <td style="border-right: 1px solid white;">
+                                                唯一字段
+                                            </td>
+                                            <td style="border-right: 1px solid white;">
+                                                是否为主表
+                                            </td>
+                                            <td style="border-right: 1px solid white;">
+                                                客户端ID
+                                            </td>
+                                            <td style="border-right: 1px solid white;">
+                                                记录操作
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div id="div2" style="display: none; overflow: auto; height: 300px; width: 600px;"
+                                    onclick="javascipt:document.getElementById('txtEdit').style.display='none'" onscroll="scrollVertical(event)">
+                                    <table id="Table2" style="width: 100%; table-layout: fixed; word-break: break-all;">
+                                        <tr style="font-weight: bold; color: white;" bgcolor="#43577B" align="center">
+                                            <td style="border-right: 1px solid white;">
+                                                所属表
+                                            </td>
+                                            <td style="border-right: 1px solid white;">
+                                                字段名
+                                            </td>
+                                            <td style="border-right: 1px solid white;">
+                                                中文名
+                                            </td>
+                                            <td style="border-right: 1px solid white;">
+                                                别名
+                                            </td>
+                                            <td style="border-right: 1px solid white;">
+                                                字段类型
+                                            </td>
+                                            <td style="border-right: 1px solid white; width: 60px;">
+                                                字段长度
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div id="div3" style="display: none; overflow: auto; height: 300px; width: 600px;"
+                                    onscroll="scrollVertical(event)">
+                                    <table style="width: 100%;">
+                                        <tr>
+                                            <td align="right" colspan="5">
+                                                <input type="button" id="btnAddAssociate" value="添加" onclick="btnAddAssociate_onclick()" />
+                                                <input type="button" id="btnDeleteAssociate" value="删除" onclick="btnDeleteAssociate_onclick(event)" />
+                                                <input type="button" id="btnCreateSql" value="生成SQL" onclick="btnCreateSql_onclick()" />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table id="Table3" style="width: 609px; table-layout: fixed; word-break: break-all;"
+                                        onclick="ChangeColor(event)" ondblclick="SelectListValue(event)">
+                                        <tr style="font-weight: bold; color: white;" bgcolor="#43577B" align="center">
+                                            <td style="border-right: 1px solid white; width: 100px">
+                                                表
+                                            </td>
+                                            <td style="border-right: 1px solid white; width: 160px">
+                                                字段
+                                            </td>
+                                            <td style="border-right: 1px solid white; width: 80px;">
+                                                关联关系
+                                            </td>
+                                            <td style="border-right: 1px solid white; width: 100px">
+                                                表
+                                            </td>
+                                            <td style="border-right: 1px solid white; width: 160px">
+                                                字段
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div id="div4" style="display: none; overflow: auto; height: 300px; width: 600px;">
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center">
+                    <!--<input type="button" id="btnSubmit" value="保存" onclick="btnSubmit_onclick()" />
+                    <input type="button" id="btnCancel" value="取消" onclick="javascript:parent.window.close()" />-->
+                    <img src="../images/new_cancel.gif" style="cursor:pointer;" id="btnSubmit" onclick="btnSubmit_onclick()" />
+                    <img src="../images/new_ok.gif" style="cursor:pointer;margin-left: 10px;" id="btnCancel" onclick="javascript:parent.window.close()" />
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="hiddenElenemt">
+        <input type="hidden" id="DataTablePrefix" value="" />
+        <input type="hidden" id="OperationSign" value="" />
+        <input type="hidden" id="sqlArgs" value="" />
+        <input type="hidden" id="connString" value="" />
+    </div>
+    <!--隐藏的输入文本框-->
+    <input name="txtEdit" id="txtEdit" style="display: none; z-index: 0; position: absolute;
+        background-color: #E6E6FA; text-align: center; width: 69px; height: 16px; overflow: hidden;
+        border-left: medium none; border-top: medium none; border-right: medium none;
+        border-bottom: medium none;" onkeyup="CopyEditText(this)" onfocus="oRng=this.createTextRange();oRng.collapse(true);oRng.moveStart('character',this.value.length);oRng.select()"
+        type="text" value="txtEdit" />
+    <!--隐藏的选择下拉框-->
+    <select id="slAssociate" style="display: none; position: absolute; width: 57px; height: 16px"
+        onchange="slAssociate_onchange(this)">
+    </select>
+    <!--隐藏的选择下拉框-->
+    <select id="slSetFatherTable" style="display: none; position: absolute; width: 69px;
+        height: 16px" onchange="slSetFatherTable_onchange(this)">
+    </select>
+</body>
+<script src="../datasource.js" type="text/javascript"></script>
+<script type="text/javascript">
+    var x = -1, y = -1; //记录被双击的单元格的位置
+    var dt = null;
+    var ds = null;
+    var dsId = "";
+    var isConnectd = "Yes";
+    //窗体加载事件
+    window.onload = function () {
+        ds = parent.window.oDataSource.createDataSet(); //new DataSet();
+        window.argsDom = !!window.top.window.argsDom ? window.top.window.argsDom : window.dialogArgs;
+        window.arrRef = null;
+        window.isOnlySee = false;
+        var datasetId = $U.params["DsId".toLowerCase()];
+        if (datasetId != undefined && datasetId != "") {
+            dsId = datasetId;
+        }
+        var dataTablePrefix = $U.params["DataTablePrefix".toLowerCase()];
+        if (dataTablePrefix != undefined && dataTablePrefix != "") {
+            document.getElementById("DataTablePrefix").value = dataTablePrefix;
+        }
+        var currentDsConn = $U.params["CurDC".toLowerCase()];
+        if (currentDsConn != undefined && currentDsConn != "") {
+//            var aDsConn = currentDsConn.match(/(=\w*\;)|(=(\d*.*);)/g);
+//            if (currentDsConn.search("a") != -1) {
+//                currentDsConn = "Data Source" + aDsConn[1] + "User ID" + aDsConn[2] + "Password" + aDsConn[0];
+//            }
+//            else
+//                currentDsConn = "database" + aDsConn[2] + "uid" + aDsConn[0] + "pwd" + aDsConn[1] + "server" + aDsConn[3];
+            document.getElementById("connString").value = currentDsConn;
+        }
+        var isOnlySee = $U.params["isOnlySee".toLowerCase()];
+        if (isOnlySee != undefined && isOnlySee != "") {
+            window.isOnlySee = true;
+        }
+        if (getAllDtName()) {
+            if (dsId.length == 0) {
+                if (isConnectd == "Yes") {
+                    if (document.getElementById("OperationSign") != "undefined" && document.getElementById("OperationSign") != null) {
+                        document.getElementById("OperationSign").value = "add";
+                    }
+                    ds.ConnString = document.getElementById("connString").value;
+                }
+            } else {
+                if (document.getElementById("OperationSign") != "undefined" && document.getElementById("OperationSign") != null) {
+                    document.getElementById("OperationSign").value = "edit";
+                }
+                var xmlDoc = XmlDocument.createBase('<Operation ParamType="GetDsInfo" value="' + dsId + '" CurrentDsConn ="' + document.getElementById("connString").value + '"/>');
+                $R({
+                    type: "post",
+                    url: "datasourceAction!getDsInfo",
+                    async: false,
+                    success: function (xhr) {
+                        var returnAjaxValue = xhr.responseXML.selectSingleNode("RAD/Doc/Data/Message").attributes.getNamedItem("value").value;
+                        if (returnAjaxValue != "操作成功") {
+                            alert(returnAjaxValue);
+                        } else {
+                            var xmlDs = xhr.responseXML.selectSingleNode("RAD/Doc/Data/DataSet");
+
+                            //处理返回的数据
+                            var selType = document.getElementById("selType");
+                            var selIndex = parseInt(xmlDs.getAttribute("Type"));
+
+                            document.getElementById("dsName").value = xmlDs.getAttribute("Name");
+
+                            ds.DbId = xmlDs.getAttribute("DbId");
+                            ds.Name = xmlDs.getAttribute("Name");
+                            ds.Type = xmlDs.getAttribute("Type");
+                            ds.State = xmlDs.getAttribute("State");
+                            ds.ConnString = currentDsConn;
+                            //获取主表名
+                            var mainTableName = ds.MainTable = xmlDs.getAttribute("MainTableName");
+
+                            var oTable1 = document.getElementById("Table1");
+                            var oTable2 = document.getElementById("Table2");
+                            var oTable3 = document.getElementById("Table3");
+
+                            var tablesCount = xmlDs.childNodes.length;
+
+                            var oTr = null;
+                            var oTd = null;
+
+                            //左边表格选择框内创建table
+                            // var selectedDTList = document.getElementById("selectedDTList");
+                            var oTable = document.createElement("table");
+                            var oTempTr = null;
+                            var oTempTd = null;
+
+                            // selectedDTList.appendChild(oTable);
+
+                            //已选数据表
+                            for (var i = 0; i < tablesCount; i++) {
+                                if (xmlDs.childNodes[i].nodeType == "1") {
+                                    dt = parent.window.oDataSource.createDataTable(); //new DataTable();
+                                    oTr = oTable1.insertRow(oTable1.rows.length);
+
+                                    //是否存在关联关系
+                                    if (xmlDs.childNodes[i].getAttribute("RelationColumns").length > 0) {
+                                        var sPTableId = xmlDs.childNodes[i].getAttribute("ParentDtClientId");
+                                        var sPTable = "";
+                                        for (var c = 0; c < tablesCount; c++) {
+                                            if (xmlDs.childNodes[c].getAttribute("ClientId") == sPTableId) {
+                                                //子表的关联字符串
+                                                var sColumns = xmlDs.childNodes[i].getAttribute("RelationColumns");
+                                                var oT3Tr = oTable3.insertRow(oTable3.rows.length);
+                                                var oT3Td = oT3Tr.insertCell(oT3Tr.cells.length);
+                                                oT3Td.innerText = xmlDs.childNodes[i].getAttribute("TableName");
+
+                                                oT3Td = oT3Tr.insertCell(oT3Tr.cells.length);
+                                                oT3Td.innerText = sColumns.substring(0, sColumns.indexOf(","));
+
+                                                oT3Td = oT3Tr.insertCell(oT3Tr.cells.length);
+                                                oT3Td.innerText = (xmlDs.childNodes[i].getAttribute("RelationType") == "RelationSingle") ? "=" : "未知关联关系";
+
+                                                oT3Td = oT3Tr.insertCell(oT3Tr.cells.length);
+                                                oT3Td.innerText = xmlDs.childNodes[c].getAttribute("TableName");
+
+                                                oT3Td = oT3Tr.insertCell(oT3Tr.cells.length);
+                                                oT3Td.innerText = sColumns.substring(sColumns.indexOf(",") + 1, sColumns.length);
+                                            }
+                                        }
+                                    }
+
+                                    //将表名添入左边表格选择框
+                                    oTempTr = document.createElement("tr");
+                                    oTempTd = document.createElement("td")
+                                    oTempTd.innerText = xmlDs.childNodes[i].getAttribute("TableName");
+                                    oTempTr.appendChild(oTempTd);
+                                    oTable.appendChild(oTempTr);
+
+                                    //表名
+                                    oTd = oTr.insertCell(0);
+                                    dt.TableName = oTd.innerText = xmlDs.childNodes[i].getAttribute("TableName");
+
+                                    //中文名
+                                    oTd = oTr.insertCell(1);
+                                    dt.Name = oTd.innerText = xmlDs.childNodes[i].getAttribute("Name");
+
+                                    //父表
+                                    oTd = oTr.insertCell(2);
+                                    var FatherTableClientId = xmlDs.childNodes[i].getAttribute("ParentDtClientId");
+                                    for (var j = 0; j < tablesCount; j++) {
+                                        if (xmlDs.childNodes[j].nodeType == "1") {
+                                            if (xmlDs.childNodes[j].getAttribute("ClientId") == FatherTableClientId) {
+                                                oTd.innerText = xmlDs.childNodes[j].getAttribute("TableName");
+                                                dt.ParentDataTableClientId = FatherTableClientId;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    oTd.ondblclick = function () {
+                                        SelectFatherTable(event);
+                                    };
+
+                                    //唯一索引字段
+                                    oTd = oTr.insertCell(3);
+                                    dt.UniqueIndexColumn = oTd.innerText = xmlDs.childNodes[i].getAttribute("UniqueIndexColumn");
+
+                                    //是否为主表
+                                    oTd = oTr.insertCell(4);
+                                    if (xmlDs.childNodes[i].getAttribute("TableName") == mainTableName) {
+                                        oTd.innerText = "是";
+                                        dt.IsMain = "true";
+                                        oTr.childNodes[2].innerText = "";
+                                        //Sql语句
+                                        document.getElementById("txtArea").value = xmlDs.childNodes[i].getAttribute("Sql");
+                                    }
+                                    else {
+                                        if (oTd.innerText = "否") {
+                                            dt.IsMain = "false";
+                                            if (xmlDs.childNodes[i].getAttribute("IsMain") == "false" && xmlDs.childNodes[i].getAttribute("Sql") != "") {
+                                                document.getElementById("txtArea").value = xmlDs.childNodes[i].getAttribute("Sql");
+                                            }
+                                        }
+                                    }
+
+                                    //前缀
+                                    oTd = oTr.insertCell(5);
+                                    oTd.innerText = xmlDs.childNodes[i].getAttribute("ClientId");
+                                    dt.ClientId = oTd.innerText = xmlDs.childNodes[i].getAttribute("ClientId");
+                                    //操作
+                                    oTd = oTr.insertCell(6);
+                                    oTd.innerHTML = "<a  href='#' onclick = 'tdTableList_click(event)'>编辑</a> &nbsp;<a  href='#' onclick ='delTable_onclick(event)'>删除</a>";
+
+                                    //已选字段
+                                    var oColumns = "firstElementChild" in xmlDs.childNodes[i] ? xmlDs.childNodes[i].firstElementChild : xmlDs.childNodes[i].firstChild;
+                                    var colsCount = oColumns.childNodes.length;
+
+                                    for (var j = 0; j < colsCount; j++) {
+                                        if (oColumns.childNodes[j].nodeType == "1") {
+                                            oTr = oTable2.insertRow(oTable2.rows.length);
+                                            var dc = parent.window.oDataSource.createDataColumn(); //new DataColumn();
+                                            //所属表
+                                            oTd = oTr.insertCell(0);
+                                            oTd.innerText = xmlDs.childNodes[i].getAttribute("TableName");
+
+                                            //字段名
+                                            oTd = oTr.insertCell(1);
+                                            dc.ColumnName = oTd.innerText = oColumns.childNodes[j].getAttribute("ColumnName");
+
+                                            //中文名
+                                            oTd = oTr.insertCell(2);
+                                            dc.Name = oTd.innerText = oColumns.childNodes[j].getAttribute("Name");
+                                            oTd.ondblclick = function () { dblClickEvent(event) };
+
+                                            //别名
+                                            oTd = oTr.insertCell(3);
+                                            dc.AnotherName = oTd.innerText = oColumns.childNodes[j].getAttribute("AnotherName");
+                                            oTd.ondblclick = function () { dblClickEvent(event) };
+
+                                            //字段类型
+                                            oTd = oTr.insertCell(4);
+                                            dc.DataType = oTd.innerText = oColumns.childNodes[j].getAttribute("DataType");
+
+                                            //字段长度
+                                            oTd = oTr.insertCell(5);
+                                            dc.Length = oTd.innerText = oColumns.childNodes[j].getAttribute("Length");
+
+                                            dt.DataColumns.push(dc);
+                                        }
+                                    }
+
+                                    ds.DataTables.push(dt);
+                                }
+                                parent.window.oDataSet = ds;
+                            }
+                        }
+                    },
+                    error: function (xhr) {
+                        alert('Failure: ' + xhr.status);
+                    },
+                    data: xmlDoc,
+                    contentType: "text/xml"
+                });
+            }
+        }
+    }
+    //获得数据库所有表名
+    function getAllDtName() {
+        var flag = "0";
+        var xmlDoc = XmlDocument.createBase('<Operation ParamType="GetAllTableName" value="" CurrentDsConn ="' + document.getElementById("connString").value + '"/>');
+        $R({
+            type: "post",
+            url: "datasourceAction!getAllTableName",
+            async: false,
+            success: function (xhr) {
+                var returnAjaxValue = xhr.responseXML.selectSingleNode("RAD/Doc/Data/Message").attributes.getNamedItem("value").value;
+                if (returnAjaxValue != "操作成功") {
+                    //alert(returnAjaxValue); 
+                    alert("您当前选择的数据源已不存在！");
+                    isConnectd = "No";
+                    parent.document.getElementById("dsSet").src = "";
+                    parent.dsSet.document.body.innerHTML = "";
+                    flag = "1";
+                }
+                else {
+                    var oTable = xhr.responseXML.selectSingleNode("RAD/Doc/Data/Table");
+                    //处理返回的数据
+                    document.getElementById("divTableList").innerHTML = oTable.xml;
+                }
+            },
+            error: function (xhr) {
+                alert('Failure: ' + xhr.status);
+            },
+            data: xmlDoc,
+            contentType: "text/xml"
+        });
+        if (flag == "0") {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    //设置选中行的背景色
+    function ChangeColor(event) {
+        x = y = -1;
+        document.getElementById("slAssociate").style.display = "none";
+        var oCell = event.srcElement;
+        if (oCell.nodeName.toLocaleLowerCase() != "td") {
+            return;
+        }
+        //第一行不允许选择
+        var oTr = oCell.parentNode;
+        if (oTr.rowIndex == 0) {
+            return;
+        }
+
+        var oTemp = document.getElementById("selected");
+        if (oTemp != null) {
+            oTemp.bgColor = "white";
+            oTemp.setAttribute("id", "");
+        }
+        var oCell = event.srcElement;
+        var oTr = oCell.parentNode;
+        oTr.bgColor = "#E6E6FA";
+        oTr.setAttribute("id", "selected");
+
+        document.getElementById("txtEdit").style.display = "none";
+    }
+
+    //双击输入内容
+    function dblClickEvent(event) {
+        var oTd = event.srcElement;
+        if (oTd.cellIndex == 0 || oTd.parentNode.rowIndex == 0) {
+            x = y = -1;
+            return;
+        }
+
+        x = oTd.cellIndex;
+        y = oTd.parentNode.rowIndex;
+
+        var pos = getCoordinate(oTd);
+        var oText = document.getElementById("txtEdit");
+        oText.value = oTd.innerText;
+        oText.style.width = oTd.offsetWidth - 4;
+        oText.style.height = oTd.offsetHeight - 2;
+
+        //添加了移动滚动条产生的文本框偏移情况
+        oText.style.top = pos.top + 1 - oTd.parentNode.parentNode.parentNode.parentNode.scrollTop;
+        oText.style.left = pos.left + 1 + oTd.parentNode.parentNode.parentNode.parentNode.scrollLeft;
+        oText.style.display = "";
+        oText.focus();
+    }
+
+    function CopyEditText(oText) {
+        if (x == -1) {
+            //屏蔽输入的键值
+            event.keyCode = 0;
+            event.returnValue = false;
+            return;
+        }
+
+        if (event.keyCode == 37 || event.keyCode == 39) {
+            return event.returnValue = true;
+        }
+        Table2.rows[y].childNodes[x].innerText = txtEdit.value = oText.value;
+
+        var objDtName = document.getElementById("Table2").rows[y].cells[0].innerText;
+        var objDcName = document.getElementById("Table2").rows[y].cells[1].innerText;
+        var objDt = null;
+        var objDc = null;
+        var dtLen = ds.DataTables.length;
+        for (var i = 0; i < dtLen; i++) {
+            if (ds.DataTables[i].TableName == objDtName) {
+                objDt = ds.DataTables[i];
+                break;
+            }
+        }
+
+        var dcLen = objDt.DataColumns.length;
+        for (var i = 0; i < dcLen; i++) {
+            if (objDt.DataColumns[i].ColumnName == objDcName) {
+                objDc = objDt.DataColumns[i];
+            }
+        }
+        if (x == 2) {
+            objDc.Name = oText.value;
+        } else {
+            objDc.AnotherName = oText.value;
+        }
+    }
+
+    //获取单元格左上角坐标
+    //参数：表格对象
+    //返回值：表格左上角坐标,left->X,top->Y
+    function getCoordinate(oCell) {
+        try {
+            for (var sumTop = 0, sumLeft = 0; oCell && oCell != document.body; ) {
+                sumTop += oCell.offsetTop, sumLeft += oCell.offsetLeft, oCell = oCell.offsetParent;
+            }
+            return { left: sumLeft, top: sumTop }
+        } catch (err) {
+            return "false";
+        }
+    }
+
+    //执行Sql语句
+    function RunSqlQuery() {
+        var oTextArea = document.getElementById("txtArea");
+        if (oTextArea.value == "") {
+            alert("您未生成SQL语句，可以点击“关联配置》生成SQL”...");
+            return;
+        }
+        var sqlStr = oTextArea.value;
+        var argsEm = window.argsDom;
+        if (/(\:|\@)(\w+)/gi.test(sqlStr)) {
+            alert("带参数的sql语句暂时不支持！");
+            return;
+        }
+        sqlStr = sqlStr.replace(/\:(\w+)/gi, function (sMatch, $1) {
+            for (var i = 0; i < argsEm.childNodes.length; i++) {
+                if ($1 == argsEm.childNodes[i].getAttribute("Name")) {
+                    return sMatch.replace(sMatch, argsEm.childNodes[i].getAttribute("Value"));
+                }
+            }
+        });
+
+        var xmlDoc = XmlDocument.createBase('<Operation ParamType="TestSqlStatement" value ="' + sqlStr.replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;") + '" CurrentDsConn ="' + document.getElementById("connString").value + '"/>');
+        $R({
+            type: "post",
+            url: "datasourceAction!getRunSqlData",
+            async: false,
+            success: function (xhr) {
+                var returnAjaxValue = xhr.responseXML.selectSingleNode("RAD/Doc/Data/Message").getAttribute("value");
+                if (returnAjaxValue != "操作成功") {
+                    alert(returnAjaxValue);
+                } else {
+                    var oTable = xhr.responseXML.selectSingleNode("RAD/Doc/Data/Table");
+                    document.getElementById("div4").innerHTML = oTable.xml;
+
+                    //切换焦点到运行后的数据展示页面
+                    document.getElementById("slAssociate").style.display = "none";
+                    document.getElementById("slSetFatherTable").style.display = "none";
+
+                    var oCell = document.getElementById("tdTab_selected");
+                    if (oCell != null) {
+                        oCell.bgColor = "white";
+                        oCell.setAttribute("id", "");
+
+                        document.getElementById("tdDataPanel").children[oCell.cellIndex + 1].style.display = "none";
+                    }
+                    var oCell = document.getElementById("tbTab").rows[0].cells[3];
+                    oCell.bgColor = "#FFE8A6";
+                    oCell.setAttribute("id", "tdTab_selected");
+
+                    //                    document.getElementById("tdDataPanel").childNodes[oCell.cellIndex + 1].style.display = "";
+                    document.getElementById("div4").style.display = "";
+                    document.getElementById("txtEdit").style.display = "none";
+                    document.getElementById("txtTotal").value = "childElementCount" in oTable ? oTable.childElementCount - 1 : oTable.childNodes.length -1;
+                }
+            },
+            error: function (xhr) {
+                alert('Failure: ' + xhr.status);
+            },
+            data: xmlDoc,
+            contentType: "text/xml"
+        });
+    }
+
+    //单击tab标签切换事件
+    function tdTab_onclick(e) {
+        //检查是否存在主表，或同时有多个主表，以及是否有表没有父表
+        //因为只有在父子表关系确定的情况下才能有效保障关联关系的正确性
+        //但是不能排除存在某个表没有关联上的情况
+        var event = e || window.Event;
+        var src = event.srcElement || event.target;
+        if (src.cellIndex == 2) {
+            var oTable = document.getElementById("Table1");
+            var rowsCount = oTable.rows.length;
+            var count = 0;
+
+            //统计主表个数，同时检查是否存在没有关联的表记录
+            if (rowsCount > 2) {
+                var IsHavsMainTable = "No";
+                for (var i = 1; i < rowsCount; i++) {
+                    if (oTable.rows[i].cells[4].innerText == "是") {
+                        IsHavsMainTable = "Yes";
+                        break;
+                    }
+                }
+                if (IsHavsMainTable == "No") {
+                    alert("当前数据集不存在主表...");
+                    return;
+                }
+                for (var i = 1; i < rowsCount; i++) {
+                    if (oTable.rows[i].cells[4].innerText == "否") {
+                        if (oTable.rows[i].cells[2].innerText.length <= 0) {
+                            alert(oTable.rows[i].cells[0].innerText + "没有父表...");
+                            return;
+                        }
+                    } else {
+                        count++;
+                    }
+                }
+            }
+
+            if (count == 0 && rowsCount > 2) {
+                alert("当前数据集不存在主表...");
+                return;
+            } else
+                if (count > 1) {
+                    alert("当前数据集存在多个主表...");
+                    return;
+                }
+        }
+
+        document.getElementById("slAssociate").style.display = "none";
+        document.getElementById("slSetFatherTable").style.display = "none";
+
+        var oCell = document.getElementById("tdTab_selected");
+        if (oCell != null) {
+            oCell.bgColor = "white";
+            oCell.setAttribute("id", "");
+
+            document.getElementById("tdDataPanel").children[oCell.cellIndex + 1].style.display = "none";
+        }
+        var oCell = src;
+        oCell.bgColor = "#FFE8A6";
+        oCell.setAttribute("id", "tdTab_selected");
+
+        if (document.getElementById("tdDataPanel").children[oCell.cellIndex + 1]) {
+            document.getElementById("tdDataPanel").children[oCell.cellIndex + 1].style.display = "";
+        }
+
+        document.getElementById("txtEdit").style.display = "none";
+    }
+
+    //表单列表双击事件
+    function tdTableList_click(event) {
+        var oCell = event.srcElement;
+        if (oCell.nodeName.toLowerCase() != "td" && oCell.nodeName.toLowerCase() != "a") {
+            return;
+        }
+        var isSelectedEdit = false;
+        if (oCell.nodeName.toLowerCase() == "a") {
+            oCell = oCell.parentNode.parentNode.cells[0];
+            isSelectedEdit = true;
+        }
+        if (!isSelectedEdit) {
+            var oSelectedTd = document.getElementById("selectedTb");
+            if (oSelectedTd != null) {
+                oSelectedTd.setAttribute("id", null);
+            }
+        }
+        oCell.setAttribute("id", "selectedTb");
+        var url = "DataSource/attribute/SelectColumn.htm?tablename=" + oCell.innerText + "&currentdsconn=" + document.getElementById("connString").value;
+        var i, len = ds.DataTables.length, dtIndex = 0;
+        for (i = 0; i < len; i++) {
+            if (ds.DataTables[i].TableName == oCell.innerText) {
+                break;
+            }
+        }
+        //记录可能找到的原数据表在数据集中的索引位置
+        dtIndex = i;
+        var bIsAdd = (i == len);
+        if (!bIsAdd) {
+            dt = ds.DataTables[i];
+            if (oCell.parentNode.children[5] == undefined) {
+                alert("此数据表已引用！");
+                return;
+            }
+            else
+                dt.ParentDataTableClientId = oCell.parentNode.children[5].innerText;
+            if (oCell.parentNode.children[4].innerText == "否")
+                dt.ParentDataTable = oCell.parentNode.children[2].innerText;
+            else
+                dt.ParentDataTable = "";
+        }
+        else {
+            dt = new DataTable();
+        }
+        var oriDtCount = dt.DataColumns.length;
+        //var oDt = showModalDialog(url, dt, 'dialogWidth:480px; dialogHeight:400px; help:no; center:yes; status:no; resizable:no; location:yes; scroll:no;');
+        window.showCustomDialog(url, dt, "dialogWidth=520px;dialogHeight=443px;resizable=no;cover:yes;overparent=yes;id=selectColumn;title=数据表设置;", null, function (oDt) {
+            //判断是否摁下了确定键
+            if (typeof oDt != "undefined" && oDt != null) {
+                oCell.setAttribute("class", "isSelcted");
+                var iDcCount = oDt.DataColumns.length;
+                for (var i = 0; i < iDcCount; i++) {
+                    var dc = new DataColumn();
+                    dc.IsCheck = oDt.DataColumns[i].IsCheck;
+                    dc.DataType = oDt.DataColumns[i].DataType;
+                    dc.Length = oDt.DataColumns[i].Length;
+                    dc.Name = oDt.DataColumns[i].Name;
+                    dc.AnotherName = oDt.DataColumns[i].AnotherName;
+                    dc.ColumnName = oDt.DataColumns[i].ColumnName;
+                    dt.DataColumns.push(dc);
+                }
+                //新记录与旧记录匹配，同时存在删掉新
+                for (var j, i = 0; i < oriDtCount; i++) {
+                    var count = dt.DataColumns.length;
+                    for (j = oriDtCount; j < count; j++) {
+                        if (dt.DataColumns[i].ColumnName == dt.DataColumns[j].ColumnName) {
+                            dt.DataColumns.splice(j, 1);
+                            break;
+                        }
+                    }
+                    if (j == count) {
+                        dt.DataColumns.splice(i, 1);
+                        oriDtCount--;
+                        i--;
+                    }
+                }
+
+                var sDataTablePrefix = "";
+
+                //针对编辑和添加，进行不同的处理
+                if (!bIsAdd) {
+                    var oTable1 = document.getElementById("Table1");
+                    var length = oTable1.rows.length;
+                    for (var j = 1; j < length; j++) {
+                        if (ds.DataTables[dtIndex].TableName == oTable1.rows[j].cells[0].innerText) {
+                            if (document.all) {
+                                oTable1.rows[j].cells[6].lastChild.fireEvent("onclick");
+                            }
+                            else {
+                                var evt = document.createEvent("MouseEvents");
+                                evt.initEvent("click", true, true);
+                                oTable1.rows[j].cells[6].lastChild.dispatchEvent(evt);
+                            }
+                            if (!isSelectedEdit) oCell.setAttribute("class", "isSelcted");
+                            break;
+                        }
+                    }
+                } else {
+                    var xmlDoc = XmlDocument.createBase('<Operation ParamType="GetDataTablePrefixSqe" value=""/>');
+                    $R({
+                        type: "post",
+                        url: "datasourceAction!getDataTablePrefixSqe",
+                        async: false,
+                        success: function (xhr) {
+                            var returnAjaxValue = xhr.responseXML.selectSingleNode("RAD/Doc/Data/Message").getAttribute("value");
+                            if (returnAjaxValue != "操作成功") {
+                                alert(returnAjaxValue);
+                            } else {
+                                document.getElementById("DataTablePrefix").value = sDataTablePrefix = xhr.responseXML.selectSingleNode("RAD/Doc/Data/Message").getAttribute("DataTablePrefix").value;
+                            }
+                        },
+                        error: function (xhr) {
+                            alert('Failure: ' + xhr.status);
+                        },
+                        data: xmlDoc,
+                        contentType: "text/xml"
+                    });
+                }
+
+                //数据表添入数据集对象
+                ds.DataTables.push(dt);
+
+                var rowsCount = document.getElementById("Table1").rows.length;
+                var oTr = document.getElementById("Table1").insertRow(rowsCount);
+
+                //数据库表名
+                oTd = oTr.insertCell(0);
+                oTd.innerText = dt.TableName;
+
+                //数据库表中文名
+                oTd = oTr.insertCell(1);
+                oTd.innerText = dt.Name;
+
+                //父表名
+                oTd = oTr.insertCell(2);
+                oTd.innerText = (typeof dt.ParentDataTable == "undefined" ? "" : dt.ParentDataTable);
+                oTd.ondblclick = function (event) {
+                    SelectFatherTable(event);
+                };
+
+                //唯一索引段
+                oTd = oTr.insertCell(3);
+                oTd.innerText = dt.UniqueIndexColumn;
+
+                //是否为主表
+                oTd = oTr.insertCell(4);
+                oTd.innerText = (dt.IsMain == "true") ? "是" : "否";
+
+                //前缀
+                oTd = oTr.insertCell(5);
+                if (bIsAdd) {
+                    oTd.innerText = dt.ClientId = sDataTablePrefix ? sDataTablePrefix : "" + "DataTable" + oTr.rowIndex + "_" + (new Date()).getDate() + (new Date()).getDay() + (new Date()).getMilliseconds();
+                } else {
+                    oTd.innerText = oDt.ClientId;
+                }
+
+                //操作
+                oTd = oTr.insertCell(6);
+                oTd.innerHTML = "<a  href='#' onclick = 'tdTableList_click(event)'>编辑</a> &nbsp;<a  href='#' onclick = 'delTable_onclick(event)'>删除</a>";
+
+                //已选字段标签
+                var len = dt.DataColumns.length;
+
+                for (var j = 0; j < len; j++) {
+                    oTr = document.getElementById("Table2").insertRow(document.getElementById("Table2").rows.length);
+                    //所属表
+                    oTd = oTr.insertCell(0);
+                    oTd.innerText = dt.TableName;
+                    //字段名
+                    oTd = oTr.insertCell(1);
+                    oTd.innerText = dt.DataColumns[j].ColumnName;
+                    if (i != len) {
+                        //中文名
+                        oTd = oTr.insertCell(2);
+                        oTd.innerText = dt.DataColumns[j].Name;
+                        oTd.ondblclick = function () { dblClickEvent(event) };
+                        //别名
+                        oTd = oTr.insertCell(3);
+                        oTd.innerText = dt.DataColumns[j].AnotherName;
+                        oTd.ondblclick = function () { dblClickEvent(event) };
+                    } else {
+                        //中文名
+                        oTd = oTr.insertCell(2);
+                        oTd.innerText = dt.DataColumns[j].ColumnName;
+                        oTd.ondblclick = function () { dblClickEvent(event) };
+                        //别名
+                        oTd = oTr.insertCell(3);
+                        oTd.innerText = dt.DataColumns[j].ColumnName;
+                        oTd.ondblclick = function () { dblClickEvent(event) };
+                    }
+                    //字段类型
+                    oTd = oTr.insertCell(4);
+                    oTd.innerText = dt.DataColumns[j].DataType;
+                    //字段长度
+                    oTd = oTr.insertCell(5);
+                    oTd.innerText = dt.DataColumns[j].Length;
+                }
+            }
+        });
+    }
+
+
+    //添加关联关系
+    function btnAddAssociate_onclick() {
+        var oTable = document.getElementById("Table3");
+        var rowsCount = oTable.rows.length;
+        var oTr = oTable.insertRow(rowsCount)
+        for (var i = 0; i < 5; i++) {
+            oTr.insertCell(i);
+        }
+        document.getElementById("slAssociate").style.display = "none";
+    }
+
+    //删除选中的关联关系
+    function btnDeleteAssociate_onclick(event) {
+        var oTr = document.getElementById("selected");
+        if (oTr == null) {
+            alert("当前无可删行或未选中行！");
+            return;
+        }
+        if (oTr != null) {
+            if (oTr.rowIndex < 1) {
+                alert("您当前没有选中行...");
+            }
+            oTr.parentNode.removeChild(oTr);
+            document.getElementById("slAssociate").style.display = "none";
+        }
+    }
+    //删除已选表
+    function deleteSelectedDtName(event) {
+        var evt = event || window.Event;
+        var oSrc = evt.srcElement || evt.target;
+        if (oSrc.nodeName.toLowerCase() != "td") return;
+        if (window.confirm("是否删除已选表")) {
+            var divTableList = document.getElementById("divTableList");
+            var oTr = divTableList.firstChild.insertRow(0);
+            oTr.appendChild(oSrc);
+        } else {
+            return;
+        }
+    }
+    //下拉框内选择关联关系
+    function SelectListValue(event) {
+        var evt = event || window.Event;
+        var oCell = evt.srcElement || evt.target;
+        if (oCell.nodeName.toLocaleLowerCase() != "td") {
+            return;
+        }
+        var oTdCellIndex = oCell.cellIndex;
+        var oTdRowIndex = oCell.parentNode.rowIndex;
+        x = oTdCellIndex;
+        y = oTdRowIndex;
+        var oSelect = document.getElementById("slAssociate");
+        var recordsCount = oSelect.children.length;
+        for (var i = 0; i < recordsCount; i++) {
+            //oSelect.firstChild.removeNode(true);
+        	"firstElementChild" in oSelect ? oSelect.removeChild(oSelect.firstElementChild) : oSelect.removeChild(oSelect.firstChild);
+        }
+
+        //左侧默认为子表，所以下拉框内无限制，可以选择选取了的所有表
+        if (oTdCellIndex == 0) {
+            var oTable = document.getElementById("Table1");
+            var div1TableCount = oTable.rows.length;
+            for (var i = 1; i < div1TableCount; i++) {
+                oOption = document.createElement("option");
+                oOption.value = oOption.innerText = oTable.rows[i].cells[0].innerText;
+                oSelect.appendChild(oOption);
+            }
+        } else if (oTdCellIndex == 3) {        //右侧默认为该行记录的父表，下拉框的选项受左侧子表的限制，一般只有一个父表选项
+            var o3Table = document.getElementById("Table3");
+            var o1Table = document.getElementById("Table1");
+            var rIndex = oCell.parentNode.rowIndex;
+            var subTableName = o3Table.rows[rIndex].cells[0].innerText;
+            var iTablesCount = o1Table.rows.length;
+            for (var i = 1; i < iTablesCount; i++) {
+                if (o1Table.rows[i].cells[0].innerText == subTableName) {
+                    oOption = document.createElement("option");
+                    oOption.value = oOption.innerText = o1Table.rows[i].cells[2].innerText;
+                    if (oOption.value.length == 0) {
+                        oOption.innerText = "无父级关联表";
+                    }
+                    oSelect.appendChild(oOption);
+                }
+            }
+        } else if (oTdCellIndex == 1 || oTdCellIndex == 4) {
+            var oTable = document.getElementById("Table3");
+            //下面的if需要去掉表名前后的空格
+            if (oTable.rows[oTdRowIndex].cells[oTdCellIndex - 1].innerText.length > 0) {
+                var tableName = oTable.rows[oTdRowIndex].cells[oTdCellIndex - 1].innerText;
+                //搜寻tableName相关的所有列
+                oTable = document.getElementById("Table2");
+                var rowsCount = oTable.rows.length;
+                var oOption = null;
+                for (var i = 0; i < rowsCount; i++) {
+                    if (oTable.rows[i].cells[0].innerText == tableName) {
+                        oOption = document.createElement("option")
+                        oOption.value = oOption.innerText = oTable.rows[i].cells[1].innerText;
+                        oSelect.appendChild(oOption);
+                    }
+                }
+            } else {
+                var oOption = document.createElement("option")
+                oOption.value = oOption.innerText = "请先选择表";
+                oSelect.appendChild(oOption);
+            }
+        } else {
+            var oOption = document.createElement("option")
+            oOption.value = oOption.innerText = "=";
+            oSelect.appendChild(oOption);
+        }
+
+        if (oSelect.value != "请先选择表") {
+            oCell.innerText = oSelect.value;
+        }
+        var cellPos = getCoordinate(oCell);
+        oSelect.style.top = cellPos.top + 2 + "px";
+        oSelect.style.left = cellPos.left + 2 + "px";
+        oSelect.style.width = parseInt(oCell.offsetWidth) - 2 + "px"; //单元格宽
+        oSelect.style.height = parseInt(oCell.offsetHeight) - 2 + "px"; //单元格高
+        oSelect.style.display = "";
+
+      /*oSelect.style.width = oCell.offsetWidth;
+        oSelect.style.height = oCell.offsetHeight;
+        oSelect.style.top = cellPos.top - oCell.parentNode.parentNode.parentNode.parentNode.scrollTop;
+        oSelect.style.left = cellPos.left + oCell.parentNode.parentNode.parentNode.parentNode.scrollLeft;
+        oSelect.style.display = ""; */
+    }
+
+
+    //选择关联数据值
+    function slAssociate_onchange(obj) {
+        var oTable = document.getElementById("Table3");
+        var oSelect = document.getElementById("slAssociate")
+        var oCell = oTable.rows[y].cells[x];
+        oCell.innerText = obj.value;
+        var cellPos = getCoordinate(oCell);
+
+        oSelect.style.width = oCell.offsetWidth;
+        oSelect.style.height = oCell.offsetHeight;
+
+        oSelect.style.top = cellPos.top;
+        oSelect.style.left = cellPos.left;
+    }
+
+    //选择父表值的变更
+    function slSetFatherTable_onchange(obj) {
+        var oTable = document.getElementById("Table1");
+        var oSelect = document.getElementById("slSetFatherTable")
+        var oCell = oTable.rows[y].cells[x];
+        oCell.innerText = obj.value;
+        var cellPos = getCoordinate(oCell);
+
+        oSelect.style.width = oCell.offsetWidth;
+        oSelect.style.height = oCell.offsetHeight;
+
+        oSelect.style.top = cellPos.top;
+        oSelect.style.left = cellPos.left;
+    }
+
+    //生成Sql语句
+    function btnCreateSql_onclick() {
+        var oTable1 = document.getElementById("Table1");
+        var oTable2 = document.getElementById("Table2");
+        var oTable3 = document.getElementById("Table3");
+        var rowsCount1 = oTable1.rows.length;
+        var rowsCount2 = oTable2.rows.length;
+        var rowsCount3 = oTable3.rows.length;
+        var sqlString = "";
+        var sign = 0;
+        var count = 0;
+
+        //因为表头为tr标签，所以需要<1
+        if (rowsCount1 <= 1 || rowsCount2 <= 1) {
+            document.getElementById("txtArea").value = sqlString;
+            return;
+        }
+        sqlString = "SELECT ";
+
+        for (var j = 1; j < rowsCount2; j++) {
+            if (sign == 1) {
+                sqlString += ", "
+            } else {
+                sign = 1;
+            }
+            sqlString += oTable2.rows[j].cells[0].innerText + ".";
+            sqlString += oTable2.rows[j].cells[1].innerText;
+
+            if (oTable2.rows[j].cells[3].innerText != oTable2.rows[j].cells[1].innerText) {
+                sqlString += " as \"" + oTable2.rows[j].cells[3].innerText + "\"";
+            }
+        }
+
+        sqlString += " FROM ";
+        sign = 0;
+        for (var i = 1; i < rowsCount1; i++) {
+            var tableName = oTable1.rows[i].cells[0].innerText;
+            if (tableName.length > 0) {
+                if (sign == 1) {
+                    sqlString += ", "
+                } else {
+                    sign = 1;
+                }
+                sqlString += tableName;
+            }
+        }
+
+        count = sign = 0;
+        for (var i = 1; i < rowsCount3; i++) {
+            if (oTable3.rows[i].cells[1].innerText.length > 0 && oTable3.rows[i].cells[4].innerText.length > 0) {
+                if (sign == 1) {
+                    sqlString += " AND ";
+                } else {
+                    sqlString += " WHERE ";
+                    sign = 1;
+                }
+
+                sqlString += oTable3.rows[i].cells[0].innerText + ".";
+                sqlString += oTable3.rows[i].cells[1].innerText + " = ";
+                sqlString += oTable3.rows[i].cells[3].innerText + ".";
+                sqlString += oTable3.rows[i].cells[4].innerText;
+            }
+        }
+
+        document.getElementById("txtArea").value = sqlString;
+    }
+
+    //删除表操作
+    function delTable_onclick(e) {
+        var source = e || window.event;
+        var obj = source.srcElement || source.target;
+        var oTr = obj.parentNode.parentNode;
+        var tableName = oTr.cells[0].innerText;
+        var oTable = document.getElementById("Table2");
+        var rowsCount = oTable.rows.length;
+
+        //删除数据集对象中的table对象
+        ds.DataTables.splice(oTr.rowIndex - 1, 1);
+
+        //如果是<<编辑>>状态，则删除左侧数据集表记录
+        //        if (document.getElementById("OperationSign").value == "edit") {
+        //            document.getElementById("divTableList").firstChild.childNodes[oTr.rowIndex - 1].removeNode(true);
+        //        }
+
+        //删除表记录
+        oTr.parentNode.removeChild(oTr);
+
+        //删除表对应的行记录
+        for (var i = 1; i < rowsCount; i++) {
+            if (oTable.rows[i].cells[0].innerText == tableName) {
+//                var divListTb = divTableList.firstChild;
+//                for (var j = 0; j < divListTb.cells.length; j++) {
+//                    if (divListTb.cells[j].innerHTML == tableName) {
+//                        divListTb.cells[j].className = "";
+//                        break;
+//                    }
+//                }
+                oTable.rows[i].parentNode.removeChild(oTable.rows[i]);
+                i--;
+                rowsCount--;
+            }
+        }
+
+        //删除表对应的关联记录
+        oTable = document.getElementById("Table3");
+        rowsCount = oTable.rows.length;
+
+        for (var i = 1; i < rowsCount; i++) {
+            if (oTable.rows[i].cells[0].innerText == tableName || oTable.rows[i].cells[3].innerText == tableName) {
+                oTable.rows[i].parentNode.removeChild(oTable.rows[i]);
+                i--;
+                rowsCount--;
+            }
+        }
+
+        //重新生成Sql
+        if (document.getElementById("txtArea").value != "") {
+            btnCreateSql_onclick();
+        }
+
+    }
+
+    //下拉框选择父表
+    function SelectFatherTable(event) {
+        var evt = event || window.Event;
+        var oCell = evt.srcElement || evt.target;
+        var cellPos = getCoordinate(oCell);
+        var oSelect = document.getElementById("slSetFatherTable");
+        var oTable = document.getElementById("Table1");
+        var recordsCount = oSelect.children.length;
+
+        x = oCell.cellIndex;
+        y = oCell.parentNode.rowIndex;
+        for (var i = 0; i < recordsCount; i++) {
+            //oSelect.firstChild.removeNode(true);
+        	"firstElementChild" in oSelect ? oSelect.removeChild(oSelect.firstElementChild) : oSelect.removeChild(oSelect.firstChild);
+        }
+
+        if (oTable.rows[y].cells[4].innerText != "是") {
+            var rowsCount = oTable.rows.length;
+            for (var i = 1; i < rowsCount; i++) {
+                if (i != y) {
+                    oOption = document.createElement("option");
+                    oOption.value = oOption.innerText = oTable.rows[i].cells[0].innerText;
+                    oSelect.appendChild(oOption);
+                }
+            }
+        } else {
+            oOption = document.createElement("option");
+            oOption.value = oOption.innerText = "主表无父表";
+            oSelect.appendChild(oOption);
+        }
+
+        if (oSelect.value != "主表无父表") {
+            oCell.innerText = oSelect.value;
+            ds.DataTables[y - 1].ParentDataTable = oSelect.value;
+        }
+
+        oSelect.style.width = oCell.offsetWidth;
+        oSelect.style.height = oCell.offsetHeight;
+
+        oSelect.style.top = cellPos.top;
+        oSelect.style.left = cellPos.left;
+
+        oSelect.style.display = "";
+    }
+
+    //最终提交数据
+    function btnSubmit_onclick() {
+        var dsName = document.getElementById("dsName");
+        var dtSql = document.getElementById("txtArea");
+        var oTable = document.getElementById("Table1");
+        var rowsCount = oTable.rows.length;
+        var dtCount = ds.DataTables.length;
+        var count = 0;
+        var mainTable = "";
+
+        //检查是否存在主表，或同时有多个主表，以及是否有表没有父表
+        for (var i = 1; i < rowsCount; i++) {
+            if (oTable.rows[i].cells[4].innerText == "否") {
+                if (oTable.rows[i].cells[2].innerText.length <= 0) {
+                    //                    alert(oTable.rows[i].cells[0].innerText + "没有父表...");
+                    //                    return;
+                }
+            } else {
+                mainTable = i;
+                count++;
+            }
+        }
+
+        if (count != 1 && rowsCount > 2) {
+            if (count > 1) {
+                alert("当前数据集存在多个主表...");
+                return;
+            } else {
+                mainTable = 1;
+            }
+        }
+
+        //是否输入了数据集名称
+        if (dsName.value.length <= 0) {
+            alert("您当前未输入数据集名称...");
+            return;
+        }
+
+        //是否已经生成了Sql语句
+        if (dtSql.value.length <= 0) {
+            alert("您当前未生成SQL语句，可以点击“关联配置->生成SQL”...");
+            return;
+        }
+
+        ds.DataTablePrefix = document.getElementById("DataTablePrefix").value;
+        ds.Name = dsName.value;
+        ds.Type = "0";
+        if (oTable.rows[mainTable]) {
+            ds.MainTable = oTable.rows[mainTable].cells[0].innerText;
+        } else {
+            ds.MainTable = "";
+        }
+        if (rowsCount == 2) {
+            ds.DataTables[0].Sql = dtSql.value.replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        } else
+            ds.DataTables[mainTable - 1].Sql = dtSql.value.replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+        //存入客户端ID
+        for (var i = 1; i < rowsCount; i++) {
+            ds.DataTables[i - 1].ClientId = oTable.rows[i].cells[5].innerText;
+        }
+
+        //存入父表
+        if (rowsCount > 2) {
+            for (var i = 1; i < rowsCount; i++) {
+                if (oTable.rows[i].cells[4].innerText != "是") {
+                    var parentTableName = oTable.rows[i].cells[2].innerText;
+                    for (var j = 1; j < rowsCount; j++) {
+                        if (oTable.rows[j].cells[0].innerText == parentTableName) {
+                            ds.DataTables[i - 1].ParentDataTableClientId = oTable.rows[j].cells[5].innerText;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        //存入关联字段
+        var oT3Table = document.getElementById("Table3");
+        var T3RowsCount = oT3Table.rows.length;
+        var sTemp = "";
+        for (var i = 1; i < T3RowsCount; i++) {
+            //子表名
+            sTemp = oT3Table.rows[i].cells[0].innerText;
+
+            for (var j = 1; j < rowsCount; j++) {
+                if (oTable.rows[j].cells[0].innerText == sTemp) {
+                    //关联字段
+                    ds.DataTables[j - 1].RelationColumns = oT3Table.rows[i].cells[1].innerText + "," + oT3Table.rows[i].cells[4].innerText;
+                    //关系类型
+                    ds.DataTables[j - 1].RelationType = (oT3Table.rows[i].cells[2].innerText == "=") ? 0 : 1;
+                }
+            }
+        }
+
+        //存入数据库
+      
+        //创建XML字符串，StringBuilder()方法为自定义
+        var sb = new StringBuilder();
+        sb.append('<?xml version="1.0"  encoding="gbk" ?>');
+        sb.append('<RAD>');
+        sb.append(' <Doc>');
+        sb.append('  <Data>');
+        sb.append('   <Operation ParamType="SaveDatabase" OperationSign="' + document.getElementById("OperationSign").value + '" value="" rowcount="' + rowsCount + '">');
+        sb.append(ds.serializeXml());
+        sb.append('</Operation>');
+        sb.append('  </Data>');
+        sb.append(' </Doc>');
+        sb.append('</RAD>');
+        var xmlDoc = XmlDocument.create(sb.toString());
+        //xmlDoc.load(sb.toString()); //在内存中生成一份XML文档
+
+        $R({
+            type: "post",
+            url: "datasourceAction!saveDataset",
+            async: false,
+            success: function (xhr) {
+                var sOperSign = document.getElementById("OperationSign").value;
+                if (sOperSign == "add") {
+                    if (xhr.responseXML.selectSingleNode("RAD/Doc/Data/Message").attributes.getNamedItem("DsId") == null) {
+                        alert(xhr.responseXML.selectSingleNode("RAD/Doc/Data/Message").attributes.getNamedItem("value").value);
+                        return;
+                    }
+                    dsId = ds.DbId = xhr.responseXML.selectSingleNode("RAD/Doc/Data/Message").attributes.getNamedItem("DsId").value;
+                    parent.window.oDataSet = ds;
+                    alert("添加成功");
+                    document.getElementById("OperationSign").value = "edit";
+                    parent.document.getElementById("dsSet").src = "";
+                    parent.dsSet.document.body.innerHTML = "";
+                    parent.dslist.location = encodeURI("datasetList.htm?DsId=" + dsId);
+                    addDsName(dsId);
+                } else if (sOperSign == "edit") {
+                    addDsName(dsId);
+                    parent.window.oDataSet = ds;
+                    alert("修改成功");
+                    if (parent.document.getElementById("dsSet") != null) {
+                        parent.document.getElementById("dsSet").src = "";
+                    }
+                    if (parent.dslist) {
+                        parent.dslist.location = encodeURI("datasetList.htm?DsId=" + dsId);
+                    } else {
+                        window.returnValue = dsName.value;
+                        window.close();
+                    }
+                } else {
+                    var returnAjaxValue = xhr.responseXML.selectSingleNode("RAD/Doc/Data/Message").attributes.getNamedItem("value").value;
+                    alert(returnAjaxValue);
+                }
+            },
+            failure: function (xhr) {
+                alert('Failure: ' + xhr.status);
+            },
+            data: xmlDoc,
+            contentType: "text/xml"
+        });
+    }
+
+    //参数加上数据集Name
+    function addDsName(dsId) {
+        if (window.argsDom == undefined || !window.arrRef) return;
+        var dsName = document.getElementById("dsName");
+        if (window.argsDom != undefined && window.argsDom.childNodes != null && window.argsDom.childNodes.length > 0 && window.argsDom.childNodes.xml != "") {
+            var arguments = window.argsDom.childNodes[0].childNodes.length ? window.argsDom.childNodes[0].childNodes : window.argsDom.childNodes;
+            for (var i = 0; i < arguments.length; i++) {
+                var argName = arguments[i].getAttribute("Name");
+                arguments[i].setAttribute("RefDsDetail", arrToString(argName, dsId, dsName.value));
+            }
+        }
+
+    }
+    function arrToString(argName, dsId, dsName, args) {
+        if (!window.arrRef[argName]) return "";
+        var arr = window.arrRef[argName];
+        var sArr;
+        sArr = "[";
+        for (var i = 0; i < arr.length; i++) {
+            if (!arr[i]) continue;
+            if (!arr[i][0] || !arr[i][1]) {
+                arr[i][0] = dsId;
+                arr[i][1] = dsName + "";
+            }
+            if (i == arr.length - 1) {
+                sArr += "[" + arr[i][0] + ",'" + arr[i][1] + "'," + arr[i][2] + "]";
+            } else {
+                sArr += "[" + arr[i][0] + ",'" + arr[i][1] + "'," + arr[i][2] + "],";
+            }
+        }
+        sArr += "]";
+        return sArr;
+    }
+    function scrollVertical(event) {
+        var oDiv = event.srcElement;
+        var cellPos;
+
+        if (x == -1 || y == -1) {
+            return;
+        }
+        if (oDiv.id == "div1") {
+            cellPos = getCoordinate(Table1.rows[y].cells[x]);
+            document.getElementById("slSetFatherTable").style.left = cellPos.left - oDiv.scrollLeft;
+            document.getElementById("slSetFatherTable").style.top = cellPos.top - oDiv.scrollTop;
+        } else if (oDiv.id == "div2") {
+            cellPos = getCoordinate(Table2.rows[y].cells[x]);
+            document.getElementById("txtEdit").style.left = cellPos.left - oDiv.scrollLeft;
+            document.getElementById("txtEdit").style.top = cellPos.top - oDiv.scrollTop;
+        } else {
+            cellPos = getCoordinate(Table3.rows[y].cells[x]);
+            document.getElementById("slAssociate").style.left = cellPos.left - oDiv.scrollLeft;
+            document.getElementById("slAssociate").style.top = cellPos.top - oDiv.scrollTop;
+        }
+    }
+
+    //参数设置
+    function argsAttributeSet() {
+        var txtArea = document.getElementById("txtArea");
+        var dsName = document.getElementById("dsName");
+        var sqlStr = txtArea.value;
+        //var returnArgs = showModalDialog("sqlSet.htm", [sqlStr, window.argsDom, dsId, window.arrRef ? window.arrRef : null], 'dialogWidth:480px;dialogheight:280px;status:no;help:no;rezise:no;scroll:no');
+        window.showCustomDialog("DataSource/attribute/sqlSet.htm", [sqlStr, window.argsDom, dsId, window.arrRef ? window.arrRef : null], "dialogWidth=533px;dialogHeight=326px;resizable=no;cover:yes;overparent=yes;id=argsSet;title=参数设置设置;", null, function (returnArgs) {
+            if (typeof returnArgs != "undefined") {
+                txtArea.value = returnArgs[0];
+                window.arrRef = returnArgs[1];
+            } 
+        });
+    }
+
+    function mouseoverEvent(e) {
+        var evt = e || window.event;
+        var oSrc = evt.target || evt.srcElement;
+        if (!oSrc) return;
+        if (oSrc.nodeName.toLocaleLowerCase() == "td") {
+            oSrc.style.backgroundColor = "#FFE8A6";
+        }
+    }
+
+    function mouseoutEvent(e) {
+        var evt = e || window.event;
+        var oSrc = evt.target || evt.srcElement;
+        if (oSrc.nodeName.toLocaleLowerCase() == "td") {
+            oSrc.style.backgroundColor = "";
+        }
+    }
+
+    function InstallConn() {
+        var nowConnString = window.showModalDialog("dataSourceChange.htm", null, 'dialogWidth:320px;dialogheight:250px;status:no;help:no;rezise:no;');
+        if (nowConnString != null && window.isOnlySee != true) {
+            window.location = "datasetSet.htm?DsId=&DataTablePrefix=&connString=" + nowConnString;
+        }
+    }
+</script>
+</html>

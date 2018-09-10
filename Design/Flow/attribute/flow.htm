@@ -1,0 +1,402 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="../../../sfk/panel/sfk_panel.css" rel="stylesheet" type="text/css" />
+    <link href="../../../sfk/accordion/sfk_accordion.css" rel="stylesheet" type="text/css" />
+    <link href="../../../sfk/tab/sfk_tab.css" rel="stylesheet" type="text/css" />
+    <script src="../../../sfk/sfk.js" type="text/javascript"></script>
+    <script src="../../../sfk/panel/sfk_panel.js" type="text/javascript"></script>
+    <script src="../../../sfk/accordion/sfk_accordion.js" type="text/javascript"></script>
+    <style type="text/css">
+        .attrTable
+        {
+            table-layout: fixed;
+            font-size: 11px;
+            border-collapse: collapse;
+            position: static;
+            text-align: left;
+            width: 100%;
+        }
+        
+        .attrTable td
+        {
+            overflow: hidden;
+        }
+        .attrTable td input
+        {
+            width: 105px;
+        }
+    </style>
+</head>
+<body style="background: rgb(240,240,240); margin: 0px;">
+    <form>
+    <div id="txtContainer" style="margin: 0px 3px; height: 80%;">
+        <ul class="acc_nav" id="barContainer">
+            <li>
+                <div>
+                    <div class="title">
+                        基本属性<div class="oper">
+                            <a href="#" panel="1">un</a></div>
+                    </div>
+                    <div class="content">
+                        <table class="attrTable" border="1" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td style="width: 60px;">
+                                    流程名称：
+                                </td>
+                                <td>
+                                    <input type="text" wlAttr="name" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    所属分类：
+                                </td>
+                                <td>
+                                    <select wlAttr="FlowClass">
+                                        <option value="3">员工相关</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    流程类型：
+                                </td>
+                                <td>
+                                    <select id="flowType" wlAttr="FlowType">
+                                        <option value="Normal">固定流程</option>
+                                        <option value="Free">自由流程</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    流程状态：
+                                </td>
+                                <td>
+                                    <select wlAttr="FlowState">
+                                        <option value="Public">发布</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    备注：
+                                </td>
+                                <td>
+                                    <textarea rows="5" wlAttr="Memo"></textarea>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <div class="title">
+                        数据配置<div class="oper">
+                            <a href="#" panel="1">un</a>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <table class="attrTable" border="1" cellpadding="0" cellspacing="0">
+                            <!-- <tr>
+                                <td style="width: 60px;">
+                                    数据模式：
+                                </td>
+                                <td>
+                                    <input type="radio" wlAttr="FlowDataMode" name="datamodel" value="SingleForm" style="width: 25px" />单表单<br />
+                                    <input type="radio" wlAttr="FlowDataMode" name="datamodel" value="MultiForm" style="width: 25px" />多表单
+                                </td>
+                            </tr> -->
+                            <tr>
+                                <td>
+                                    主表单：
+                                </td>
+                                <td>
+                                    <input type="text" disabled="disabled" wlAttr="MainFormName" /><br />
+                                    <input type="button" name="MainForm" value="选择" />
+                                </td>
+                            </tr>
+                            <!-- <tr>
+                                <td>
+                                    扩展表单：
+                                </td>
+                                <td>
+                                    <textarea rows="5" disabled="disabled" wlAttr="ExtendFormNames"></textarea><br />
+                                    <input type="button" id="ExtendForm" name="ExtendForm" value="选择" />
+                                </td>
+                            </tr> -->
+                        </table>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <div class="title">
+                        管理权限<div class="oper">
+                            <a href="#" panel="1">un</a>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <table class="attrTable" border="1" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td style="width: 60px;">
+                                    管理流程机构或人员：
+                                </td>
+                                <td>
+                                    <textarea rows="5" disabled="disabled" wlAttr="OwnerViewNames"></textarea><br />
+                                    <input type="button" name="ManageTree" value="选择" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <div class="title">
+                        创建权限<div class="oper">
+                            <a href="#" panel="1">un</a>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <table class="attrTable" border="1" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td style="width: 60px;">
+                                    自由流程创建工作的机构或人员：
+                                </td>
+                                <td>
+                                    <textarea rows="5" disabled="disabled" wlAttr="FreeBeginViewNames"></textarea><br />
+                                    <input type="button" name="CreateTree" value="选择" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <div class="title">
+                        使用权限<div class="oper">
+                            <a href="#" panel="1">un</a>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <table class="attrTable" border="1" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td style="width: 60px;">
+                                    使用自由流程机构或人员：
+                                </td>
+                                <td>
+                                    <textarea rows="5" disabled="disabled" wlAttr="FreeAppViewNames"></textarea><br />
+                                    <input type="button" name="AppTree" value="选择" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    </form>
+
+    <script type="text/javascript">
+        window.onload = function () {
+            var doc = document,
+                accor = new Accordion({
+                    target: doc.getElementById("barContainer"),
+                    container: doc.getElementById("txtContainer"),
+                    titleStyle: {},
+                    contentStyle: {},
+                    mode: 1,
+                    active: false
+                });
+
+            window.flowObj = parent.workflow;
+            window.workflow = flowObj.ExtAttributes;
+            window.flag = false;
+
+            SetForm();
+        }
+        
+        function changeAttr(element){
+        	var newVal = element.value, 
+        		oldVal = element.getAttribute("source"), 
+        		wlAttr = element.getAttribute("wlAttr"),
+        		eType = element.type;
+        	if(element.type == "radio"){
+        		if(newVal == "MultiForm"){
+        			document.getElementById("ExtendForm").disabled = true;
+        		}else{
+        			document.getElementById("ExtendForm").disabled = false;
+        		}
+        		oldVal = newVal == "MultiForm" ? "SingleForm" : "MultiForm";
+        	}
+       		parent.workflow.getCommandStack().execute(new parent.draw2d.CommandAttribute(flowObj, wlAttr, newVal, oldVal));
+           	element.setAttribute("source", newVal);    	
+        }
+
+        function SetForm() {
+            var form = document.forms[0], element, wlAttr, attrVal;
+            for (var i = form.length - 1; i >= 0; i--) {
+                element = form[i],
+                wlAttr = element.getAttribute("wlAttr");
+                if(wlAttr != null)
+                	attrVal = workflow["" + wlAttr + ""];
+                switch (element.type) {
+                    case "text":
+                        element.value = attrVal;
+                        if(!flag){
+	                        if(wlAttr == "MainFormName"){
+	                        	element.setAttribute("source", workflow["MainFormId"] + "," + attrVal + "," + workflow["MainFormTableName"]);
+	                        }else{
+		                        element.setAttribute("source", attrVal);
+		                        addEvent(element, "change", wlAttr);
+	                        }
+                        }
+                        break;
+                    case "select-one":
+                        if (wlAttr == "FlowState") {
+                            if (attrVal == "Draft" || attrVal == "Final") {
+                                element.options.add(new Option("草稿", "Draft"));
+                                element.options.add(new Option("定稿", "Final"));
+                            } else {
+                                element.options.add(new Option("冻结", "Congeal"));
+                            }
+                        } else if (wlAttr == "FlowType") {
+                            $E.on(element, "change", displayDiv);
+                        }
+                        element.value = attrVal;
+                        displayDiv();
+                        !flag && (element.setAttribute("source", attrVal), addEvent(element, "change", wlAttr));
+                        break;
+                    case "textarea":
+                    	element.value = attrVal || "";
+                    	if(!flag){
+	                    	wlAttr == "Memo" && (addEvent(element, "change", wlAttr), element.setAttribute("source", attrVal));
+	                    	if(wlAttr == "ExtendFormNames")
+	                    		element.setAttribute("source", workflow["ExtendFormIds"] + "," + workflow["ExtendFormNames"]);
+	                    	else if(wlAttr == "OwnerViewNames")
+	                    		element.setAttribute("source", workflow["OwnerIds"] + "," + workflow["OwnerNames"] + "," + attrVal || "");
+	                    	else if(wlAttr == "FreeBeginViewNames")
+	                    		element.setAttribute("source", workflow["FreeBeginUserIds"] + "," + workflow["FreeBeginUserNames"] + "," + attrVal || "");
+	                    	else if(wlAttr == "FreeAppViewNames")
+	                    		element.setAttribute("source", workflow["FreeAppUserIds"] + "," + workflow["FreeAppUserNames"] + "," + attrVal || "");
+                    	}
+                    	break;
+                    case "radio":
+                        if (attrVal == element.value)
+                            element.checked = true;
+                        !flag && (element.setAttribute("source", attrVal), addEvent(element, "click", wlAttr));
+                        break;
+                    case "button":
+                    	if(element.name == "ExtendForm") break;//扩展表单暂时没开启
+                    	
+                        !flag && $E.on(element, "click", function (evt,element) {
+                        	parent.sDialog.open({
+                                title: (function(){
+                                	if(element.name == "MainForm") return "主表单选择";
+                                	if(element.name == "ExtendForm") return "扩展表单选择";
+                                	return "组织人员选择";
+                                })(),
+                                content: {
+                                	src: (function(){
+		                                	if(element.name == "MainForm") 
+		                                		return "Flow/attribute/formTree.htm?showType=showRadio";
+		                                	else if(element.name == "ExtendForm") 
+		                            			return "Flow/attribute/formTree.htm?showType=showCheckbox";
+		                                	else
+		                                		return "Flow/attribute/personTree.htm";
+                                		 })()
+                                },
+                                width: 400,
+                                height: 400,
+                                onConfirm:function () {
+                                       	var reVal = this.heIframe.contentWindow.Submit();
+                                       	switch(element.name){
+                                        	case "MainForm":
+                                        		workflow.MainFormId = reVal[0];
+                                        		workflow.MainFormName = reVal[1];
+                                        		workflow.FormMainTableName = reVal[2];
+                                        		break;
+                                        	case "ExtendForm":
+                                        		workflow.ExtendFormIds = reVal[0];
+                                        		workflow.ExtendFormNames = reVal[1];
+                                        		break;
+                                        	case "ManageTree":
+                                        		workflow.OwnerIds = reVal[0];
+                                        		workflow.OwnerNames = reVal[2];
+                                        		workflow.OwnerViewNames = reVal[1];
+                                        		break;
+                                        	case "CreateTree":
+                                        		workflow.FreeBeginUserIds = reVal[0];
+                                        		workflow.FreeBeginUserNames = reVal[2];
+                                        		workflow.FreeBeginViewNames = reVal[1];
+                                        		break;
+                                        	case "AppTree":
+                                        		workflow.FreeAppUserIds = reVal[0];
+                                        		workflow.FreeAppUserNames = reVal[2];
+                                        		workflow.FreeAppViewNames = reVal[1];
+                                        		break;
+                                       	}
+                                       	var parObj = element.parentNode.children[0],
+	                                		oldVal = parObj.getAttribute("source"), 
+	                                		wlAttr = parObj.getAttribute("wlAttr"),
+	                                		wlAttrs = [], newVals = [];
+                                    	if(parObj.value != reVal[1])
+                                    	{
+                                    		if(wlAttr == "MainFormName"){
+                                    			newVals = [workflow["MainFormId"], workflow["MainFormName"], workflow["FormMainTableName"]];
+                                    			wlAttrs = ["MainFormId", "MainFormName", "FormMainTableName"];
+                                    		}
+                                    		else if(wlAttr == "ExtendFormNames"){
+                                    			newVals = [workflow["ExtendFormIds"], workflow["ExtendFormNames"]];
+                                    			wlAttrs = ["ExtendFormIds", "ExtendFormNames"];
+                                    		}
+                                        	else if(wlAttr == "OwnerViewNames"){
+                                    			newVals = [workflow["OwnerIds"], workflow["OwnerNames"], workflow["OwnerViewNames"]];
+                                    			wlAttrs = ["OwnerIds", "OwnerNames", "OwnerViewNames"];
+                                    		}
+                                        	else if(wlAttr == "FreeBeginViewNames"){
+                                    			newVals = [workflow["FreeBeginUserIds"], workflow["FreeBeginUserNames"], workflow["FreeBeginViewNames"]];
+                                    			wlAttrs = ["FreeBeginUserIds", "FreeBeginUserNames", "FreeBeginViewNames"];
+                                    		}
+                                        	else if(wlAttr == "FreeAppViewNames"){
+                                    			newVals = [workflow["FreeAppUserIds"], workflow["FreeAppUserNames"], workflow["FreeAppViewNames"]];
+                                    			wlAttrs = ["FreeAppUserIds", "FreeAppUserNames", "FreeAppViewNames"];
+                                    		}
+                                    		parObj.setAttribute("source", newVals);
+                                    		parent.workflow.getCommandStack().execute(new parent.draw2d.CommandAttribute(flowObj, wlAttrs, newVals, oldVal.split(",")));
+                                    	}
+                                    	parObj.value = reVal[1];                                         	
+                                    }
+                            });
+                        }, element, element);
+                }
+            }
+            window.flag = true;
+        }
+
+        function addEvent(element, type, wlAttr) {
+            $E.on(element, type, function () {
+                workflow["" + wlAttr + ""] = element.value;
+            });
+            $E.on(element, "change", function(){
+            	changeAttr(element);
+            });
+        }
+
+        function displayDiv() {
+            var doc = document,
+                heType = doc.getElementById("flowType"),
+                container = doc.getElementById("barContainer"),
+                flag = heType.value == "Free";
+            container.children[3].style.display = flag ? "" : "none";
+            container.children[4].style.display = flag ? "" : "none";
+        }
+    </script>    
+</body>
+</html>

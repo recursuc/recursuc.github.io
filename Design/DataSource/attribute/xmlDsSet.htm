@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+    <title>xml数据集设置</title>
+     <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <style type="text/css">
+        body
+        {
+            background-color: #BDC7D7;
+        }
+        table td
+        {
+            font-size: 12px;
+        }
+    </style>
+    <script src="../js/public_function.js"></script>
+</head>
+<body>
+    <div id="xmlDiv">
+        <fieldset style="font-size: 12; height: 330px;">
+            <legend>XML数据集配置</legend>
+            <table width="100%">
+                <tr>
+                    <td width="72px">
+                        &nbsp;&nbsp; &nbsp;数据集名：
+                    </td>
+                    <td>
+                        &nbsp;<input type="text" id="dsName" style="height: 21px; width: 145px;" />
+                    </td>
+                    <td rowspan="2">
+                        <fieldset>
+                            <legend style="color: Red;">说明</legend><span style="color: Gray;">请先下载XML模版，输入数据再上传
+                            </span>
+                        </fieldset>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="font-size: 12px;">
+                        &nbsp; &nbsp; <a id="downXml"></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <iframe frameborder="no" id="upXmlIframe" src="../common/UP_Xml.aspx" width="80%"
+                            height="60px"></iframe>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+        <div style="position: absolute; left: 360px; top: 350px">
+            <input type="button" value="确定" onclick="submitDs()" style="width: 60px;" />
+            <input type="button" value="取消" onclick="closeDsSet()" style="width: 60px;" />
+        </div>
+    </div>
+    <input type="hidden" id="OperationSign" value="" />
+    <input type="hidden" id="oldXmlFileName" value="" />
+    <input type="hidden" id="nowXmlName" value="" />
+    <input type="hidden" id="xmlURL" value="" />
+    <script type="text/javascript">
+        //初始化
+        var dsId = ""; //数据集ID
+        window.onload = function () {
+
+            if (Request["DsId".toLowerCase()] != undefined && Request["DsId".toLowerCase()].toString() != "") {
+                dsId = Request["DsId".toLowerCase()].toString();
+            }
+            if (dsId != "") {
+                OperationSign.value = "edit"
+                var xmlDoc = CreateBaseXmlDoc('<Operation ParamType="GetDsInfo" value="' + dsId + '"/>');
+                var Ajax = new AjaxHandler();
+                var callback = {
+                    success: function (xhr) {
+                        var returnAjaxValue = xhr.responseXML.selectSingleNode("RAD/Doc/Data/Message").attributes.getNamedItem("value").value;
+                        if (returnAjaxValue == "操作成功") {
+                            var xmlDs = xhr.responseXML.selectSingleNode("RAD/Doc/Data").childNodes[1];
+                            dsName.value = xmlDs.getAttribute("Name");
+                            oldXmlFileName.value = xmlDs.getAttribute("FileName");
+                            if (xmlDs.getAttribute("FileName") != "") {
+                                downXml.innerHTML = "下载已有xml文件";
+                                downXml.href = "../common/DownBaseXml.aspx?downXmlName=" +escape(xmlDs.getAttribute("FileName"))+"";
+                            } else {
+                                downXml.innerHTML = "下载xml模版文件";
+                                downXml.href = "../common/DownBaseXml.aspx";
+                            }
+                        }
+                    },
+                    failure: function (xhr) {
+                        alert('Failure: ' + xhr.status);
+                    }
+                };
+                Ajax.request("post", "../common/RptDSAjax.aspx", false, callback, xmlDoc);
+            } else {
+                OperationSign.value = "add";
+                downXml.innerHTML = "下载xml文件模版";
+                downXml.href = "../common/DownBaseXml.aspx";
+            }
+        };
+
+        function closeDsSet() {
+            parent.window.close();
+        }
+
+        function submitDs() {
+            if (dsName.value == "") {
+                alert("数据集名不能为空！");
+                return;
+            }
+            if (nowXmlName.value == "") {
+                alert("请选择上传！");
+                return;
+            }
+            var nowDate = new Date();
+            var dateTime = "-" + nowDate.getYear() + "" + (nowDate.getMonth() + 1) + "" + nowDate.getDate() + "" + nowDate.getHours() + "" + nowDate.getMinutes() + "" + nowDate.getSeconds();
+            // var fileName = nowXmlName.value.replace(/[-]?.*?(?=\.xml)/ig, dateTime);
+            var fileNameArr = nowXmlName.value.split('-');
+            var fileType = fileNameArr[fileNameArr.length - 1].split('.');
+            var fileName = null;
+            if (fileNameArr.length > 1) {
+                fileNameArr.splice(fileNameArr.length - 1, 1);
+                fileName = fileNameArr.join("") + dateTime + "." + fileType[fileType.length - 1];
+            } else {
+                fileType.splice(fileType.length - 1, 0,dateTime+".");
+                fileName = fileType.join("");
+            }
+
+
+            nowXmlName.value = fileName;
+            var filePath = "Application/ReportSystem/xmlFiles/" + fileName;
+            upXmlIframe.window.upXmlForm.nowXmlName.value = fileName;
+            upXmlIframe.window.upXmlForm.oldXmlName.value = oldXmlFileName.value;
+            xmlURL.value = upXmlIframe.window.upXmlForm.filePath.value;
+            upXmlIframe.window.upXmlForm.submit();
+
+            if (OperationSign.value == "edit") {//更新
+                sSaveXml = new StringBuilder('<Operation ParamType="SaveDatabase" OperationSign="edit">');
+            } else {//保存
+                sSaveXml = new StringBuilder('<Operation ParamType="SaveDatabase" OperationSign="add">');
+            }
+            sSaveXml.append('<DataSet DsId="' + dsId + '" Name ="' + dsName.value + '" Type="3" FileName="' + fileName + '" FilePath = "' + filePath + '">');
+            sSaveXml.append('</DataSet>');
+            sSaveXml.append('</Operation>');
+
+            var xmlDoc = CreateBaseXmlDoc(sSaveXml.toString()); //创建DOM
+            var Ajax = new AjaxHandler();
+            var callback = {
+                success: function (xhr) {
+                    var returnMessage = xhr.responseXML.selectSingleNode("RAD/Doc/Data/Message").attributes.getNamedItem("value").value;
+                    if (dsId == "") {
+                        dsId = xhr.responseXML.selectSingleNode("RAD/Doc/Data/Message").attributes.getNamedItem("DsId").value;
+                        OperationSign.value = "edit";
+                    } else {
+                        downXml.innerHTML = "下载已有xml文件";
+                        downXml.href = "../common/DownBaseXml.aspx?downXmlName=" + escape(fileName) + "";
+                    }
+                    if (parent.dslist != null) {
+                        parent.dslist.location = encodeURI("datasetList.htm?DsId=" + dsId);
+                        alert(returnMessage);
+                    } else {
+                        alert(returnMessage);
+                        window.close();
+                    }
+                },
+                failure: function (xhr) {
+                    alert('Failure: ' + xhr.status);
+                }
+            };
+            Ajax.request("post", "../common/RptDSAjax.aspx", false, callback, xmlDoc);
+        }
+
+    </script>
+</body>
+</html>

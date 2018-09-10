@@ -1,0 +1,28 @@
+﻿
+.CM ul
+{
+    list-style-type: none;
+    margin: 0px;
+    padding: 0px;
+    background-color: #F1F1F1;
+    border: 1px solid #F1F1F1;
+}
+
+.CM a:link, .CM a:visited
+{
+    color: black;
+    font-size: 12px;
+    text-decoration: none;
+}
+
+.CM a:hover, .CM a:active
+{
+    background-color: transparent;
+    text-decoration: none;
+}
+
+a.disable
+{
+    color: #F1F1F1;
+    text-decoration: none;
+}

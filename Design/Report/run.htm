@@ -1,0 +1,138 @@
+<!DOCTYPE HTML>
+<html id="main">
+<head>
+    <title></title>
+    <meta http-equiv="content-type" content="text/html; charset=gb2312" />
+    <script src="../../publicJS/jquery/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="../../publicJS/jq_utilities.js" type="text/javascript"></script>
+    <script src="js/public_function.js" type="text/javascript"></script>
+      <script src="js/charts.js" type="text/javascript"></script>
+        <!-- Place this tag in your head or just before your close body tag -->
+    <script src="js/rgraph/libraries/RGraph.common.core.js" type="text/javascript"></script>
+    <script src="js/rgraph/libraries/RGraph.common.effects.js" type="text/javascript"></script>
+    <script src="js/rgraph/libraries/RGraph.common.tooltips.js" type="text/javascript"></script>
+    <script src="js/rgraph/libraries/RGraph.common.key.js" type="text/javascript"></script>
+    <script src="js/rgraph/libraries/RGraph.bar.js" type="text/javascript"></script>
+    <script src="js/rgraph/libraries/RGraph.line.js" type="text/javascript"></script>
+    <script src="js/rgraph/libraries/RGraph.common.zoom.js" type="text/javascript"></script>
+</head>
+<body>
+    <script type="text/javascript">
+        //document.write('<div id="divLoading" style="position:absolute;left:50%;' + Math.round(main.offsetWidth / 2).toString() + 'px;top:' + Math.round(document.body.offsetHeight / 2) + 'px;"><img id="imgLoading" src="skins/blue/images/run_progress_bar.gif"  alt="Loading" /></div>');
+
+        //document.write('<div id="divLoading" style="position:absolute;left:50%;top:50%;"><img id="imgLoading" src="skins/blue/images/run_progress_bar.gif"  alt="Loading" /></div>');
+        var bIsView, xdRptDefine, reportId;
+        window.onload = function () {
+            var oDiv = document.createElement("div");
+            oDiv.id = "divLoading";
+            oDiv.style.position = "absolute";
+
+            var oImg = document.createElement("img");
+            oImg.src = "skins/blue/images/run_progress_bar.gif";
+            oImg.alt = "Loading";
+            oDiv.appendChild(oImg);
+
+            var oP = document.createElement("p");
+            oP.style.fontSize = "12px";
+            oDiv.appendChild(oP);
+
+            document.body.appendChild(oDiv);
+
+            var sDis = "加载中,请稍等……";
+            var fnDis = (function (oControl, sDis, iCurSeq) {
+                var arrDis = sDis.split("");
+                var iCur = iCurSeq, len = arrDis.length;
+                var iForward = 1, iPLen = parseInt(oControl.style.fontSize) * len;
+                oImg.style.marginLeft = Math.floor((iPLen - oImg.width) / 2).toString() + "px";
+                if (oImg.parentNode != null) {
+                    oImg.parentNode.style.left = Math.round((document.documentElement.clientWidth - Math.max(oImg.width, iPLen)) / 2).toString() + "px";
+                    oImg.parentNode.style.top = Math.round((document.documentElement.clientHeight - Math.max(oImg.height, parseInt(oControl.style.fontSize))) / 2).toString() + "px";
+                }
+
+                return function () {
+                    if (iForward == 1) {
+                        if (iCur < len) {
+                            oControl.innerText += arrDis[iCur++];
+                        } else {
+                            iForward *= -1;
+                        }
+                    } else {
+                        if (iCur >= 0) {
+                            oControl.innerText = sDis.substring(0, iCur--);
+                        } else {
+                            iForward *= -1;
+                            iCur = 0;
+                        }
+                    }
+                }
+            })(oP, sDis, 0);
+
+            var iInterId = window.setInterval(fnDis, 350);
+
+            var Ajax = new AjaxHandler();
+            var callback = {
+                success: function (xhr) {
+                    //设计器回填
+                    if (xhr.responseXML.xml != "") {
+                        window.xdRptRun = (new DOM(xhr.responseXML));
+                        var xnReport = xdRptRun.selectSingleNode("/RAD/Doc/Data/Report");
+                        var oFrameset = document.createElement("frameset");
+                        oFrameset.rows = "26px,*";
+                        oFrameset.border = "0";
+                        oFrameset.borderColor = "gray";
+                        oFrameset.frameBorder = "0px"
+                        oFrameset.scrolling = "no";
+                        var oFrameToolbar = document.createElement("frame");
+                        oFrameToolbar.id = "toolbar";
+                        oFrameToolbar.border = "0";
+                        oFrameToolbar.scrolling = "no";
+                        oFrameToolbar.noResize = true;
+                        oFrameToolbar.src = "run_toolbar.htm" + location.href.substring(location.href.indexOf("?"));
+                        var oFrameTopic = document.createElement("frame");
+                        oFrameTopic.id = "topic";
+                        oFrameTopic.border = "0";
+                        oFrameTopic.scrolling = "no";
+                        oFrameTopic.noResize = true;
+                        //oFrameTopic.borderTopColor = "LightGrey"
+                        oFrameTopic.marginwidth = "1"
+                        oFrameTopic.src = "run_topic.htm" + location.href.substring(location.href.indexOf("?"));
+                        oFrameset.appendChild(oFrameToolbar);
+                        oFrameset.appendChild(oFrameTopic);
+                        //documentRun.write(oFrameset.outerHTML);
+                        document.documentElement.replaceChild(oFrameset, document.body);
+                    } else {
+                        alert(xhr.responseText);
+                        window.close();
+                    }
+                    window.clearInterval(iInterId);
+                },
+                failure: function (xhr) {
+                    window.clearInterval(iInterId);
+                    alert('Failure: ' + xhr.responseText);
+                }
+            };
+
+            bIsView = Request["isview"];
+            if (bIsView != undefined && bIsView == "1") {
+                xdRptDefine = window.dialogArguments;
+                //处理带参数的报表模型
+                if (xdRptDefine.documentElement.selectSingleNode(".//Arguments").childNodes.length > 0) {
+                    var retVal = showModalDialog("attribute/runArgsSet.htm", xdRptDefine, 'dialogWidth:400px; dialogHeight:200px; help:no; center:yes; status:no; resizable:no; location:yes; scroll:no;');
+                    if (!retVal) {
+                        alert("参数未设置值！");
+                        window.close();
+                    }
+                }
+                Ajax.request("Post", "common/RptRunAjax.aspx?IsView=1", true, callback, xdRptDefine);
+                return;
+            }
+
+            reportId = Request["reportid"];
+            if (reportId != undefined && reportId.toString() != "") {
+                Ajax.request("GET", "common/RptRunAjax.aspx" + location.href.substring(location.href.indexOf("?")), true, callback, "");
+                return;
+            }
+        }  
+    </script>
+</body>
+</html>

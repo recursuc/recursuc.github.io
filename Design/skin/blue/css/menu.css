@@ -1,0 +1,143 @@
+.MenuPanel 
+{
+	border: 1px solid #002D96;
+	cursor:hand;
+	filter:progid:DXImageTransform.Microsoft.Shadow(enabled=true,color=#99CCFF,direction=135,strength=3);
+	table-layout:fixed;
+}
+
+.ItemHightLightDiv 
+{  
+	border: 1px solid #000080; 
+	background-color: #FFEEC2;
+	position: absolute;
+	z-index:6;
+	height:23px;
+	left:2px;
+	cursor:hand;
+}
+
+.ItemHighLightTable
+{
+	table-layout:fixed;
+	width:100%;
+ 	height:100%;
+	cursor:hand;
+}
+
+.ItemHL
+{   padding-left:6px;
+	font-size: 10pt;
+	white-space:nowrap;
+}
+
+.ItemNormal
+{
+    padding-left:4px;
+    height:25px;
+	font-size: 10pt; 
+	padding-top:2px;
+	background-color: #F6F6F6;
+	border-Bottom: 1px solid #F6F6F6;
+	white-space:nowrap;
+}
+
+
+.ItemNormalLine
+{ 
+    padding-left:4px;
+    padding-top:2px;
+    height:25px;
+	font-size: 10pt; 
+	background-color: #F6F6F6;
+	border-Bottom: 1px solid #6A8CCB;
+	white-space:nowrap;
+}
+
+.ItemNormalReadOnly
+{
+    padding-left:4px;
+    height:25px;
+	font-size: 10pt; 
+	padding-top:2px;
+	background-color: #F6F6F6;
+	color:red;
+	border-Bottom: 1px solid #F6F6F6;
+	white-space:nowrap;
+}
+
+.PicColummLeftHalf
+{
+	padding-left:7px;
+	height:25px;
+	width:26px;
+	afilter:progid:DXImageTransform.Microsoft.gradient(startcolorstr=#E3EFFF,endcolorstr=#8EB3E7,gradientType=1);
+	background-image:url(../images/designer_menu_LeftHalf.gif);
+}
+.PicColummRightHalf
+{
+	height:25px;
+	width:26px;
+	padding-left:5px;
+	afilter:progid:DXImageTransform.Microsoft.gradient(startcolorstr=#8EB3E7,endcolorstr=#88AEE4,gradientType=1);
+	background-image:url(../images/designer_menu_RightHalf.gif);
+}
+
+.PicColummFull
+{
+	padding-left:5px;
+	height:25px;
+	width:26px;
+	afilter:progid:DXImageTransform.Microsoft.gradient(startcolorstr=#DDECFE,endcolorstr=#81A9E2,gradientType=1);
+	background-image:url(../images/designer_menu_FullBG.gif);
+}
+
+.DivPanel{
+	position: relative;  
+	height: 1px; 
+	z-index: 2; 
+	visibility:hidden;
+}
+
+.MenubarHLYellow
+{
+	text-align:center;
+	padding-right:4px;
+	padding-left:4px;
+	padding-top: 1px; 
+	padding-bottom: 1px;
+	filter:progid:DXImageTransform.Microsoft.gradient(startcolorstr=#FFF4CC,endcolorstr=#FFD79D,gradientType=0);
+	border: 1px solid #000080;
+}
+
+.MenubarHLBlue
+{
+	text-align:center;
+	padding-right:4px;
+	padding-left:4px;
+	padding-top: 1px; 
+	padding-bottom: 1px;
+	filter:progid:DXImageTransform.Microsoft.gradient(startcolorstr=#E3EFFF,endcolorstr=#98B9E8,gradientType=0);
+	border: 1px solid #000080;
+}
+
+.Menubar{
+	background-color: #98B9E8;
+	font-size: 10pt;
+    height:24px;
+    width:100%;  
+    cursor:hand;
+}
+
+.MenubarNormal{ 
+	font-size: 10pt;
+    white-space:nowrap;
+    padding-left:4px;
+    padding-right:4px;
+    padding-top: 1px; 
+    padding-bottom: 1px;
+    cursor:hand;
+    border:1px solid #98B9E8;
+}
+
+

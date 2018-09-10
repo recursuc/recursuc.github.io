@@ -1,0 +1,419 @@
+<!DOCTYPE HTML ">
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+    <style type="text/css">
+        body
+        {
+            margin: 0px;
+            padding: 0px;
+        }
+        .aFilter
+        {
+            filter: alpha(opacity=80);
+        }
+        .over
+        {
+            border-top: #D5D5D6 1px solid;
+            border-left: #D5D5D6 1px solid;
+            border-right: #676869 1px solid;
+            border-bottom: #676869 1px solid;
+            filter: changestrength(strength=800) alpha(opacity=90) dropshadow(color=#8BBCC5,offx=1,offy=1);
+        }
+        .down
+        {
+            border-top: #676869 1px solid;
+            border-left: #676869 1px solid;
+            border-right: #D5D5D6 1px solid;
+            border-bottom: #D5D5D6 1px solid;
+            filter: changestrength(strength=800) alpha(opacity=100,color=#8BBCC5) dropshadow(color=#8BBCC5,offx=1,offy=1);
+        }
+        .Toolbar
+        {
+            font-size: 12px;
+        }
+    </style>
+    <script src="js/public_function.js" type="text/javascript"></script>
+    <script src="../../publicJS/jquery/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="../../publicJS/jq_utilities.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var iCurPageNo = 1;  //当前页号
+        var iTotalPageNum = 1;   //总页数
+        var sCacheRptId = ""; //报表的缓存ID
+        var isFirstShow = true;
+        var btnList = { //所有按钮的列表
+            firstpage: ["第一页", "skins/blue/images/firstpage.gif", false, 'movePage("first")'],
+            prevpage: ["上一页", "skins/blue/images/prepage.gif", false, 'movePage("pre")'],
+            nextpage: ["下一页", "skins/blue/images/nextpage.gif", false, 'movePage("next")'],
+            lastpage: ["最后一页", "skins/blue/images/lastpage.gif", false, 'movePage("last")'],
+            pages: ["总页数", "", false, ''],
+            curpage: ["设置当前页", "", false, ''],
+            expExcel: ["导出EXCEL", "skins/blue/images/ef_design_excel.gif", false, 'expExcel()'],
+            expHtml: ["导出HTML", "skins/blue/images/ef_run_html.gif", false, 'expHTML()']
+        };
+        var xdRptRun = null;
+        var pTopic = parent.document.getElementById("topic")
+        window.onload = function () {
+            xdRptRun = parent.xdRptRun;
+            var xnReport = xdRptRun.selectSingleNode("/RAD/Doc/Data/Report");
+            iCurPageNo = xnReport.getAttribute("CurrentPageNum");
+            iTotalPageNum = xnReport.getAttribute("TotaPageNum");
+
+            addToolbarButton();
+            initPageNo();
+
+            //写Html到主页面
+            if (pTopic.contentDocument.readyState == "complete") {
+                writeHtmlToTopic();
+            } else {
+               pTopic.contentDocument.onreadystatechange = function () {
+                   if (pTopic.contentDocument.readyState == "complete") {
+                        writeHtmlToTopic();
+                    }
+                };
+            }
+
+        }
+
+        function writeHtmlToTopic() {
+            if (isFirstShow) {
+                isFirstShow = false;
+                //var oStyle = pTopic.contentDocument.createElement("style"); // createStyleSheet();
+                var oStyle =null;
+                if (pTopic.contentDocument.createStyleSheet) {
+                    oStyle = pTopic.contentDocument.createStyleSheet();
+                    oStyle.cssText = parent.xdRptDefine != undefined ? parent.xdRptDefine.selectSingleNode("/RAD/Doc/Data/Report/RuntimeStyle").text : xdRptRun.selectSingleNode("/RAD/Doc/Data/Report/RuntimeStyle").text();
+                } else {
+                    oStyle = pTopic.contentDocument.createElement("style");
+                    pTopic.contentDocument.getElementsByTagName("head")[0].appendChild(oStyle);
+                    oStyle.innerHTML = parent.xdRptDefine != undefined ? parent.xdRptDefine.selectSingleNode("/RAD/Doc/Data/Report/RuntimeStyle").text : xdRptRun.selectSingleNode("/RAD/Doc/Data/Report/RuntimeStyle").text();
+                }
+//                var htmlScript =pTopic.contentDocument.createElement("script");
+//                htmlScript.id = "seVerAlert";
+//                htmlScript.text = xdRptRun.selectSingleNode("/RAD/Doc/Data/Report").lastChild().text().replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">"); ;
+//               pTopic.contentDocument.body.appendChild(htmlScript);
+            }
+
+            if (parent.bIsView) {
+                //pTopic.document.styleSheets[0].cssText += parent.xdRptDefine.selectSingleNode("RAD/Doc/Data/Report/RuntimeStyle").text;
+                var divRpt =pTopic.contentDocument.getElementById("divRpt"),
+                 xeReport = xdRptRun.selectSingleNode("/RAD/Doc/Data/Report");
+                divRpt.innerHTML = xeReport.firstChild().xml().replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+                pTopic.RptName = xeReport.getAttribute("ChineseName")
+
+                //setRptSession();
+            } else {
+                var divRpt =pTopic.contentDocument.getElementById("divRpt");
+                divRpt.innerHTML = xdRptRun.selectSingleNode("/RAD/Doc/Data/Report/Table").xml().replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+                // setRptSession();
+            }
+            divRpt.style.width =pTopic.contentDocument.documentElement.clientWidth > 12 ?pTopic.contentDocument.documentElement.clientWidth - 12+"px" :pTopic.contentDocument.documentElement.clientWidth+"px";
+            divRpt.style.height =pTopic.contentDocument.documentElement.clientHeight > 12 ?pTopic.contentDocument.documentElement.clientHeight - 12+"px" :pTopic.contentDocument.documentElement.clientHeight+"px";
+            resetTbWidth();
+            var initChart = window.setInterval(function () {
+                if (pTopic.contentWindow.oCharts) {
+                    var oCharts = pTopic.contentWindow.oCharts.jsonToCharts(xdRptRun.selectSingleNode("/RAD/Doc/Data/Report/Charts").text(), true);
+                   // oCharts.drawTo(true);
+                    window.clearInterval(initChart);
+                }
+            }, 100)
+         
+        }
+
+        //重新设置table宽度
+        function resetTbWidth() {
+            var oTable = pTopic.contentDocument.getElementsByTagName("table")[0];
+            //            changeCellStyle.setCellStyle(oTable);
+            var colgroup = oTable.children[0];
+            var tableWidth = 0;
+//            for (var i = 0; i < colgroup.childNodes.length; i++) {
+//                tableWidth += parseInt(colgroup.childNodes[i].style.width);
+//            }
+//            oTable.setAttribute("width", tableWidth.toString());
+        }
+
+        function addToolbarButton() {
+            if (document.getElementById("tbToolbar") != null) return;
+
+            var sToolbar = "firstpage,prevpage,pages,curpage,nextpage,lastpage,expExcel,expHtml"; //,|,preview,print,printdirect,printall"; //,|,expexcel,expexcelall,exppdf";
+            var arr = sToolbar.split(",");
+            var sbToolbar = new StringBuilder(); //工具栏的串
+            sbToolbar.append("<table id='tbToolbar' class='Toolbar' cellSpacing='0' cellPadding='2px' border='0'><tr>");
+            for (var j = 0; j < arr.length; j++) {
+                var btn = btnList[arr[j]];
+                switch (arr[j]) {
+                    case "|":
+                        {
+                            sbToolbar.append("<td><img src='../images/ef_design_menuline.gif'></td>");
+                            break;
+                        }
+                    case "curpage":
+                        {
+                            sbToolbar.append("<td height='22px'><select id='cboPage' onchange='cboPage_onchange()' style='width:45px'><option selected>1</option></select></td>");
+                            break;
+                        }
+                    case "pages":
+                        {
+                            sbToolbar.append("<td height='22px'><span id='lblPage'>共有" + iTotalPageNum.toString() + "页</span></td>");
+                            break;
+                        }
+                    default:
+                        {
+                            sbToolbar.append("<td width='22px' height='22px' onmouseover='this.className=\"over\"' onmouseout='this.className=\"aFilter\"' onmousedown='this.className=\"down\"' onmouseup='this.className=\"over\"'><img class='aFilter' title='" + btn[0] + "' onclick='" + btn[3] + "' src='" + btn[1] + "' width='20px' height='20px'></td>");
+                            break;
+                        }
+                }
+
+            }
+            sbToolbar.append("<td  height='22px'>&nbsp;</td></tr></table>");
+            document.getElementById("divToolbar").innerHTML = sbToolbar.toString();
+        }
+
+        function movePage(sPageNo) {
+            switch (sPageNo) {
+                case "first":
+                    {
+                        if (iCurPageNo > 1) {
+                            iCurPageNo = 1;
+                            movePageHandle();
+                        }
+                        break;
+                    }
+                case "pre":
+                    {
+                        if (iCurPageNo > 1) {
+                            iCurPageNo--;
+                            movePageHandle();
+                        } else {
+                            alert("已经到了第一页");
+                        }
+                        break;
+                    }
+                case "next":
+                    {
+                        if (iCurPageNo < iTotalPageNum) {
+                            iCurPageNo++;
+                            movePageHandle();
+                        } else {
+                            alert("已经到了最后一页");
+                        }
+                        //movePageHandle();
+                        break;
+                    }
+                case "last":
+                    {
+                        iCurPageNo = iTotalPageNum;
+                        movePageHandle();
+                        break;
+                    }
+            }
+            var oCboPage = document.getElementById("cboPage");
+            if (oCboPage != null) {
+                oCboPage.selectedIndex = iCurPageNo - 1;
+            }
+        }
+
+        function cboPage_onchange() {
+            iCurPageNo = cboPage.selectedIndex + 1;
+            movePageHandle();
+        }
+
+        function movePageHandle() {
+            var Ajax = new AjaxHandler();
+            var callback = {
+                success: function (xhr) {
+                    //设计器回填
+                    if (xhr.responseXML.xml != "") {
+                        var divRpt =pTopic.contentDocument.getElementById("divRpt");
+                        divRpt.innerHTML = xhr.responseXML.selectSingleNode("/RAD/Doc/Data/Report").firstChild.xml.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+                        if (isFirstShow) {
+                            var oStyle =pTopic.contentDocument.createStyleSheet();
+                            oStyle.cssText = parent.xdRptDefine.selectSingleNode("RAD/Doc/Data/Report/RuntimeStyle").text;
+                        }
+                        resetTbWidth();
+                        var initChart = window.setInterval(function () {
+                            if (pTopic.contentWindow.oCharts) {
+                                var oCharts = pTopic.contentWindow.oCharts.jsonToCharts(xdRptRun.selectSingleNode("/RAD/Doc/Data/Report/Charts").text(), true);
+                                // oCharts.drawTo(true);
+                                window.clearInterval(initChart);
+                            }
+                        }, 100)
+                        //setRptSession();
+                    }
+                },
+                failure: function (xhr) {
+                    alert('Failure: ' + xhr.status);
+                }
+            };
+            var url = parent.location.href;
+            if (parent.bIsView) {
+                Ajax.request("Post", "common/RptRunAjax.aspx?" + url.substring(url.indexOf("?") + 1, url.length) + "&PageNo=" + iCurPageNo + "&RptCacheId=" + sCacheRptId, false, callback, parent.xdRptDefine);
+            } else {
+                Ajax.request("Get", "common/RptRunAjax.aspx?" + url.substring(url.indexOf("?") + 1, url.length) + "&PageNo=" + iCurPageNo + "&RptCacheId=" + sCacheRptId, false, callback);
+            }
+        }
+
+        function initPageNo() {
+            var sOption = "";
+            for (var i = 0; i < iTotalPageNum; i++) {
+                sOption += "<option>" + (i + 1) + "</option>";
+            }
+            document.getElementById("cboPage").outerHTML = "<span style='vertical-align:bottom;'>当前为：<span style='vertical-align:middle;'><select id='cboPage' style='width:50px;' onchange='cboPage_onchange()'>" + sOption + "</select></span>页</span>";
+        }
+
+        function setRptSession() {
+            var Ajax = new AjaxHandler();
+            var xmlDoc = CreateBaseXmlDoc('<Excel></Excel>');
+            var excelEm = xmlDoc.selectSingleNode("//Excel");
+            excelEm.text =pTopic.contentDocument.documentElement.outerHTML.replace(/<link.*>|<br>/mgi, function (sMatch) {
+                return sMatch.replace(sMatch, "");
+            }); 
+            var callback = {
+                success: function (xhr) {
+                },
+                failure: function (xhr) {
+                    alert('Failure: ' + xhr.status);
+                }
+            };
+            Ajax.request("Post", "common/RptToExcel.aspx?rptName=", false, callback, xmlDoc);
+        }
+
+        function expExcel() {//导出excel
+            setRptSession();
+            var sRptName = pTopic.RptName + "Sheet" + iCurPageNo;
+            rptToExcel.document.location = "common/RptToExcel.aspx?rptName=" + sRptName;
+        }
+        function setRptHtmlSession() {
+            var Ajax = new AjaxHandler();
+            var xmlDoc = CreateBaseXmlDoc('<PNTHTML></PNTHTML>');
+            var excelEm = xmlDoc.selectSingleNode("//PNTHTML");
+            excelEm.text =pTopic.contentDocument.documentElement.outerHTML;
+//            excelEm.text = excelEm.text.replace(/<script.*<\/script>/mgi,function (sMatch) {
+//                    return sMatch.replace(sMatch, "");
+//                }); 
+            var callback = {
+                success: function (xhr) {
+                },
+                failure: function (xhr) {
+                    alert(xhr.responseText);
+                }
+            };
+            Ajax.request("Post", "common/RptToHTML.aspx?rptName=", false, callback, xmlDoc);
+        }
+        function expHTML() {//导出html
+            setRptHtmlSession();
+            var sRptName = pTopic.RptName + iCurPageNo;
+            rptToExcel.document.location = "common/RptToHTML.aspx?rptName=" + sRptName;
+        }
+        //单元格内容格式设置
+        var changeCellStyle = {
+            oTable: {
+        },
+
+        setCellStyle: function (oTable) {
+            var oTds = oTable.cells;
+            this.oTable = oTable;
+            this.changeColWidth(oTds); //先进行单元格变长
+            for (var i = 0; i < oTds.length; i++) {
+                switch (oTds[i].CellDisplayType) {
+                    case "0": //隐藏
+                        {
+                            this.cellAddEllipsis(oTds[i]);
+                            break;
+                        }
+                    case "1": //折行
+                        {
+                            this.breakCellText(oTds[i]);
+                            break;
+                        }
+                    case "2": //字体变小
+                        {
+                            this.changeCellFontSize(oTds[i]);
+                            break;
+                        }
+                }
+            }
+        },
+
+        changeColWidth: function (oTds) {
+            var cols = this.oTable.childNodes[0];
+            var cellTextLength = 0;
+            var colWidth = 0;
+            var tdTest = document.getElementById("tdTest");
+            for (var i = 0; i < oTds.length; i++) {
+                if (oTds[i].CellDisplayType == "3") {
+                    tdTest.fontSize = oTds[i].currentStyle.fontSize;
+                    tdTest.innerText = oTds[i].innerText;
+                    cellTextLenth = tdTest.offsetWidth;
+                    var colIndex = parseInt(oTds[i].Merge.split('-')[0].split(',')[1]) - 1;
+                    colWidth = parseInt(cols.childNodes[colIndex].style.width);
+                    if (cellTextLenth > colWidth) {
+                        var cellColSpan = oTds[i].colSpan;
+                        if (cellColSpan == 1) {
+                            cols.childNodes[colIndex].style.width = cellTextLenth;
+                        } else {
+                            cellTextLenth = Math.floor(cellTextLenth / cellColSpan) + 1;
+                            for (var j = 0; j < cellColSpan; j++) {
+                                cols.childNodes[colIndex + j].style.width = cellTextLenth;
+                            }
+                        }
+                    }
+                }
+            }
+        },
+
+        changeCellFontSize: function (oTd) {
+            var cols = this.oTable.childNodes[0];
+            var cellTextLength = 0;
+            var tdFontSize = oTd.currentStyle.fontSize;
+            var tdTest = document.getElementById("tdTest");
+            tdTest.style.fontSize = tdFontSize;
+            tdTest.innerText = oTd.innerText;
+            cellTextLenth = tdTest.offsetWidth;
+            var colWidth = 0;
+            var colIndex = parseInt(oTd.Merge.split('-')[0].split(',')[1]) - 1;
+            for (var i = 0; i < oTd.colSpan; i++) {
+                colWidth += parseInt(cols.childNodes[colIndex + i].currentStyle["width"]);
+            }
+            while (cellTextLenth >= colWidth) {
+                tdFontSize = tdFontSize.replace(/\d+/g, function (sMatch) {
+                    var size = parseInt(sMatch);
+                    size--;
+                    return size;
+                });
+                tdTest.style.fontSize = tdFontSize;
+                tdTest.innerText = oTd.innerText;
+                cellTextLenth = tdTest.offsetWidth;
+            }
+            oTd.style.fontSize = tdFontSize;
+        },
+
+        breakCellText: function (oTd) {
+            oTd.style.wordBreak = "break-all";
+        },
+
+        cellAddEllipsis: function (oTd) {
+            oTd.style.textOverflow = "ellipsis";
+            oTd.style.overflow = "hidden";
+        }
+
+    }
+    </script>
+</head>
+<body>
+    <div id="divToolbar" style="height: 100%; width: 100%; text-align: center; vertical-align: middle;">
+    </div>
+    <div style="display: none">
+        <iframe src="common/RptToExcel.aspx" id="rptToExcel"></iframe>
+    </div>
+    <div>
+        <table>
+            <tr>
+                <td id="tdTest" style="white-space: nowrap">
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

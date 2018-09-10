@@ -1,0 +1,1 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="AttachmentAjax.aspx.cs" Inherits="FrameWorkPage.Application.Design.Form.Handle.AttachmentAjax" %>

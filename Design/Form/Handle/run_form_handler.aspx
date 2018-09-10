@@ -1,0 +1,1 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="run_form_handler.aspx.cs" Inherits="ReportSystem.Application.Design.Form.Handle.run_form_handler" %>

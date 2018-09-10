@@ -1,0 +1,194 @@
+﻿body {
+    background-color: #e3dfdf;
+    margin: 0;
+    border:0px;
+}
+
+
+/* -----------按钮控件样式 -------------------------- */
+.divButtons_Button
+{
+	CURSOR:hand;
+	font-family: 宋体;
+	font-size: 12px;
+	color: #000000;
+	filter: progid:DXImageTransform.Microsoft.Shadow (Color=#cbd3de,Direction=120,strength=3); 
+	height: 22px;
+	text-align: center;
+	vertical-align: baseline;
+	line-height: 150%; 
+	margin-top: 0px;
+	margin-right: 3px;
+	margin-bottom: 0px;
+	margin-left: 3px;
+	background-image: url(../Image/SelectOptionImage/button_bg.gif); 
+	border: 1px solid #90a5c2;
+	letter-spacing: 1px;
+	text-indent: 5px;
+}
+
+/*首面新建按钮样式*/
+.index_button_div
+{
+    height: 65px;
+    width: 442px;
+    position: relative;
+    top: 60px;
+    left: 249px;
+    float: left;
+    padding-right: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align:right;
+}
+#index_button_div img,
+.edit_button_div img,
+.espbar a
+{
+    cursor:pointer;
+}
+
+.edit_button_div
+{
+    height: 17px;
+    width: 408px;
+    position: relative;
+    top: 4px;
+    left: 0px;
+    float: left;
+    padding-right: 30px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align:right;
+}
+
+
+ul
+{
+    margin-top:10px;
+    margin-bottom:10px;
+    margin-left:auto;
+    list-style-type:none;
+    list-style-position:inherit;
+    padding:auto;
+    width:470px; 
+}
+li
+{
+    background-image:url('../Image/SelectOptionImage/edit_button_background.jpg');
+    background-repeat:repeat-x;
+    width:80px;
+    float:left;
+    line-height:23px;
+    border:1px solid #a5b6d2;
+    margin-top:2px;
+    margin-right:5px;
+    text-decoration:none;
+    text-align:center;
+    vertical-align:middle;
+    color:#343333;
+    cursor: pointer;
+}
+.listtile
+{
+    color:#f00;
+    border:none;
+    background:none;
+    text-align:left;
+}
+
+
+#officecontrol
+{
+     
+     height:540px;
+     width:549px;
+	margin-right: 0px;
+}
+/*编辑页面下部联系信息*/
+.edit_bottom
+{
+    clear:both;
+    width:620px;
+    color: #343333;
+    font-size: 14px;
+}
+
+
+.bottom
+{
+   background-image:url('../Image/SelectOptionImage/edit_main_nether.jpg');
+    height:22px; 
+}
+
+.edittop
+{
+    background-image:url('../Image/SelectOptionImage/edit_main_top.jpg');
+    height:22px;
+   
+}
+#edittop
+{
+     width:620px;
+    margin:0 auto;
+}
+
+.left
+{
+    background-position:0 0;
+    width:25px;
+    float:left;
+}
+.center
+{
+    background-position:8% 0;
+    background-repeat:no-repeat;
+    float:left;
+    width:570px;
+}
+.right
+{
+    background-position:right top;
+    width:25px;
+    float:right;
+}
+
+/*   */
+.tool
+{
+    background-image: url('../Image/SelectOptionImage/edit_main_middle.jpg');
+    height:50px; 
+}
+#edittool
+{
+    /*width:1000px;*/
+}
+.editmain
+{
+    background-image: url('../Image/SelectOptionImage/edit_main_middle.jpg');
+    height:550px;
+    
+}
+#editmain
+{
+    background-image: url('../Image/SelectOptionImage/edit_main_middle.jpg');
+    width:620px;
+    margin:auto;
+}
+
+#div01{
+	width:70px;
+	height:35px;
+	background-image:url('../Image/SelectOptionImage/bg01.gif');
+	text-align: center;
+	margin-bottom: 3px;
+	padding-top: 7px;
+}
+#div02{
+	width:70px;
+	height:35px;
+	background-image:url('../Image/SelectOptionImage/bg02.gif');
+	text-align: center;
+	margin-bottom: 3px;
+	padding-top: 7px;
+}

@@ -1,0 +1,367 @@
+<!DOCTYPE>
+<html>
+<head>
+    <title>统计图数据管理</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <style type="text/css">
+        *
+        {
+            font-size: 12px;
+        }
+        fieldset legend
+        {
+            color: Blue;
+        }
+        ul li
+        {
+            list-style-type: none;
+            padding-bottom: 10px;
+        }
+        ul
+        {
+            padding-left: 20px;
+        }
+        a
+        {
+            width: 100%;
+        }
+        a:hover
+        {
+            background-color: #c4d9f2;
+        }
+        #filedNameDiv
+        {
+            width: 100%;
+        }
+    </style>
+    <script src="../../../publicJS/jquery/jquery-1.7.1.js" type="text/javascript"></script>
+    <script src="../../../publicJS/jq_utilities.js" type="text/javascript"></script>
+    <script src="../../../publicJS/customDialog/lhgdialog.min.js" type="text/javascript"></script>
+    <script src="../../../publicJS/customDialog/showModalDialog.min.js?s=default,classic,chrome,aero,facebook"
+        type="text/javascript"></script>
+    <script type="text/javascript" language="javascript">
+        var oChart = window.dialogArgs ? window.dialogArgs[0] : false || parent.oCurrChart, designWin = parent.pWin || parent;
+        $(document).ready(function () {
+            $("#cellData").bind("click", function () {
+                oChart.setDataType("1");
+                $("#cellDataManageDiv").show();
+                $("#datasetDataManageDiv").hide();
+            });
+            $("#datasetData").bind("click", function () {
+                oChart.setDataType("0");
+                $("#cellDataManageDiv").hide();
+                $("#datasetDataManageDiv").show();
+            });
+            $("#fieldValue").bind("click", function () {
+                $("#showFieldName").hide();
+                $("#showFieldValue").show();
+            });
+            $("#fieldName").bind("click", function () {
+                $("#showFieldName").show();
+                $("#showFieldValue").hide();
+            });
+            initDsTb(designWin);
+            $(document.documentElement).keydown(function (ev) {
+                var oSrc = ev.target, iCode = ev.keyCode, sTagName = oSrc.tagName.toLowerCase(), sType = oSrc.type;
+                if (iCode == 8 && sType != "text" && sTagName != "textarea") {
+                    ev.preventDefault();
+                }
+            });
+        });
+        function initDsTb(designWin) {
+            var dsInfo = (new DOM(designWin.datasource)).selectNodes("DataSet[@Type!='1']"); // $(designWin.datasource).find("dataset[Type!='1']"),
+            l = dsInfo.length, oSelect = $("#selDataSetName")[0],
+                dsName = "", dsID = "", reData = [], oOption = null, oSeries = oChart.getDsSeries(),iChartType = oChart.type,
+                getDSNameData = function (isInit) {
+                    var dbId = oSelect.options[oSelect.selectedIndex].value; //oSeries.getDatasetId() 
+                    if (!dbId) dbId = oSeries || oSeries.getDatasetId();
+                    if (!dbId || dbId === "-1") return;
+                    clearData();
+                    if (reData[dbId]) {
+                        initDsNameSel(reData[dbId], oSeries);
+                    } else {
+                        $.ajax({
+                            url: "../common/RptDesignAjax_Json.aspx?operSign=getDsFieldName&dbId=" + dbId + "&args=" + (designWin.argsDom ? designWin.argsDom.xml : ""),
+                            dataType: "text",
+                            success: function (data) {
+                                var data = eval(data);
+                                if (data.length > 0) {
+                                    reData[dbId] = data;
+                                    initDsNameSel(data, oSeries)
+                                }
+                            },
+                            error: function (xr, sStatus, et) {
+                                alert(et);
+                            }
+                        });
+                    }
+                };
+            oSelect.add(new Option("", "-1"));
+            while (l--) {
+                dsName = dsInfo[l].getAttribute("Name");
+                dsID = dsInfo[l].getAttribute("DbId");
+                oOption = new Option(dsName, dsID);
+                oSeries && dsName == oSeries.getDataDsName() && (oOption.selected = true);
+                oSelect.add(oOption);
+            }
+            $(oSelect).bind("change", getDSNameData);
+            switch (iChartType) {
+                case "0":
+                case "1":
+                    {
+                        break;
+                    }
+                case "2":
+                    {
+                        $("#selGroupByLayOn1").attr("disabled", true);
+                        break;
+                    }
+                case "3":
+                    {
+                        $("#selGroupByLayOn1").attr("disabled", true);
+                        $("#selFieldName").attr("disabled", true); //selFieldFn1
+                        $("#selFieldFn1").attr("disabled", true);
+                        break;
+                    }
+            }
+            getDSNameData();
+        }
+        function getRegExp(sR) {
+            return new RegExp(sR, "g", "i");
+        }
+
+        function clearData() {
+            var oSelectLayOn = $("#selGroupByLayOn1")[0],
+                  oSelFieldName = $("#selFieldName")[0],
+                  oSelFieldValue = $("#selFieldValue")[0], len = 0,
+                 sFn = $("#selFieldFn1")[0];
+            for (len = oSelectLayOn.options.length; len--; ) {
+                oSelectLayOn.remove(len);
+            }
+            for (len = oSelFieldName.options.length; len--; ) {
+                oSelFieldName.remove(len);
+            }
+            for (len = oSelFieldValue.options.length; len--; ) {
+                oSelFieldValue.remove(len);
+            }
+            sFn.options[3].selected = true;
+        }
+        function initDsNameSel(data, oSeries) {
+            var oSelectLayOn = $("#selGroupByLayOn1")[0],
+                l = data.length, oSelFieldName = $("#selFieldName")[0],
+                oSelFieldValue = $("#selFieldValue")[0],
+                oFiledNameDiv = $("#filedNameDiv")[0],
+                oSelectedfiledNameDiv = $("#selectedfiledNameDiv")[0], oOption = null;
+            oSelectLayOn.add(new Option(""));
+            oSelFieldName.add(new Option(""));
+            oSelFieldValue.add(new Option("")), selFn = $("#selFieldFn1")[0], sL = selFn.options.length;
+            while (l--) {
+                if (!data[l]) continue;
+                oReg = getRegExp(data[l]);
+                oOption = new Option(data[l]);
+                oChart.getDataLayOnValue().indexOf(data[l]) != -1 && (oOption.selected = true);
+                oSelectLayOn.add(oOption);
+                oOption = new Option(data[l]);
+                oSeries && oSeries.getName().indexOf(data[l]) != -1 && (oOption.selected = true);
+                oSelFieldName.add(oOption);
+                oOption = new Option(data[l]);
+                oSeries && oSeries.getValue().indexOf(data[l]) != -1 && (oOption.selected = true);
+                oSelFieldValue.add(oOption);
+            }
+            while (sL-- && oSeries) {
+                if (selFn.options[sL].value == oSeries.getFn()) {
+                    selFn.options[sL].selected = true;
+                }
+            }
+            inintList(oFiledNameDiv, data);
+       
+        }
+        function inintList(oTarget, data) {
+            var sbUL = new $.StringBuilder(), l = data.length;
+            while (l--) {
+                sbUL.appendFormat("<div><a>{0}</a></div>", data[l]);
+            }
+            $(oTarget).html(sbUL.reverse());
+        }
+        function submitDataSelect() {
+            var sLayOnName = $("#selGroupByLayOn1 option:selected ").text();
+            sDsName = $("#selDataSetName option:selected").text(),
+                sFiledName = $("#selFieldName option:selected").text(),
+                sFiledValue = $("#selFieldValue option:selected").text(),
+                arrSelectedfiled = $("#selectedfiledNameDiv").children(), oSeries = null,
+                sSeriesType = $("input[name='serieSet']:checked").val(),
+                sFn = $("#selFieldFn1 option:selected").val(), dbId = $("#selDataSetName option:selected").val(), isTrue = true, sType = oChart.type,sConfig="";
+            oChart.clearSeries();
+            sDsName && sLayOnName && oChart.setDataLayOn("1", sDsName + ".group(\'" + sLayOnName + "\')");
+
+            switch (iChartType) {
+                case "0":
+                case "1":
+                    {
+                        if (sLayOnName == "") {
+                            sConfig = "系列轴没有设置，是否继续？"
+                            isTrue = false;
+                        } else if (sFiledName == "") {
+                            sConfig = "系列名没有设置，是否继续？"
+                            isTrue = false;
+                        } else if (sFiledValue == "") {
+                            sConfig = "系列值没有设置，是否继续？"
+                            isTrue = false;
+                        }
+                        break;
+                    }
+                case "2":
+                    {
+                        if (sFiledName == "") {
+                            sConfig = "系列名没有设置，是否继续？"
+                            isTrue = false;
+                        } else if (sFiledValue == "") {
+                            sConfig = "系列值没有设置，是否继续？"
+                            isTrue = false;
+                        }
+                        break;
+                    }
+                case "3":
+                    {
+                        if (sFiledValue == "") {
+                            sConfig = "系列值没有设置，是否继续？"
+                            isTrue = false;
+                        }
+                        break;
+                    }
+            }
+            if (isTrue) {
+                oSeries = oChart.buildSeries();
+                oSeries.setSeriesType(sSeriesType);
+                oSeries.setName("1", sFiledName);
+                sFn ? oSeries.setValue("1", sDsName + "." + sFn + "(\'" + sFiledValue + "\')") : oSeries.setValue("1", sDsName + "." + sFiledValue);
+                oSeries.setDataDsName(sDsName);
+                oSeries.setFn(sFn);
+                oSeries.setDataSetId(dbId);
+                oSeries.setDataSeries(sLayOnName + "," + sFiledName + "," + sFiledValue + "," + sFn + "," + oChart.type);
+                oChart.addSeries(oSeries);
+                $.ajax({
+                    url: "../common/RptDesignAjax_Json.aspx?operSign=getDsData&dbId=" + dbId + "&data=" + sLayOnName + "," + sFiledName + "," + sFiledValue + "," + sFn + "," + sType + "&args=" + (designWin.argsDom ? designWin.argsDom.xml : "" + "&ConnString=" + (new DOM(designWin.datasource)).selectNodes("DataSet[@Type!='1']")[0].getAttribute("ConnString")),
+                    dataType: "text",
+                    async: false,
+                    success: function (data) {
+                        if (data.length > 0) {
+                            oChart.setData(data);
+                            oChart.drawTo();
+                        }
+                    },
+                    error: function (xr, sStatus, et) {
+                        isTrue = false;
+                        alert("系列值不是数字类型！");
+                    }
+                });
+            } else {
+            if (!window.confirm(sConfig)) {
+                isTrue = false;
+            } else {
+                isTrue = true;
+            }
+            }
+            return isTrue;
+        }
+     
+    </script>
+</head>
+<body >
+    <form id="dataSetForm" name="dataSetForm" action="">
+    <fieldset>
+        <legend>数据类型选择</legend>
+        <label>
+            选择数据来源：</label>
+        <input type="radio" id="cellData" name="dataSelect" value="1" style="display: none;" />
+        <label for="cellData" style="display: none;">
+            单元格数据</label>
+        <input type="radio" id="datasetData" name="dataSelect" value="0" checked="checked" />
+        <label for="datasetData">
+            数据集数据</label>
+    </fieldset>
+    <fieldset>
+        <legend>数据配置</legend>
+        <div id="dataManageDiv">
+            <div id="cellDataManageDiv" style="display: none;">
+                <ul>
+                    <li>
+                        <label>
+                            分 类 轴：</label><input type="text" id="selGroupByLayOn2" style="width: 150px; height: 20px;
+                                padding-left: 3em;" /></li>
+                    <li>
+                        <label>
+                            系列设置：</label></li>
+                    <li></li>
+                </ul>
+            </div>
+            <div id="datasetDataManageDiv">
+                <ul>
+                    <li>
+                        <label>
+                            选择数据集：</label><select id="selDataSetName" style="width: 125px; height: 20px"></select></li>
+                    <li>
+                        <label style="padding-right: 1em;">
+                            分 类 轴：</label><select id="selGroupByLayOn1" style="width: 125px; height: 20px"></select></li>
+                    <li>
+                        <label>
+                            系列设置：</label><input type="radio" name="serieSet" id="fieldValue" checked="checked"
+                                value="0" /><label for="fieldValue">字段值作为系列名</label><br />
+                        <input type="radio" name="serieSet" id="fieldName" value="1" style="display: none;" /><label
+                            for="fieldName" style="display: none;">字段名作为系列名</label></li>
+                    <li id="showFieldValue">
+                        <li>
+                            <label style="padding-right: 1em;">
+                                系列名称：</label><select id="selFieldName" style="width: 125px; height: 20px"></select></li>
+                    </li>
+                    <li>
+                        <label style="padding-right: 1em;">
+                            系 列 值：</label><select id="selFieldValue" style="width: 125px; height: 20px"></select>
+                    </li>
+                    <li>
+                        <label style="padding-right: 1em;">
+                            汇总方法：</label><select id="selFieldFn1" style="width: 125px; height: 20px">
+                                <option value="max">最大值</option>
+                                <option value="min">最小值</option>
+                                <option value="avg">平均值</option>
+                                <option value="sum" selected="selected">求和</option>
+                            </select></li>
+                    <li id="showFieldName" style="display: none">
+                        <div id="filedNameDiv" style="width: 250px; height: 300px; border: 1px solid gray;
+                            display: block; float: left;">
+                        </div>
+                        <div style="display: block; float: left; vertical-align: middle; width: 50px; height: 300px;">
+                            <input type="button" value="选中" /><br />
+                            <input type="button" value="撤回" />
+                        </div>
+                        <div id="selectedfiledNameDiv" style="width: 250px; height: 300px; border: 1px solid gray;
+                            display: block; float: left;">
+                        </div>
+                        <div style="display: block; float: left; height: 300px;">
+                            <ul>
+                                <li>
+                                    <label>
+                                        系列名称：</label><input type="text" style="width: 60px;" /></li>
+                                <li>
+                                    <label>
+                                        汇总方法：</label><select id="selFieldFn2" style="width: 60px; height: 20px">
+                                            <option>无</option>
+                                            <option value="max">最大值</option>
+                                            <option value="min">最小值</option>
+                                            <option value="avg">平均值</option>
+                                            <option value="sum">求和</option>
+                                        </select></li>
+                                <li>
+                                    <input type="button" value="上移" /></li>
+                                <li>
+                                    <input type="button" value="下移" /></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </fieldset>
+    </form>
+</body>
+</html>

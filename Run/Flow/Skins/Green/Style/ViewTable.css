@@ -1,0 +1,186 @@
+﻿.table_heading_fristcol{
+	height: 28px;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: double;
+	border-right-style: double;
+	border-bottom-style: double;
+	border-left-style: double;
+	border-top-color: #FFFFFF;
+	border-right-color: #CFD7DA;
+	border-bottom-color: #CFD7DA;
+	border-left-color: #CFD7DA;
+	background-image: url(../Image/ViewTable/title01.gif);
+	font-weight: bold;
+	text-align: center;
+}
+.table_heading_fristcol2{
+	height: 28px;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: double;
+	border-right-style: double;
+	border-bottom-style: double;
+	border-left-style: double;
+	border-top-color: #FFFFFF;
+	border-right-color: #CFD7DA;
+	border-bottom-color: #CFD7DA;
+	border-left-color: #CFD7DA;
+	background-image: url(../Image/ViewTable/title02.gif);
+	font-weight: bold;
+	text-align: center;
+}
+.table_heading {
+	height: 28px;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: double;
+	border-right-style: double;
+	border-bottom-style: double;
+	border-left-style: double;
+	border-top-color: #FFFFFF;
+	border-right-color: #CFD7DA;
+	border-bottom-color: #CFD7DA;
+	border-left-color: #FFFFFF;
+	background-image: url(../Image/ViewTable/title01.gif);
+	font-weight: bold;
+	text-align: center;
+}
+.table_heading2 {
+	height: 28px;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: double;
+	border-right-style: double;
+	border-bottom-style: double;
+	border-left-style: double;
+	border-top-color: #FFFFFF;
+	border-right-color: #CFD7DA;
+	border-bottom-color: #CFD7DA;
+	border-left-color: #FFFFFF;
+	background-image: url(../Image/ViewTable/title02.gif);
+	font-weight: bold;
+	text-align: center;
+}
+
+.date_table {
+	height: 27px;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: double;
+	border-right-style: double;
+	border-bottom-style: double;
+	border-left-style: double;
+	border-top-color: #FFFFFF;
+	border-right-color: #CFD7DA;
+	border-bottom-color: #CFD7DA;
+	border-left-color: #FFFFFF;
+	text-align: center;
+	padding-top: 1px;
+	padding-right: 2px;
+	padding-bottom: 1px;
+	padding-left: 3px;
+}
+
+.date_table1 {
+	height: 27px;
+    border:1px solid #CFD7DA;
+	border-top-color: #FFFFFF;
+	border-left-color: #FFFFFF;
+	text-align: center;
+	padding-top: 1px;
+	padding-right: 2px;
+	padding-bottom: 1px;
+	padding-left: 3px;
+	background:#f7fdff;
+}
+
+.date_table2 {
+	height: 27px;
+    border:1px solid #CFD7DA;
+	border-top-color: #FFFFFF;
+	border-left-color: #FFFFFF;
+	text-align: center;
+	padding-top: 1px;
+	padding-right: 2px;
+	padding-bottom: 1px;
+	padding-left: 3px;
+	background:#f2f2f2;
+}
+
+.date_table2_fristcol
+{
+	height: 27px;
+    border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: double;
+	border-right-style: double;
+	border-bottom-style: double;
+	border-left-style: double;
+	border-top-color: #FFFFFF;
+	border-right-color: #CFD7DA;
+	border-bottom-color: #CFD7DA;
+	border-left-color: #CFD7DA;
+	text-align: left;
+	background:#f2f2f2;
+	padding-top: 1px;
+	padding-right: 2px;
+	padding-bottom: 1px;
+	padding-left: 3px;
+}
+
+.date_table1_fristcol
+{
+	height: 27px;
+    border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: double;
+	border-right-style: double;
+	border-bottom-style: double;
+	border-left-style: double;
+	border-top-color: #FFFFFF;
+	border-right-color: #CFD7DA;
+	border-bottom-color: #CFD7DA;
+	border-left-color: #CFD7DA;
+	text-align: left;
+	background:#f7fdff;
+	padding-top: 1px;
+	padding-right: 2px;
+	padding-bottom: 1px;
+	padding-left: 3px;
+}
+
+.date_table_fristcol {
+	height: 27px;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: double;
+	border-right-style: double;
+	border-bottom-style: double;
+	border-left-style: double;
+	border-top-color: #FFFFFF;
+	border-right-color: #CFD7DA;
+	border-bottom-color: #CFD7DA;
+	border-left-color: #CFD7DA;
+	text-align: left;
+	padding-top: 1px;
+	padding-right: 2px;
+	padding-bottom: 1px;
+	padding-left: 3px;
+}

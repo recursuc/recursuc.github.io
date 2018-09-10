@@ -1,0 +1,119 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>表单状态列表</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="../../../SysAdmin/Style/Style_CustomizePage.css" rel="stylesheet" type="text/css" />
+    <link href="../../../SysAdmin/grid/css/jquery-ui-1.8.1.css" rel="stylesheet" type="text/css" />
+    <link href="../../../SysAdmin/grid/css/ui.jqgrid.css" rel="stylesheet" type="text/css" />
+    <link href="../../../SysAdmin/grid/css/ui.multiselect.css" rel="stylesheet" type="text/css" />
+
+    <script src="../../../../Javascripts/jquery/jquery-1.7.1.js" type="text/javascript"></script>
+    <script src="../../../SysAdmin/grid/js/jquery-ui-1.8.1.custom.min.js" type="text/javascript"></script>
+    <script src="../../../SysAdmin/grid/js/jquery.layout.js" type="text/javascript"></script>
+    <script src="../../../SysAdmin/grid/js/grid.locale-cn.js" type="text/javascript"></script>
+    <script src="../../../SysAdmin/grid/js/ui.multiselect.js" type="text/javascript"></script>
+    <script src="../../../SysAdmin/grid/js/jquery.jqGrid.js" type="text/javascript"></script>
+    <script src="../../../SysAdmin/grid/js/jquery.tablednd.js" type="text/javascript"></script>
+    <script src="../../../SysAdmin/grid/js/jquery.contextmenu.js" type="text/javascript"></script>
+</head>
+<body>
+    <table id="userlist"></table>
+    <div id="pagelist"></div>
+    <input type="hidden" id="formId" />
+    <script type="text/javascript">
+        var list=jQuery("#userlist");
+	    var queryStrings=function() {  //get url querystring
+	        var params=document.location.search,reg=/(?:^\?|&)(.*?)=(.*?)(?=&|$)/g,temp,args={};
+	        while((temp=reg.exec(params))!=null) 
+	        	args[temp[1]]=decodeURIComponent(temp[2]);
+	        return args;
+	    };
+	    var args = queryStrings();
+	    
+	    var formId = args.formId;
+        document.getElementById("formId").value = formId;
+        list.jqGrid({
+            url: "formStateAction!getFormStatesByForm?formId="+formId,
+            datatype: "json",
+            height:  460,
+            width:800,
+            rowNum:  20,
+            rowList: [10, 20, 30],
+            colNames:  ['状态id', '状态名称', '创建人', '创建日期', '修改人', '修改日期', '操作'],
+            colModel:[
+   		        { name: 'id', index: 'id', hidden : true,  width: 80, align: "center" },
+   		        { name: 'name', index: 'formName', width: 80, align: "center" },
+   		        { name: 'createrName', index: 'name', width: 80, align: "center" },
+   		        { name: 'createDate', index: 'loginName', width: 110, align: "center" },
+   		        { name: 'modifierName', index: 'passWord', width: 80, align: "center" },
+   		        { name: 'modifyDate', index: 'mobilePhone', width: 110, align: "center" },
+   		        { name: 'op', index: 'op', width: 40, align: "center" }
+   	        ],
+            multiselect: true,
+            pager: "#pagelist",
+            viewrecords: true,
+            caption: "状态列表",
+            jsonReader: {
+                root: "rows",
+                page: "page",
+                total: "total",
+                records: "records",
+                repeatitems: false,
+                cell: "cell",
+                id: "id"
+            },
+            loadonce: false,
+            editurl: "formStateAction!deleteStates",
+            gridComplete: function () { $("#gbox_userlist").css("margin", "0 auto") }
+        });
+
+       list.jqGrid('navGrid', '#pagelist', { edit: false, searchtext: "查找", deltext: "删除",
+        		refreshtext: "刷新", addtext: "新建表单状态", addfunc: function () 
+        		{ addState(); } }, {}, {}, {}, { multipleSearch: true });
+        
+        function addState(){
+        	    parent.sDialog.open({
+				title : "添加状态列表",
+				content : {
+						src : (function() {
+						  return "Form/state/AddFormState.html?formId="+formId;
+						})()
+					},
+	             width : 800,
+	             height : 550,
+	             onConfirm : function(){
+	            	 var aaa = this.heIframe.contentWindow.saveState();
+	            		if(aaa) {
+	            			list.trigger("reloadGrid");
+	            			return true;
+	            			}
+	            		else
+	            			return false;
+	             }
+				});	  
+  	 
+        }
+        			
+        
+		function update(formStateId, formId){
+			parent.sDialog.open({
+				title : (function() {
+	                           return "编辑状态列表";
+				    })(),
+				 content : {
+						src : (function() {
+						  return "Form/state/EditFormState.html?stateId="+formStateId +"&formId="+formId;
+						})()
+					},
+	             width : 800,
+	             height : 550,
+	             
+				});
+		}
+		
+    </script>
+    <script src="../../../../Javascripts/jqueryapp/lhgdialog/lhgdialog.js" type="text/javascript"></script>
+    <script src="../../../../Javascripts/jqueryapp/lhgdialog/showModalDialog.js" type="text/javascript"></script>
+</body>
+</html>

@@ -1,0 +1,1163 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <title>设计平台</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <!--<script src="js/table_toolbar.js" type="text/javascript"></script>-->
+    <script src="DataSource/datasource.js" type="text/javascript"></script>
+    <link href="../sfk/dialog/sfk_dialog.css" rel="stylesheet" type="text/css" />
+    <link href="../sfk/panel/sfk_panel.css" rel="stylesheet" type="text/css" />
+    <link href="../sfk/tab/sfk_tab.css" rel="stylesheet" type="text/css" />
+    <link href="../sfk/dockTab/sfk_dockTab.css" rel="stylesheet" type="text/css" />
+    <link href="../sfk/accordion/sfk_accordion.css" rel="stylesheet" type="text/css" />
+    <link href="../sfk/tree/sfk_Tree.css" rel="stylesheet" type="text/css" />
+    <link href="../sfk/contextmenu/sfk_contextmenu.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        body
+        {
+            background-color: #213352;
+        }
+        
+        .op
+        {
+            color: Black;
+            font-size: 13px;
+            background: #213352;
+        }
+        
+        .toolbarDiv
+        {
+            background-color: #B4BFD1;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            position: relative; /* background-image: url(skins/blue/images/toolbarbg.gif);*/
+        }
+        
+        .dock
+        {
+            border-radius: 7px;
+            border: 2px solid #213352;
+            background-color: #FFFFFF;
+        }
+        
+        .center
+        {
+            left: 50%;
+            margin-top: -50px;
+            margin-left: -100px;
+            top: 50%;
+            position: fixed;
+        }
+        
+        .mask
+        {
+            opacity: 0;
+            filter: alpha(opacity =     0);
+            background-color: white;
+            z-index: 100;
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+        }
+        
+        .closeleftdock
+        {
+            margin-right: 200px;
+            margin-left: 30px;
+            position: relative;
+            width: auto;
+            height: 100%;
+        }
+        
+        .fixedTable, .topTable, .leftTable
+        {
+            border-collapse: separate; /*;separate;默认为 separate*/
+            empty-cells: show;
+            table-layout: fixed;
+            position: absolute;
+            border-collapse: collapse \9;
+        }
+        
+        .fixedTable tr
+        {
+            height: 19px;
+        }
+        
+        .fixedTable td
+        {
+            border-left-width: 0px;
+            border-top-width: 0px;
+            border-bottom: 1px solid gray;
+            border-right: 1px solid gray;
+            text-align: center;
+            font-size: 10px; /*overflow: hidden; word-break: break-all; word-wrap: break-word;*/
+        }
+        
+        .topTable td
+        {
+            border-left-width: 0px;
+            border-top-width: 0px;
+            border-right: 1px solid gray;
+            font-size: 12px;
+            overflow: hidden; /* word-break: break-all; word-wrap: break-word;*/
+        }
+        
+        .rulerH td
+        {
+            font: 11px/1 Arial, sans-serif;
+            text-align: left;
+            padding: 2px 0px 2px 0px;
+        }
+        
+        .cssDivTop
+        {
+            background-color: #c4d9f2;
+            border-top: 1px solid white;
+            border-left: 1px solid white;
+            z-index: 5;
+            position: absolute;
+            top: 68px;
+            width: 35px;
+            height: 21px;
+        }
+        /*
+        .tbTopHead td
+        {
+            border-right: 1px solid gray;
+            border-bottom: 1px solid #6699ff;
+            width: 60px;
+            font-size: 13px;
+        }*/
+        .leftTable td
+        {
+            border-left-width: 0px;
+            border-top-width: 0px;
+            border-bottom: 1px solid gray;
+            border-right: 1px solid #6699ff;
+            width: 34px;
+            font-size: 13px;
+            overflow: hidden;
+            text-align: center;
+        }
+        
+        .rulerV td
+        {
+            border-width: 0px 0px 1px 0px;
+            border-style: solid;
+            border-color: gray;
+            width: 10px;
+            padding: 0px 3px;
+            font: 11px/1 Arial, sans-serif;
+            text-align: left;
+        }
+        
+        #attributiIframe
+        {
+            top: 50%;
+            left: 50%;
+            position: absolute;
+        }
+        
+        .borderStyle
+        {
+            padding: 1px;
+        }
+        
+        #menuDiv td
+        {
+            font-size: 12px;
+            width: 100%;
+        }
+        
+        .mpb
+        {
+            margin: 0px;
+            padding: 0px;
+            border: 0px;
+        }
+        
+        .menuBar
+        {
+        }
+        
+        .menuBar img
+        {
+            vertical-align: top;
+        }
+        
+        .sheetsContainer
+        {
+            position: absolute;
+            left: 35px;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            background-color: white;
+        }
+        
+        .sheetPane
+        {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            overflow: hidden;
+        }
+        
+        .tdSelected
+        {
+            background-color: rgba(173, 238, 152, 0.52);
+        }
+        
+        .colTopLine
+        {
+            height: 100%;
+            width: 1px;
+            background: #CECFCE;
+            float: right;
+            margin-right: -3px;
+        }
+        
+        .colResizeLine, .rowResizeLine
+        {
+            position: absolute;
+            font-size: 0px;
+            overflow: hidden;
+            z-index: 10;
+            padding: 0px;
+            margin: 0px;
+        }
+        
+        .colResizeLine
+        {
+            display: none;
+            height: 100%;
+            border-left: 1px dotted black;
+        }
+        
+        .rowResizeLine
+        {
+            display: none;
+            width: 100%;
+            border-top: 1px dotted black;
+        }
+        
+        .tooltip
+        {
+            padding: 2px;
+            position: absolute;
+            white-space: nowrap;
+            z-index: 20;
+            color: #5181A6;
+            background-color: #F3F3F3;
+            border: 1px solid #BAC7D8;
+        }
+        
+        .rangBox
+        {
+            position: absolute;
+            background-color: #0066cc;
+            display: none;
+            width: 2px;
+            height: 2px;
+        }
+        
+        .addnextpre_div
+        {
+            float: left;
+            width: 33%;
+            text-align: center;
+        }
+        
+        .sheetTabWrap
+        {
+            position: absolute;
+            width: 100%;
+            left: 35px;
+            top: 0px;
+        }
+        
+        .sheetTabPaneBody
+        {
+            overflow: hidden;
+        }
+        
+        .sheetTabPane
+        {
+            /* border-right: 1px solid gray;      background: #F0F0F0;        border-left: 1px solid gray;*/
+            margin-right: 2px;
+            cursor: pointer;
+            color: white;
+            display: inline;
+            border-radius: 0px 0px 6px 6px;
+            padding-left: 5px;
+            padding-right: 5px;
+            display: inline;
+        }
+        
+        .activeSheetAnchor
+        {
+            border-radius: 0px 0px 8px 8px;
+            border: 2px solid #E7C04D;
+            padding: 0px 1px 1px 1px;
+            color: black;
+            background-color: #E7C04D; /*  opacity: 0.9;  Safari, Opera */ /*   -moz-opacity: 0.90; FireFox */ /* filter: alpha(opacity=90);  IE */
+        }
+        
+        .divTopHead > table, .sheetPane > table
+        {
+            width: 3px;
+        }
+        
+        .hscroll
+        {
+            background: #EEE;
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            height: 100%;
+            width: 50%; /*border-top: 1px solid gray;
+            border-bottom: 1px solid gray;*/
+        }
+        
+        .rscroll
+        {
+            position: absolute;
+            right: 0px;
+            border-right: 1px solid gray;
+            border-left: 1px solid gray;
+            height: 100%;
+            width: 13px;
+            width: 15px \9;
+        }
+        
+        .lscroll
+        {
+            position: absolute;
+            left: 0px;
+            height: 100%;
+            border-left: 1px solid gray;
+            border-right: 1px solid gray;
+            width: 13px;
+            width: 15px \9;
+        }
+        
+        .vscroll
+        {
+            background: #EEE;
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            border: 1px solid #6699ff;
+            height: 100%;
+            width: 13px;
+            width: 15px \9;
+        }
+        
+        .track
+        {
+            position: absolute;
+            border: 1px outset buttonhighlight;
+            background-color: #D4D0C8;
+        }
+        
+        .dscroll
+        {
+            position: absolute;
+            bottom: 0px;
+            width: 100%;
+            height: 12px;
+            border-bottom-width: 0;
+            border-top: 1px solid gray;
+        }
+        
+        .tscroll
+        {
+            position: absolute;
+            top: 0px;
+            width: 100%;
+            height: 12px;
+            border-top-width: 0;
+            border-bottom: 1px solid gray;
+        }
+        
+        /* http://kingkit.iteye.com/blog/692203 */
+        .triangle
+        {
+            margin: 1px;
+        }
+        
+        .triangle-down
+        {
+            border-color: gray transparent transparent transparent;
+            border-style: solid;
+            border-width: 5px 5px 0px 5px;
+        }
+        
+        .triangle-up
+        {
+            border-color: transparent transparent gray transparent;
+            border-style: solid;
+            border-width: 0px 5px 5px 5px;
+        }
+        
+        .triangle-right
+        {
+            border-width: 5px 0px 5px 5px;
+            border-style: solid;
+            border-color: transparent transparent transparent gray;
+        }
+        
+        .triangle-left
+        {
+            border-width: 5px 5px 5px 0px;
+            border-style: solid;
+            border-color: transparent gray transparent transparent;
+        }
+        
+        .clearfix::after
+        {
+            content: ".";
+            display: block;
+            height: 0px;
+            clear: both;
+            visibility: hidden;
+        }
+        
+        .heightfix::before
+        {
+            content: '.';
+            display: block;
+            visibility: hidden;
+            height: 0;
+        }
+        
+        .addnextpre a
+        {
+            color: #15428B;
+            font-size: 13px;
+        }
+        
+        .footWrap
+        {
+            position: absolute;
+            bottom: 0px;
+            width: 100%;
+            height: 16px;
+            min-height: 16px;
+            height: 19px \9;
+            border-top: 4px solid #E7C04D;
+            min-height: 19px \9;
+        }
+        
+        a:link
+        {
+            color: White;
+            text-decoration: none;
+        }
+        
+        a:visited
+        {
+            color: White;
+        }
+        
+        a:hover, a:active
+        {
+            color: yellow;
+            text-decoration: none;
+        }
+        
+        .accord_nav
+        {
+            font: 12px;
+            font-family: Arial;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .titleDiv
+        {
+            border: 1px solid #1D95C7;
+            border-radius: 5px;
+            background-color: #C4D9F2;
+            background: #C4D9F2;
+            cursor: pointer;
+            margin: 3px 3px;
+            padding: 3px 3px;
+        }
+        
+        .contentDiv
+        {
+            margin: 0 3px;
+            display: none;
+        }
+        
+        .control
+        {
+            margin: 3px 0;
+        }
+        
+        .controlOn
+        {
+            border-radius: 5px;
+            background-color: #C4D9F2;
+            background: #C4D9F2;
+        }
+        
+        .control img
+        {
+            width: 16px;
+            height: 16px;
+            margin: 3px 10px 3px 10px;
+            vertical-align: middle;
+        }
+        
+        .attrTable
+        {
+            table-layout: fixed;
+            font-size: 12px;
+            border-collapse: collapse;
+            position: static;
+            text-align: left;
+        }
+        
+        .controls
+        {
+            height: 328px;
+            background-image: url(Form/imgs/controls.png);
+            background-repeat: no-repeat;
+            margin: 0px;
+            padding: 0px;
+        }
+        
+        .controls li
+        {
+            height: 22px;
+        }
+        
+        .attrTable td
+        {
+            overflow: hidden;
+        }
+        
+        .attrTable td input
+        {
+            width: 105px;
+        }
+        
+        .toolbal_img
+        {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            margin-left: 3px;
+            margin-right: 3px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body style="margin: 0px; overflow: hidden;">
+    <div class="mpb" style="overflow: hidden;">
+        <div id="toolbar1" class="toolbarDiv" style="height: 30px; overflow: hidden;">
+        </div>
+        <div id="tdSplitLine" style="height: 5px; width: 100%;">
+        </div>
+        <div id="mainDesign" class="mpb" style="position: relative; width: 100%; height: auto;">
+            <div class="mpb  dock" id="leftDock" style="margin: 0px 3px; position: absolute;
+                top: 0px; left: 0px; width: 190px; height: 100%;">
+                <div>
+                    <div id="explore">
+                        <div class="title">
+                            资源管理器
+                            <div class="oper">
+                            </div>
+                        </div>
+                        <div class="content">
+                        </div>
+                    </div>
+                    <div id="toolbox">
+                        <div class="title">
+                            工具箱
+                            <div class="oper">
+                            </div>
+                        </div>
+                        <div class="content">
+                            <ul class="acc_nav" id="frmToolBox" style="display: none">
+                                <li>
+                                    <div>
+                                        <div class="title">
+                                            数据控件
+                                            <div class="oper">
+                                                <a href="#" panel="1">un</a>
+                                            </div>
+                                        </div>
+                                        <div class="content">
+                                            <img alt="text" src="Form/imgs/text.png" name="text" />
+                                            <img alt="textarea" src="Form/imgs/textarea.png" name="textarea" />
+                                            <img alt="combobox" src="Form/imgs/select.png" name="combobox" />
+                                            <img alt="label" src="Form/imgs/label.png" name="label" />
+                                            <img alt="datetime" src="Form/imgs/datetime.png" name="datetime" />
+                                            <img alt="radio" src="Form/imgs/radio.png" name="radio" />
+                                            <img alt="checkboxlist" src="Form/imgs/checkboxlist.png" name="checkboxlist" />
+                                            <img alt="upload" src="Form/imgs/attachment.png" name="upload" />
+                                            <img alt="webgrid" src="Form/imgs/webgrid.png" name="webgrid" />
+                                            <img alt="richeditor" src="Form/imgs/webgrid.png" name="richeditor" />
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div>
+                                        <div class="title">
+                                            容器控件
+                                            <div class="oper">
+                                                <a href="#" panel="1">un</a>
+                                            </div>
+                                        </div>
+                                        <div class="content">
+                                            <img alt="div" src="Form/imgs/div.png" name="div" />
+                                            <img alt="table" src="Form/imgs/table.png" name="table" />
+                                            <img alt="iframe" src="Form/imgs/iframe.bmp" name="iframe" />
+                                            <img alt="tab" src="Form/imgs/tab.bmp" name="tab" />
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div>
+                                        <div class="title">
+                                            功能控件
+                                            <div class="oper">
+                                                <a href="#" panel="1">un</a>
+                                            </div>
+                                        </div>
+                                        <div class="content">
+                                            <img alt="button" src="Form/imgs/button.png" name="button" />
+                                            <img alt="a" src="Form/imgs/linklabel.png" name="a" />
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div>
+                                        <div class="title">
+                                            流程控件
+                                            <div class="oper">
+                                                <a href="#" panel="1">un</a>
+                                            </div>
+                                        </div>
+                                        <div class="content">
+                                            <img alt="div" src="Form/imgs/div.png" name="countersign" />
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                            <ul class="acc_nav" id="flwToolBox" style="display: none;">
+                                <li>
+                                    <div>
+                                        <div class="title">
+                                            流程节点
+                                            <div class="oper">
+                                                <a href="#" panel="1">un</a>
+                                            </div>
+                                        </div>
+                                        <div class="content">
+                                            <div class="controlContainer" style="position: relative; width: 100%; height: 500px;">
+                                                <div style="text-align: left; margin: 10px 10px">
+                                                    <span class="l-btn-text start-event-icon" wfmodel="Start">开始节点</span>
+                                                </div>
+                                                <div style="text-align: left; margin: 10px 10px">
+                                                    <span class="l-btn-text end-event-icon" wfmodel="End">结束节点</span>
+                                                </div>
+                                                <div style="text-align: left; margin: 10px 10px">
+                                                    <span class="l-btn-text user-task-icon" wfmodel="UserTask">处理</span>
+                                                </div>
+                                                <div style="text-align: left; margin: 10px 10px">
+                                                    <span class="l-btn-text manual-task-icon" wfmodel="Activity">活动</span>
+                                                </div>
+                                                <div style="text-align: left; margin: 10px 10px">
+                                                    <span class="l-btn-text service-task-icon" wfmodel="SubFlow">子流程</span>
+                                                </div>
+                                                <!--                                                 <div style="text-align:left;margin:10px 10px"> -->
+                                                <!--                                                     <span class="l-btn-text script-task-icon"> -->
+                                                <!--                                                         并行</span> -->
+                                                <!--                                                 </div>  -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="header">
+                    <ul class="nav">
+                        <li><a href="javascript:void(0)" class="selected">资源管理器</a></li>
+                        <li><a href="javascript:void(0)">工具箱</a></li>
+                    </ul>
+                    <input type="text" name="" style="display: none; z-index: 0; position: absolute;
+                        width: 9px; height: 6px; overflow: hidden;" value="" />
+                </div>
+            </div>
+            <div id="lSplitLine" class="mpb" style="margin: 0px; position: absolute; top: 0px;
+                left: 193px; width: 7px; height: 100%; background-color: #213352;">
+            </div>
+            <div id="rSplitLine" class="mpb" style="margin: 0px; position: absolute; top: 0px;
+                right: 193px; width: 7px; height: 100%; background-color: #213352;">
+            </div>
+            <div class="mpb dock" id="rightDock" style="margin: 0px 3px; position: absolute;
+                top: 0px; right: 0px; width: 190px; height: 100%;">
+                <div>
+                    <div id="attrPage">
+                        <div class="title">
+                            属性页
+                            <div class="oper">
+                            </div>
+                        </div>
+                        <div style="">
+                            <!--                            <iframe src="Form/attribute/combobox.htm" frameborder="0" height="100%" width="100%"
+                                scrolling="no" marginheight="0" marginwidth="0"></iframe>-->
+                        </div>
+                    </div>
+                    <div id="structTree">
+                        <div class="title">
+                            结构树
+                            <div class="oper">
+                            </div>
+                        </div>
+                        <div class="content">
+                        </div>
+                    </div>
+                </div>
+                <div class="header">
+                    <ul class="nav">
+                        <li><a href="#" class="selected">属性页</a></li>
+                        <li><a href="#">结构树</a></li>
+                    </ul>
+                    <input type="text" name="" style="display: none; z-index: 0; position: absolute;
+                        width: 9px; height: 6px; overflow: hidden;" value="" />
+                </div>
+            </div>
+            <div id="designTab" class="mpb" style="position: relative; margin: 0px 200px; width: auto;
+                height: 100%;">
+                <div class="mpb" style="width: 100%;">
+                </div>
+                <div class="header">
+                    <ul class="nav">
+                    </ul>
+                </div>
+            </div>
+            <div id="wellcomeLogo" style="z-index: -1; background: url('../../theme/skin/classic/login/images/page.png') no-repeat 50% 50%;
+                height: 100%; width: 100%; position: absolute; top: 0px; left: 0px;">
+                <h1 style="text-align: center; position: relative; top: 10%; margin: 0px;">
+                    欢迎使用Framework设计平台</h1>
+            </div>
+            <!--<div style="clear: both;">-->
+        </div>
+        <div id="dd" style="text-align: center; font-size: 12px; color: White;">
+            www.sfk.com</div>
+    </div>
+    <div id="template" style="display: none;">
+        <div class="mpb" style="position: absolute; width: 100%; height: 100%;">
+            <div class="mpb" style="position: absolute; width: 100%; height: 100%; overflow: hidden;">
+                <div class="mpb" style="position: relative; width: 100%; height: 30px; min-height: 30px;">
+                </div>
+                <div class="mpb" style="background-color: #c4d9f2; position: relative; height: 22px;">
+                    <div class="mpb" style="position: absolute; width: 35px; height: 100%; overflow: hidden;">
+                        <div style="height: 99%; margin: 0px; padding: 0px; border-right: 1px solid #6699ff;">
+                            &nbsp;</div>
+                    </div>
+                    <div class="mpb divTopHead" style="position: absolute; left: 35px; height: 100%;
+                        width: 100%; overflow: hidden;">
+                    </div>
+                    <div class="mpb" style="position: absolute; right: 0px; height: 100%; width: 15px;
+                        overflow: hidden; background-color: #A9CEFA;">
+                    </div>
+                </div>
+                <div class="mpb" style="position: relative; width: 100%; height: 100%;">
+                    <div class="mpb" style="background-color: #c4d9f2; position: absolute; overflow: hidden;
+                        width: 35px; height: 100%;">
+                    </div>
+                    <div class="mpb sheetsContainer">
+                    </div>
+                    <div class="vscroll mpb">
+                        <div class="tscroll">
+                            <div class="triangle">
+                                <div class="triangle triangle-up">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="track" style="width: 90%; top: 16px; height: 26px;">
+                        </div>
+                        <div class="dscroll">
+                            <div class="triangle">
+                                <div class="triangle triangle-down">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footWrap">
+                    <div class="op" style="position: absolute; top: 0px; left: 0px; width: 50%; height: 100%;
+                        overflow: hidden;">
+                        <div class="addnextpre" style="width: 36px; position: absolute; left: 0px; top: 0px;">
+                            <div class="addnextpre_div">
+                                <a href="#" style="text-decoration: none" data-opertype="+">+</a>
+                            </div>
+                            <div class="addnextpre_div">
+                                <a href="#" style="text-decoration: none" data-opertype="<">&lt;</a>
+                            </div>
+                            <div class="addnextpre_div">
+                                <a href="#" style="text-decoration: none" data-opertype=">">&gt;</a>
+                            </div>
+                            <div style="clear: both;">
+                            </div>
+                        </div>
+                        <div class="sheetTabWrap">
+                            <div class="SheetTabPaneBody" style="height: 100%;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hscroll">
+                        <div class="lscroll">
+                            <div class="triangle">
+                                <div class="triangle-left">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="track" style="top: 0px; left: 26px; width: 34px; height: 80%;">
+                        </div>
+                        <div class="rscroll">
+                            <div class="triangle">
+                                <div class="triangle-right">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mpb" style="display: none; position: absolute; width: 100%; height: 100%;
+                overflow: hidden; background-color: White;">
+                <div class="mpb" style="position: absolute; width: 0px; height: 0px;">
+                </div>
+                <div class="mpb headWrap" style="background-color: #c4d9f2; position: relative; height: 18px;">
+                    <div class="mpb divTopLeft" style="position: absolute; width: 18px; height: 100%;
+                        overflow: hidden;">
+                        <div style="height: 99%; margin: 0px; padding: 0px; border-right: 1px solid #6699ff;">
+                            &nbsp;</div>
+                    </div>
+                    <div class="mpb divTopHead" style="position: absolute; left: 18px; height: 100%;
+                        width: 100%; overflow: hidden; background-image: url(Form/imgs/ruler_h.png)">
+                    </div>
+                    <div class="mpb" style="position: absolute; right: 0px; height: 100%; width: 15px;
+                        overflow: hidden; background-color: #A9CEFA;">
+                    </div>
+                </div>
+                <div class="mpb contentWrap" style="position: relative; width: 100%; height: 100%;">
+                    <div class="mpb divLeftHead" style="background-color: #c4d9f2; position: absolute;
+                        overflow: hidden; width: 18px; height: 100%; background-image: url(Form/imgs/ruler_v.png)">
+                    </div>
+                    <div class="mpb sheetsContainer" style="left: 18px; background-image: url(Form/imgs/grid_10.png)">
+                    </div>
+                    <div class="vscroll mpb VScrollBar">
+                        <div class="tscroll">
+                            <div class="triangle">
+                                <div class="triangle triangle-up">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="track vTrack" style="width: 90%; top: 16px; height: 26px;">
+                        </div>
+                        <div class="dscroll">
+                            <div class="triangle">
+                                <div class="triangle triangle-down">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footWrap">
+                    <div class="op" style="position: absolute; top: 0px; left: 0px; width: 50%; height: 100%;
+                        overflow: hidden;">
+                        <div class="addnextpre" style="width: 36px; position: absolute; left: 0px; top: 0px;">
+                            <div class="addnextpre_div">
+                                <a href="#" style="text-decoration: none" data-opertype="+">+</a>
+                            </div>
+                            <div class="addnextpre_div">
+                                <a href="#" style="text-decoration: none" data-opertype="<">&lt;</a>
+                            </div>
+                            <div class="addnextpre_div">
+                                <a href="#" style="text-decoration: none" data-opertype=">">&gt;</a>
+                            </div>
+                            <div style="clear: both;">
+                            </div>
+                        </div>
+                        <div class="sheetTabWrap">
+                            <div class="SheetTabPaneBody" style="height: 100%;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hscroll">
+                        <div class="lscroll">
+                            <div class="triangle">
+                                <div class="triangle-left">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="track" style="top: 0px; left: 26px; width: 34px; height: 80%;">
+                        </div>
+                        <div class="rscroll">
+                            <div class="triangle">
+                                <div class="triangle-right">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="position: absolute; z-index: 100; right: 8px; top: 7px; width: 50px;
+                height: 15px; background-color: #213352;">
+                <a href="#">参数设计</a>
+            </div>
+        </div>
+        <div class="mpb" style="position: absolute; width: 100%; height: 100%; overflow: hidden;
+            background-color: White;">
+            <div class="mpb" style="position: absolute; width: 0px; height: 0px;">
+            </div>
+            <div class="mpb headWrap" style="background-color: #c4d9f2; position: relative; height: 18px;">
+                <div class="mpb divTopLeft" style="position: absolute; width: 18px; height: 100%;
+                    overflow: hidden;">
+                    <div style="height: 99%; margin: 0px; padding: 0px; border-right: 1px solid #6699ff;">
+                        &nbsp;</div>
+                </div>
+                <div class="mpb divTopHead" style="position: absolute; left: 18px; height: 100%;
+                    width: 100%; overflow: hidden; background-image: url(Form/imgs/ruler_h.png)">
+                </div>
+                <div class="mpb" style="position: absolute; right: 0px; height: 100%; width: 15px;
+                    overflow: hidden; background-color: #A9CEFA;">
+                </div>
+            </div>
+            <div class="mpb contentWrap" style="position: relative; width: 100%; height: 100%;">
+                <div class="mpb divLeftHead" style="background-color: #c4d9f2; position: absolute;
+                    overflow: hidden; width: 18px; height: 100%; background-image: url(Form/imgs/ruler_v.png)">
+                </div>
+                <div class="mpb sheetsContainer" style="left: 18px; background-image: url(Form/imgs/grid_10.png)">
+                </div>
+                <div class="vscroll mpb VScrollBar">
+                    <div class="tscroll">
+                        <div class="triangle">
+                            <div class="triangle triangle-up">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="track vTrack" style="width: 90%; top: 16px; height: 26px;">
+                    </div>
+                    <div class="dscroll">
+                        <div class="triangle">
+                            <div class="triangle triangle-down">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footWrap">
+                <div class="op" style="position: absolute; top: 0px; left: 0px; width: 50%; height: 100%;
+                    overflow: hidden;">
+                    <div class="addnextpre" style="width: 36px; position: absolute; left: 0px; top: 0px;">
+                        <div class="addnextpre_div">
+                            <a href="#" style="text-decoration: none" data-opertype="+">+</a>
+                        </div>
+                        <div class="addnextpre_div">
+                            <a href="#" style="text-decoration: none" data-opertype="<">&lt;</a>
+                        </div>
+                        <div class="addnextpre_div">
+                            <a href="#" style="text-decoration: none" data-opertype=">">&gt;</a>
+                        </div>
+                        <div style="clear: both;">
+                        </div>
+                    </div>
+                    <div class="sheetTabWrap">
+                        <div class="SheetTabPaneBody" style="height: 100%;">
+                        </div>
+                        <input type="text" name="" style="display: none; z-index: 0; position: absolute;
+                            text-align: ; width: 9px; height: 6px; font-family: ; font-weight: ; overflow: hidden;"
+                            value="" />
+                    </div>
+                </div>
+                <div class="hscroll">
+                    <div class="lscroll">
+                        <div class="triangle">
+                            <div class="triangle-left">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="track" style="top: 0px; left: 26px; width: 34px; height: 80%;">
+                    </div>
+                    <div class="rscroll">
+                        <div class="triangle">
+                            <div class="triangle-right">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mpb" style="position: absolute; width: 100%; height: 100%; overflow: hidden;
+            background-color: White;">
+            <div class="mpb" style="position: absolute; width: 0px; height: 0px;">
+            </div>
+            <div class="mpb headWrap" style="background-color: #c4d9f2; position: relative; height: 18px;
+                display: none;">
+                <div class="mpb divTopLeft" style="position: absolute; width: 18px; height: 100%;
+                    overflow: hidden;">
+                    <div style="height: 99%; margin: 0px; padding: 0px; border-right: 1px solid #6699ff;">
+                        &nbsp;</div>
+                </div>
+                <div class="mpb divTopHead" style="position: absolute; left: 18px; height: 100%;
+                    width: 100%; overflow: hidden; background-image: url(ruler_h.png)">
+                </div>
+                <div class="mpb" style="position: absolute; right: 0px; height: 100%; width: 15px;
+                    overflow: hidden; background-color: #A9CEFA;">
+                </div>
+            </div>
+            <div class="mpb contentWrap" style="position: relative; width: 100%; height: 100%;">
+                <div class="mpb divLeftHead" style="background-color: #c4d9f2; position: absolute;
+                    display: none; overflow: hidden; width: 18px; height: 100%; background-image: url(ruler_v.png)">
+                </div>
+                <div class="mpb sheetsContainer" style="left: 0;">
+                </div>
+                <div class="vscroll mpb VScrollBar">
+                    <div class="tscroll">
+                        <div class="triangle">
+                            <div class="triangle triangle-up">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="track vTrack" style="width: 90%; top: 16px; height: 26px;">
+                    </div>
+                    <div class="dscroll">
+                        <div class="triangle">
+                            <div class="triangle triangle-down">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footWrap">
+                <div class="op" style="position: absolute; top: 0px; left: 0px; width: 50%; height: 100%;
+                    overflow: hidden;">
+                    <div class="addnextpre" style="width: 36px; position: absolute; left: 0px; top: 0px;">
+                        <div class="addnextpre_div">
+                            <a href="#" style="text-decoration: none" data-opertype="+">+</a>
+                        </div>
+                        <div class="addnextpre_div">
+                            <a href="#" style="text-decoration: none" data-opertype="<">&lt;</a>
+                        </div>
+                        <div class="addnextpre_div">
+                            <a href="#" style="text-decoration: none" data-opertype=">">&gt;</a>
+                        </div>
+                        <div style="clear: both;">
+                        </div>
+                    </div>
+                    <div class="sheetTabWrap">
+                        <div class="SheetTabPaneBody" style="height: 100%;">
+                        </div>
+                    </div>
+                </div>
+                <div class="hscroll">
+                    <div class="lscroll">
+                        <div class="triangle">
+                            <div class="triangle-left">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="track" style="top: 0px; left: 26px; width: 34px; height: 80%;">
+                    </div>
+                    <div class="rscroll">
+                        <div class="triangle">
+                            <div class="triangle-right">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <label id="aaa">
+            aaa</label>
+        <label id="bbb">
+            bbb</label>
+        <div style="position: absolute; z-index: 300;">
+            <div class="mask">
+            </div>
+        </div>
+    </div>
+    <!--fk -->
+    <script src="../sfk/sfk.js" type="text/javascript"></script>
+
+    <!--form and report depend on-->
+    <script src="../sfk/Interactions/sfk.dragdrop.js" type="text/javascript"></script>
+    <script src="../sfk/slider/sfk.slider.js" type="text/javascript"></script>
+    <script src="module.js" type="text/javascript"></script>
+    <!--form -->
+    <script src="Form/frmsheet.js" type="text/javascript"></script>
+    <script src="Form/frmdesign.js" type="text/javascript"></script>
+    <script src="../sfk/grid/sfk_grid.js" type="text/javascript"></script>
+    <!--report -->
+    <script src="Report/rptsheet.js" type="text/javascript"></script>
+    <script src="Report/rptdesign.js" type="text/javascript"></script>
+    <!-- flow -->
+    <script src="Flow/flwsheet.js" type="text/javascript"></script>
+    <script src="Flow/flwdesign.js" type="text/javascript"></script>
+    <!-- design start port -->
+    <script src="design.js" type="text/javascript"></script>
+    <!-- ui -->
+    <script src="../sfk/dialog/sfk_dialog.js" type="text/javascript"></script>
+    <script src="../sfk/Interactions/sfk_resizable.js" type="text/javascript"></script>
+    <script src="../sfk/panel/sfk_panel.js" type="text/javascript"></script>
+    <script src="../sfk/tab/sfk_tab.js" type="text/javascript"></script>
+    <script src="../sfk/dockTab/sfk_dockTab.js" type="text/javascript"></script>
+    <script src="../sfk/accordion/sfk_accordion.js" type="text/javascript"></script>
+    <script src="../sfk/tree/sfk_Tree.js" type="text/javascript"></script>
+    <script src="../sfk/contextmenu/sfk_contextmenu.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        //存放属性页的配置信息
+        var attributes = new Array();
+        //初始化表格数据对象
+        var tableObj = {
+            dateTable: document.getElementById("tbData")
+        };
+        window.sbRunStyle = null; //运行样式
+        window.oCssStyle = "";
+        //设计器初始化
+        $P.ready(function () {
+            var design;
+            if ($U.params.Count > 0) {
+                var temp = $U.params.Count;
+                delete $U.params.Count;
+                $Ajax({
+                    type: "post",
+                    url: "common/RptDSAjax.aspx",
+                    async: false,
+                    success: function (xhr, data) {
+                        $U.params.Count = temp;
+                        design = new Design(xhr.responseXML.selectSingleNode(".//Sheets"));
+                    },
+                    error: function (xhr, error) {
+                        $U.params.Count = temp;
+                        alert('Failure: ' + xhr.status);
+                    },
+                    data: $U.params
+                });
+            } else {
+                design = new Design();
+            }
+        });
+        window.onload = function () {
+            parseInt(document.getElementById("designTab").children[0].style.width) == 0
+					&& parent.frames[parent.frames.length - 1].location.reload();
+        };
+    </script>
+</body>
+</html>

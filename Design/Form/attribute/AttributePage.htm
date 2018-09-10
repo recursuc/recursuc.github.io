@@ -1,0 +1,209 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+    <style type="text/css">
+    .x-tab-panel-body .x-panel-body {
+        padding:10px;
+    }
+    v\:* { BEHAVIOR: url(#default#VML) }
+	o\:* {	BEHAVIOR: url(#default#VML)}
+    .shape { BEHAVIOR: url(#default#VML)}
+    </style>
+    
+     <link rel="Stylesheet" type="text/css" href="../skins/blue/css/form.css" />
+    <link rel="Stylesheet" type="text/css" href="../../ext/resources/css/ext-all.css" />
+    <link rel="Stylesheet" type="text/css" href="../../ext/resources/css/xtheme-gray.css" />
+    <link rel="Stylesheet" type="text/css" href="../../ext/resources/css/tabs.css" />
+</head>
+<body onload="uf_open()">
+    <!-- Ext Tab控件 -->
+    <div id="SKbillsheet">
+        <div id="tabs">
+            <div id="ab" class="x-hide-display">
+                <table>
+                    <tr>
+                        <td>控件ID：</td>
+                        <td><input id="txtId" style="display: block; font-size: 12px; left: 71px; width: 183px; height: 20px; background-color: #ffffff; text-align: left" size="24" type="text" /></td>
+                        <td style="width: 9px"><font color="red">*</font></td>
+                    </tr>
+                    <tr>
+                        <td>中文名：</td>
+                        <td><input id="txtFieldChn" style="display: block; font-size: 12px; left: 71px; width: 183px; height: 20px; background-color: #ffffff; text-align: left" size="24" type="text" /></td>
+                        <td style="width: 9px"><font color="red">*</font></td>
+                    </tr>
+                </table>
+            </div>
+            <div id="st" class="x-hide-display">
+                <table>
+                <tr>
+                    <td>
+                        <table>
+                            <tr>
+                                <td>
+                                    定位类型：
+                                </td>
+                                <td colspan = "7" >
+                                    <select id="cboPosition" style="display: block; font-size: 12px; left: 65px; width: 75px; height: 25px; background-color: #ffffff" onchange="PropWinChangePosition()">
+                                         <option value="static" selected>静态</option>
+                                         <option value="absolute">绝对</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    左：
+                                </td>
+                                <td>
+                                    <input id="txtLeft" style="display: block; font-size: 12px; left: 64px; width: 45px; height: 18px; background-color: #ffffff; text-align: left"
+                                    onchange="SetPosOnChange(publicform.obj[0],txtLeft)" />
+                                </td>
+                                <td>
+                                    上：
+                                </td>
+                                <td style="width: 46px">
+                                    <input id="txtTop" style="display: block; font-size: 12px; left: 133px; width: 45px; height: 18px; background-color: #ffffff; text-align: left"
+                                    onchange="SetPosOnChange(publicform.obj[0],txtTop)" />
+                                </td>
+                                <td>
+                                    宽：
+                                </td>
+                                <td>
+                                    <input id="txtWidth" style="display: block; font-size: 12px; left: 202px; width: 45px;height: 18px; background-color: #ffffff; text-align: left"
+                                    onchange="SetPosOnChange(publicform.obj[0],txtWidth)" />
+                                </td>
+                                <td style="width: 33px">
+                                    高：
+                                </td>
+                                <td>
+                                    <input id="txtHeight" style="display: block; font-size: 12px; left: 269px; width: 45px;height: 18px; background-color: #ffffff; text-align: left"
+                                    onchange="SetPosOnChange(publicform.obj[0],txtHeight)" />
+                                </td>
+                            </tr>
+                        </table>
+                    </td>  
+                  </tr>
+                  <tr>
+                    <td>
+                        <table border="1px" style="border-left: 1px; border-right: 1px; border-top: 1px; border-bottom: 1px;
+                            table-layout: fixed;border-collapse: collapse; left: 39px;" bgcolor="#ffffff" bordercolor="black">
+                            <tr>
+                                <td align="center" valign="middle" width="250px" height="55px">
+                                    <span id="displayfont" style="font-size: 12px; overflow: hidden;">
+                                        <div nowrap="false">字体颜色</div>
+                                    </span>
+                                </td>
+                                <td>
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <button id="cmdBgcolor" style="display: block; font-size: 12px; left: 292px; width: 25px; height: 25px; background-color: #d4d0c8" onclick="SelColor()">
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <button id="cmdFont" style="display: block; font-size: 12px; left: 292px; width: 25px; height: 25px; background-color: #d4d0c8" onclick="OpenAttributeForm('fontlist',displayfont,'字体属性');">
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                        <table>
+                          
+                            <tr>
+                                <td>
+                                    <table>
+                                        <tr>
+                                            <td style="height: 40px">
+                                                对齐方式：
+                                            </td>
+                                            <td style="height: 40px">
+                                                <select id="cboAlign" style="display: block; font-size: 12px; left: 85px; width: 79px;height: 20px; background-color: #ffffff" 
+                                                    onkeydown='bill_onkeydown("")' check="1" >
+                                                    <option value="left" selected>左对齐</option>
+                                                    <option value="right">右对齐</option>
+                                                    <option value="center">居中</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                  </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- 确定按钮 -->
+    <button id="cmdOk" style="display: block; font-size: 12px; left: 168px; width: 79px;height: 25px; background-color: #d4d0c8" onclick="uf_ok()">
+    </button>
+    <!-- 取消按钮 -->
+    <button id="cmdClose" style="display: block; font-size: 12px; left: 250px; width: 79px;height: 25px; background-color: #d4d0c8" onclick="CloseBill()">
+    </button>
+    <!-- 浏览器颜色控件 -->
+    <object id="dlgHelper" classid="clsid:3050f819-98b5-11cf-bb82-00aa00bdce0b" width="0px"height="0px" viewastext></object>
+    
+      <script type="text/javascript" src="../../ext/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="../../ext/ext-all.js"></script>
+    <script type="text/javascript" src="../../commonjs/public_api.js"></script>   
+    <script type="text/javascript" src="../js/f_core.js"></script>  
+    <script type="text/javascript" src="../../commonjs/design_operation.js"></script> 
+    <script type="text/javascript" src="../../commonjs/property.js"></script>    
+    <script type="text/javascript" src="../../commonjs/opencommonform.js"></script>
+    <script  type="text/javascript" src="../../commonjs/browser_version.js"></script>
+    <script type="text/javascript" src="../../commonjs/sys_common_valid_library.js"></script>       
+
+<script type="text/javascript" language="javascript">
+    Ext.onReady(function() {
+        var tabs = new Ext.TabPanel({
+            renderTo: 'tabs',
+            activeTab: 0,
+            frame: true,
+            monitorResize: true,
+            defaults: { autoHeight: true },
+            items: [
+            { contentEl: 'ab', title: '  属性  ' },
+            { contentEl: 'st', title: '  样式  ' }
+        ]
+        });
+    });
+
+    public_Form();
+
+    function uf_open() {
+        var obj = publicform.obj[0];
+        var obj1 = displayfont;
+        
+        PropWinOnload.loadBaseAttr();
+        PropWinOnload.loadStyleAttr()
+        
+        txtFieldChn.value = obj.innerHTML;
+    }
+
+    function uf_ok() {
+        PropWinClickOk.synchronBaseAttr();
+        PropWinClickOk.synchronStyleAttr();
+        if (!PropWinClickOk.isPassValid) {
+            PropWinClickOk.isHaveValid = false;
+            return;
+        }
+        var obj = publicform.obj[0];
+        obj.innerHTML = txtFieldChn.value;
+
+        //编辑成功返回true,修改编辑状态
+        window.returnValue = true;
+        window.close();
+    }
+</script>
+</body>
+</html>

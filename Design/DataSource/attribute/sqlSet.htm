@@ -1,0 +1,512 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="Stylesheet" type="text/css" href="../../../../publicJS/ext/resources/css/ext-all.css" />
+    <link rel="Stylesheet" type="text/css" href="../../../../publicJS/ext/resources/css/xtheme-gray.css" />
+    <link rel="Stylesheet" type="text/css" href="../../../../publicJS/ext/resources/css/tabs.css" />
+    <script src="../../../sfk/sfk.js" type="text/javascript"></script>
+    <style type="text/css">
+        #headDiv th
+        {
+            text-align: center;
+            font-size: 12px;
+            background-color: #87CEFA;
+        }
+        #argsSetTb td
+        {
+            height: 19px;
+            font-size: 12px;
+            border: solid 1px gray;
+        }
+        #headDiv th
+        {
+            border: solid 1px gray;
+        }
+        #selected tr
+        {
+            background-color: #c8d9f0;
+        }
+    </style>
+</head>
+<body>
+    <div id="tabs" style="margin-left: 5px; margin-top: 5px; width: 482px;">
+        <div id="sql" class="x-hide-display">
+            <table style="font-size: 12px; width: 100%;">
+                <tr>
+                    <td style="font-size: 14px;">
+                        sql语句：（<span style="color: Red">：参数名</span>代表参数值）
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <textarea id="sqlArea" cols="65" rows="10">
+                   </textarea>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- 样式编辑Tab页 -->
+        <div id="args" class="x-hide-display">
+            <table style="font-size: 12px;" id="allTable">
+                <tr>
+                    <td colspan="4" style="color: Gray;">
+                        当数据集中的记录较多时，可以通过动态设置开始行和结束行来减少数据集中的数据量。
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        起始页：
+                    </td>
+                    <td align="left">
+                        <table style="border-collapse: collapse; padding: 0; margin: 0;">
+                            <tr height="12px">
+                                <td rowspan="2" height="24px">
+                                    <input id="startPage" type="text" size="4" />
+                                </td>
+                                <td>
+                                    <button id="addStart" style="font-size: 12px; width: 10px; height: 10px; border-style: none;
+                                        border: 0; background-image: url(../images/dataSet_page_add.gif);"
+                                        onclick="addPage(this)">
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr height="12px">
+                                <td>
+                                    <button id="decreaseStart" style="font-size: 12px; width: 10px; height: 10px; border-style: none;
+                                        border: 0px; background-image: url(../images/dataSet_page_decrease.gif);"
+                                        onclick="decreasePage(this)">
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td align="right">
+                        结束页：
+                    </td>
+                    <td align="left">
+                        <table style="border-collapse: collapse; padding: 0; margin: 0;">
+                            <tr height="12px">
+                                <td rowspan="2" height="24px">
+                                    <input id="endPage" type="text" size="4" />
+                                </td>
+                                <td valign="top">
+                                    <button id="addEnd" style="font-size: 12px; width: 10px; height: 10px; border-style: none;
+                                        border: 0; background-image: url(../images/dataSet_page_add.gif);"
+                                        onclick="addPage(this)">
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr height="12px">
+                                <td valign="top">
+                                    <button id="decreaseEnd" style="font-size: 12px; width: 10px; height: 10px; border-style: none;
+                                        border: 0px; background-image: url(../images/dataSet_page_decrease.gif);"
+                                        onclick="decreasePage(this)">
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="color: Gray;" colspan="4">
+                        下边的参数必须和SQL语句输中的（：参数）参数按顺序一一对应:
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" id="tbArgsSets">
+                        <table width="100%">
+                            <tr>
+                                <td rowspan="4">
+                                    <div id="argsDiv" style="height: 90px; width: 340px;">
+                                        <div id="headDiv">
+                                            <table width="324px" style="border-collapse: collapse;">
+                                                <tr height="19px">
+                                                    <th width="50%" align="center">
+                                                        参数定义
+                                                    </th>
+                                                    <th width="20%" align="center">
+                                                        类型
+                                                    </th>
+                                                    <th width="30%" align="center">
+                                                        参数名称
+                                                    </th>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div id="argsSetDiv" style="width: 100%; overflow-y: scroll; height: 70px" onclick="selecteArgs()">
+                                            <table id="argsSetTb" cellpadding="0" cellspacing="0" style="border: 1px; border-collapse: collapse;
+                                                width: 100%; table-layout: fixed; text-align: center;">
+                                                <thead>
+                                                    <tr style="display: none; height: 19px;">
+                                                        <th width="50%">
+                                                        </th>
+                                                        <th width="20%">
+                                                        </th>
+                                                        <th width="30%">
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <input type="button" value="添加" style="width: 60px" onclick="insertArgs()" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="button" value="删除" style="width: 60px" onclick="deleteArgs()" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="button" value="上移" style="width: 60px" onclick="argsUP()" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="button" value="下移" style="width: 60px" onclick="argsDown()" />
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div id="buttons" style="text-align: right;">
+        <table>
+            <tr>
+                <td style="padding-right: 20px; padding-left: 300px;">
+                    <!-- 确定按钮 -->
+                    <button id="cmdOk" style="display: block; font-size: 12px; width: 65px; height: 21px;
+                        background-color: #ffffff; border-style: none; border: 0px; background-image: url(../images/button_ok.gif);"
+                        onclick="ok()">
+                    </button>
+                </td>
+                <td style="padding-right: 20px;">
+                    <!-- 取消按钮 -->
+                    <button id="cmdClose" style="display: block; font-size: 12px; width: 65px; height: 21px;
+                        background-color: #ffffff; border-style: none; border: 0px; background-image: url(../images/button_close.gif);"
+                        onclick="closeWin()">
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <!--文本框Div-->
+    <div id="textDiv" style="position: absolute; left: -100px">
+        <input type="text" style="width: 60px; height: 20px; margin: 0px; padding: 0px; border: 0px;
+            background-color: darkgray;" id="text" />
+    </div>
+    <!--下拉列表参数类型Div-->
+    <div id="selectDiv" style="position: absolute; left: -100px">
+        <select id="selectType">
+            <option value="">类型选择</option>
+            <option value="整数">整数</option>
+            <option value="实数">实数</option>
+            <option value="字符串">字符串</option>
+            <option value="日期">日期</option>
+            <option value="时间">时间</option>
+            <option value="日期时间">日期时间</option>
+            <option value="整数组">整数组</option>
+            <option value="实数组">实数组</option>
+            <option value="字符串组">字符串组</option>
+            <option value="默认">默认</option>
+        </select>
+    </div>
+    <div id="selectNameDiv" style="position: absolute; display: none">
+        <select id="selectName">
+            <option value="参数选择">参数选择</option>
+        </select>
+    </div>
+    <script src="../../../../publicJS/ext/adapter/ext/ext-base.js" type="text/javascript"></script>
+    <script src="../../../../publicJS/ext/ext-all.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        window.onload = function () {
+            var sqlSet = window.dialogArgs;
+            var sqlArea = document.getElementById("sqlArea");
+            window.argsDom = sqlSet[1];
+            window.dsId = sqlSet[2];
+            window.dsArrRef = sqlSet[3] ? sqlSet[3] : [];
+            if (sqlSet[0]) {
+                sqlArea.value = sqlSet[0];
+            } else {
+                sqlArea.value = "";
+            }
+            if (argsDom != undefined && argsDom.childNodes != undefined && argsDom.childNodes.length > 0 && argsDom != null && argsDom.xml != "") {
+                var arguments = window.argsDom.childNodes[0].childNodes.length ? window.argsDom.childNodes[0].childNodes : window.argsDom.childNodes;
+                var argsTb = document.getElementById("argsSetTb");
+                var argsLength = arguments.length;
+
+                for (var i = 0; i < argsLength; i++) {
+                    var args = arguments[i];
+                    var argName = args.getAttribute("Name");
+                    window.dsArrRef[argName] = window.dsArrRef[argName] ? window.dsArrRef[argName] : eval(args.getAttribute("RefDsDetail")) ? eval(args.getAttribute("RefDsDetail")) : [];
+                    for (var j = 0; j < dsArrRef[argName].length; j++) {
+                        if (dsArrRef[argName][j] != null && (!dsArrRef[argName][j][0] || dsArrRef[argName][j][0] == window.dsId)) {
+                            var oTr = argsTb.insertRow();
+                            var cell0 = oTr.insertCell();
+                            cell0.innerText = argName;
+                            var cell1 = oTr.insertCell();
+                            cell1.innerText = enumTosArgs(parseInt(args.getAttribute("DataType")));
+                            var cell2 = oTr.insertCell();
+                            cell2.innerText = args.getAttribute("ChineseName");
+                            dsArrRef[argName][j] = null;
+                            // dsArrRef[argName].length = 0;
+                        }
+                    }
+                    var option = document.createElement("option");
+                    option.text = option.value = argName;
+                    selectName.add(option);
+                }
+            }
+        }
+        Ext.onReady(function () {
+            var tabs = new Ext.TabPanel({
+                renderTo: 'tabs',
+                width: "100%",
+                height: ChangeTabsSize,
+                activeTab: 0,
+                frame: true,
+                defaults: { autoHeight: true },
+                items: [
+                    { contentEl: 'sql', title: ' SQL ' },
+                     { contentEl: 'args', title: ' 参数  ' }
+                ]
+            });
+        });
+        //改变TAB的样式
+        function ChangeTabsSize() {
+            var PageHeight = document.body.clientTop;
+            var ButtonsHeight = document.getElementById("buttons").offsetHeight + document.getElementById("buttons").offsetTop;
+            var TabsHeight = PageHeight + ButtonsHeight;
+            return TabsHeight;
+        }
+        //提交
+        function ok() {
+            var sqlArea = document.getElementById("sqlArea");
+            var oTb = document.getElementById("argsSetTb");
+            var rows = oTb.rows;
+            for (var i = 1; i < rows.length; i++) {
+                var argName = rows[i].cells[0].innerText;
+                if (argName) {
+                    window.dsArrRef[argName].push([window.dsId, , i]);
+                } else {
+                    alert("参数名不能为空，请选择参数!");
+                    return;
+                }
+            }
+            window.returnValue = [sqlArea.value, window.dsArrRef];
+            window.close();
+        }
+
+        //取消
+        function closeWin() {
+            window.close();
+        }
+        //添加参数
+        function insertArgs() {
+            var argsTb = document.getElementById("argsSetTb");
+            var selectedTr = document.getElementById("selected");
+            var oTr = argsTb.insertRow(argsTb.rows.length);
+            if (selectedTr != null) {
+                selectedTr.setAttribute("id", "");
+                selectedTr.bgColor = "";
+                if (selectedTr.nodeName.toLocaleLowerCase() == "tr") {
+                    for (var i = 0; i < 3; i++) {
+                        selectedTr.children[i].bgColor = "";
+                    }
+                }
+            }
+            oTr.bgColor = "#c8d9f0";
+            oTr.setAttribute("id", "selected");
+            for (var i = 0; i < 3; i++) {
+                var oTd = oTr.insertCell(i);
+                if (i == 0) {
+                    oTd.bgColor = "#3399ff";
+                }
+            }
+        }
+        //删除参数
+        function deleteArgs() {
+            try {
+                var oTr = document.getElementById("selected");
+                var oTb = oTr.parentNode.parentNode;
+                var i = oTr.rowIndex;
+                var argName = oTr.children[0].innerText;
+                // changeArgDom(argName, "");
+                oTb.deleteRow(i);
+                var nowSelectedTr;
+                if (i > 1) {
+                    nowSelectedTr = oTb.rows[i - 1];
+                } else if (i == 1) {
+                    nowSelectedTr = oTb.rows[i];
+                }
+                if (nowSelectedTr != null) {
+                    nowSelectedTr.bgColor = "#c8d9f0";
+                    nowSelectedTr.childNodes[0].bgColor = "#3399ff";
+                    nowSelectedTr.setAttribute("id", "selected");
+                }
+            } catch (e) {
+                alert("请选择要删除的行！");
+            }
+
+        }
+
+        //选择参数
+        var indexSelectedType;
+        var indexSelectedName;
+        function selecteArgs() {
+            var oTr = document.getElementById("selected");
+            var textDiv = document.getElementById("textDiv"); //文本框div
+            var text = document.getElementById("text"); //文本框
+            var selectDiv = document.getElementById("selectDiv"); //下拉列表div
+            var selectType = document.getElementById("selectType"); //下拉列表
+            var argsTb = document.getElementById("argsSetTb");
+            var tbArgsSets = document.getElementById("tbArgsSets");
+            var allTable = document.getElementById("allTable");
+            var argsDiv = document.getElementById("argsSetDiv");
+            var srcCell = event.srcElement;
+            var nowTr;
+            if (oTr != null) {
+                oTr.bgColor = "#ffffff";
+                oTr.setAttribute("id", "");
+                if (oTr.nodeName.toLocaleLowerCase() == "tr") {
+                    for (var i = 0; i < 3; i++) {
+                        oTr.children[i].bgColor = "";
+                    }
+                }
+            }
+            if (srcCell.nodeName.toLocaleLowerCase() == "td") {
+                nowTr = srcCell.parentNode;
+                srcCell.bgColor = "#3399ff"
+                var x = srcCell.offsetLeft + argsTb.offsetLeft + tbArgsSets.offsetLeft + document.body.clientLeft + 14; //单元格X坐标
+                var y = srcCell.offsetTop + argsTb.offsetTop + tbArgsSets.offsetTop + allTable.offsetTop + document.body.clientTop - argsDiv.scrollTop + 56; //单元格Y坐标
+                var width = parseInt(srcCell.offsetWidth); //单元格宽
+                var height = parseInt(srcCell.offsetHeight); //单元格高
+                srcCell.onkeydown = srcCell.ondblclick = function () {
+
+                    switch (srcCell.cellIndex) {
+                        case 0:
+                            {
+                                selectNameDiv.style.display = "";
+                                selectNameDiv.style.left = x;
+                                selectNameDiv.style.top = y;
+                                selectName.style.width = width - 2;
+                                selectName.style.height = height - 2;
+                                selectName.focus();
+                                selectName.onchange = function () {
+                                    indexSelectedName = selectName.selectedIndex;
+                                }
+                                selectName.onblur = function () {
+                                    if (indexSelectedName != undefined && indexSelectedName != 0) {
+                                        srcCell.innerHTML = selectName.options[indexSelectedName].text;
+                                        indexSelectedName = undefined;
+                                    }
+                                    selectName.selectedIndex = 0;
+                                    selectNameDiv.style.display = "none";
+                                };
+                                break;
+                            }
+                        case 1:
+                            {
+                                selectDiv.style.display = "";
+                                selectDiv.style.left = x;
+                                selectDiv.style.top = y;
+                                selectType.style.width = width - 2;
+                                selectType.style.height = height - 2;
+                                selectType.focus();
+                                selectType.onchange = function () {
+                                    indexSelectedType = selectType.selectedIndex;
+                                }
+                                selectType.onblur = function () {
+                                    if (indexSelectedType != undefined && indexSelectedType != 0) {
+                                        srcCell.innerHTML = selectType.options[indexSelectedType].text;
+                                        if (selectType.options[indexSelectedType].text == "默认") {
+                                            srcCell.innerHTML = "字符串";
+                                        }
+                                        indexSelectedType = undefined;
+                                    }
+                                    selectType.selectedIndex = 0;
+                                    selectDiv.style.display = "none";
+                                };
+                                break;
+                            }
+                        case 2:
+                            {
+                                textDiv.style.display = "";
+                                text.focus();
+                                textDiv.style.left = x;
+                                textDiv.style.top = y;
+                                text.style.width = width;
+                                text.style.height = height;
+                                text.value = srcCell.innerHTML;
+                                text.onblur = function () {
+                                    if (text.getAttribute('value') != null) {
+                                        srcCell.innerHTML = text.getAttribute('value');
+                                    } else {
+                                        srcCell.innerHTML = "";
+                                    }
+                                    textDiv.style.display = "none";
+                                };
+                                break;
+                            }
+                    }
+                };
+            } else {
+                nowTr = srcCell;
+            }
+            if (nowTr.nodeName.toLocaleLowerCase() == "tr") {
+                nowTr.setAttribute("id", "selected");
+                nowTr.bgColor = "#c8d9f0";
+            }
+        }
+
+        //上移参数
+        function argsUP() {
+            var oTr = document.getElementById("selected");
+            var i = oTr.rowIndex; //行索引号
+            var oTb = oTr.parentNode.parentNode;
+            if (i != 1) {
+                var preOTr = oTb.rows[i - 1];
+                oTr.swapNode(preOTr); 4
+            }
+
+        }
+        //下移参数
+        function argsDown() {
+            var oTr = document.getElementById("selected");
+            var i = oTr.rowIndex; //行索引号
+            var oTb = oTr.parentNode.parentNode;
+            if (i != oTb.rows.length - 1) {
+                var preOTr = oTb.rows[i + 1];
+                oTr.swapNode(preOTr);
+            }
+        }
+        //添加页数
+        function addPage(oEvent) {
+            var textPage = oEvent.parentNode.previousSibling.childNodes[0];
+            var nowPage = 0;
+            if (textPage.value != "") {
+                nowPage = parseInt(textPage.value);
+            }
+            textPage.value = nowPage + 1;
+        }
+        //减少页数
+        function decreasePage(oEvent) {
+            var textPage = oEvent.parentNode.parentNode.previousSibling.cells[0].childNodes[0];
+            var nowPage = 0;
+            if (textPage.value != "" && parseInt(textPage.value) > 0) {
+                nowPage = parseInt(textPage.value);
+                textPage.value = nowPage - 1;
+            }
+        }
+    </script>
+</body>
+</html>

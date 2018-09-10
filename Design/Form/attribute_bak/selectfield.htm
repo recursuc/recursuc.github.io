@@ -1,0 +1,390 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+    <title>数据集字段选择</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <style type="text/css">
+        .x-tab-panel-body .x-panel-body
+        {
+            padding: 10px;
+        }
+        #selectTable th
+        {
+            font: bold 11px "Trebuchet MS" , Verdana, Arial, Helvetica, sans-serif;
+            color: #15428b;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-align: center;
+            background: #ebf3fc url(images/bg_header.jpg) no-repeat;
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+        #selectTable td
+        {
+            background: #fff;
+            font-size: 12px;
+            color: #4f6b72;
+            padding: 2px 0px 2px 10px;
+        }
+    </style>
+    <link rel="Stylesheet" type="text/css" href="../skins/blue/css/form.css" />
+    <link rel="Stylesheet" type="text/css" href="../../ext/resources/css/ext-all.css" />
+    <link rel="Stylesheet" type="text/css" href="../../ext/resources/css/xtheme-gray.css" />
+    <link rel="Stylesheet" type="text/css" href="../../ext/resources/css/tabs.css" />
+</head>
+<body onload="uf_open()" style="overflow: hidden; margin: 3px; font-size: 13px; padding: 0px;">
+    <div id="SKbillsheet">
+        <div id="tabs">
+            <div id="ab" class="x-hide-display">
+                <table style="font-size: 12px; width: 100%;">
+                    <tr style="width: 100%;">
+                        <td colspan="2" style="font-weight: bold; color: #15428b; width: 100%;">
+                            数据字段选择
+                        </td>
+                    </tr>
+                    <tr style="width: 100%;">
+                        <td colspan="2" style="width: 100%;">
+                            <hr style="color: #8db2e3; width: 100%; height: 1px;" />
+                        </td>
+                    </tr>
+                    <tr style="width: 100%;">
+                        <td style="width: 20%;">
+                            DataTable名称：
+                        </td>
+                        <td style="width: 80%;">
+                            <div id="selReadOnly" style="width: 100%; height: 100%; display: none; position: absolute;
+                                left: 0; top: 0">
+                            </div>
+                            <select id="selDataSet" style="width: 168px;" onchange="uf_sel();">
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100%; height: 303px;" colspan="2">
+                            <div style="left: 15px; width: 464px; position: absolute; top: 70px; height: 303px;
+                                scrollbar-face-color: #9EBFE8; scrollbar-shadow-color: #FFFFFF; scrollbar-highlight-color: #FFFFFF;
+                                scrollbar-3dlight-color: #9EBFE8; scrollbar-darkshadow-color: #9EBFE8; scrollbar-track-color: #FFFFFF;
+                                scrollbar-arrow-color: #FFFFFF; overflow-x: hidden; overflow-y: auto">
+                                <table id="selectTable" width="100%" border="0" align="center" cellpadding="1" cellspacing="1"
+                                    bgcolor="#C1DFE8">
+                                    <thead>
+                                        <tr>
+                                            <th style="height: 3px; width: 20px;">
+                                            </th>
+                                            <th style="height: 3px; width: 166px;">
+                                                字段名
+                                            </th>
+                                            <th style="height: 3px; width: 205px;">
+                                                描述
+                                            </th>
+                                            <th style="height: 3px; width: 138px;">
+                                                字段类型
+                                            </th>
+                                            <th style="width: 55px; height: 3px">
+                                                长度
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="selectfields">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="buttons" style="text-align: right;">
+        <table>
+            <tr>
+                <td style="padding-right: 20px;">
+                    <!-- 确定按钮 -->
+                    <button id="cmdOk" style="display: block; font-size: 12px; width: 65px; height: 21px;
+                        background-color: #ffffff; border-style: none; border: 0px;" onclick="uf_ok()">
+                    </button>
+                </td>
+                <td style="padding-right: 20px;">
+                    <!-- 取消按钮 -->
+                    <button id="cmdClose" style="display: block; font-size: 12px; width: 65px; height: 21px;
+                        background-color: #ffffff; border-style: none; border: 0px;" onclick="CloseBill()">
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script type="text/javascript" src="../../ext/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="../../ext/ext-all.js"></script>
+    <script type="text/javascript" src="../../commonjs/public_api.js"></script>
+    <script type="text/javascript" src="../js/f_core.js"></script>
+    <script type="text/javascript" src="../../commonjs/design_operation.js"></script>
+    <script type="text/javascript" src="../../commonjs/property.js"></script>
+    <script type="text/javascript" src="../../commonjs/opencommonform.js"></script>
+    <script type="text/javascript" src="../../commonjs/browser_version.js"></script>
+    <script type="text/javascript" src="../../commonjs/sys_common_valid_library.js"></script>
+    <script type="text/javascript" language="javascript">
+        Ext.onReady(function () {
+            var tabs = new Ext.TabPanel({
+                renderTo: 'tabs',
+                width: "496px",
+                height: ChangeTabsSize(),
+                activeTab: 0,
+                frame: true,
+                defaults: { autoHeight: true },
+                items: [
+                        { contentEl: 'ab', title: '  字段选择  ' }
+                    ]
+            });
+        });
+
+        //改变TAB的样式
+        function ChangeTabsSize() {
+            var PageWidth = document.body.clientWidth;
+            var PageHeight = document.body.clientHeight;
+            var ButtonsHeight = document.getElementById("buttons").offsetHeight;
+            var TabsHeight = PageHeight - ButtonsHeight - 10;
+            return TabsHeight;
+        }
+
+        public_Form();
+        var s1;
+        var arr, seldatas;
+        function uf_open() {
+            //设置确定和取消按钮图片
+            PropWinOnload.loadButtonImg();
+            arr = publicform.obj[1];
+            XMLSend = new ActiveXObject("Microsoft.XMLDOM");
+            XMLSend.loadXML("<?xml version=\"1.0\" encoding=\"utf-8\"?><root>" + arr[0] + "</root>");
+            var options = XMLSend.getElementsByTagName("option");
+            var option = "";
+            for (var i = 0; i < options.length; i++) {
+                option += "<option value='" + options[i].text + "'>" + publicform.obj[2].eval(options[i].text).ChineseName + "</option>";
+            }
+            var seldata = publicform.obj[0];
+            var s2 = selDataSet.outerHTML;
+            s2 = s2.substring(0, s2.length - 9) + option + "</select>";
+            selDataSet.outerHTML = s2;
+
+            seldatas = seldata.split(";");
+            if (seldatas[0] != "") {
+                selDataSet.value = seldatas[0];
+            }
+            uf_sel();
+            if (seldatas.length == 2) {
+                if (seldatas[1] != "") {
+                    for (var i = 0; i < s1.documentElement.childNodes.length; i++) {
+                        if (seldatas[1] == s1.documentElement.childNodes[i].childNodes[0].text) {
+                            document.getElementById(s1.documentElement.childNodes[i].childNodes[0].text).checked = true;
+                            break;
+                        }
+                    }
+                }
+                if (seldatas[1] == "upload") {
+                    document.getElementById("selectTable").style.display = "none";
+                }
+            }
+        }
+
+        function uf_sel() {
+            if (SysF_IsNoEmpty(selDataSet.value)) {
+                s1 = SetDom(arr[selDataSet.value]);
+                if (SysF_IsNoEmpty(s1.xml.toString())) {
+                    var objTbody = document.getElementById("selectfields");
+
+                    for (i = objTbody.rows.length - 1; i >= 0; i--) {
+                        objTbody.removeChild(objTbody.rows[i]);
+                    }
+
+                    for (var i = 0; i < s1.documentElement.childNodes.length; i++) {
+                        var newRowObj = document.createElement("tr");
+                        var newtext0 = document.createElement("td");
+                        var newtext1 = document.createElement("td");
+                        var newtext2 = document.createElement("td");
+                        var newtext3 = document.createElement("td");
+                        var newtext4 = document.createElement("td");
+
+                        newtext0.innerHTML = "<input id=\"" + s1.documentElement.childNodes[i].childNodes[0].text + "\" type=\"checkbox\" name=\"selectfield\" value=\""
+		        + s1.documentElement.childNodes[i].childNodes[0].text + "\" onclick=\"onlyClick(this.value, this);\" />";
+                        newtext1.innerHTML = s1.documentElement.childNodes[i].childNodes[0].text;
+                        newtext2.innerHTML = s1.documentElement.childNodes[i].childNodes[1].text;
+                        newtext3.innerHTML = s1.documentElement.childNodes[i].childNodes[2].text;
+                        newtext4.innerHTML = s1.documentElement.childNodes[i].childNodes[3].text;
+
+                        newRowObj.appendChild(newtext0);
+                        newRowObj.appendChild(newtext1);
+                        newRowObj.appendChild(newtext2);
+                        newRowObj.appendChild(newtext3);
+                        newRowObj.appendChild(newtext4);
+
+                        if (ValidateBing(s1.documentElement.childNodes[i].childNodes[0].text, "dis")) {
+                            for (var k = 0; k < newRowObj.childNodes.length; k++) {
+                                newRowObj.childNodes[k].style.backgroundColor = "#9ac8f5";
+                            }
+                        }
+
+                        objTbody.appendChild(newRowObj);
+                    }
+                } else {
+                    alert("此数据集未配置");
+                }
+            }
+        }
+
+        function onlyClick(strValue) {
+            var checks = document.getElementsByName("selectfield");
+            for (var j = 0; j < checks.length; j++) {
+                if (strValue != checks[j].value) {
+                    checks[j].checked = false;
+                }
+            }
+            if (arguments[1].checked) {
+                var returnValue = ValidateBing(strValue, "alert");
+                if (returnValue == false) {
+                    arguments[1].checked = false;
+                }
+            }
+        }
+
+        //	        var oDesignWindow = publicform.obj[2];
+        //	        var arrTags = ["input", "textarea", "select", "FIELDSET"];
+
+        //	        function validateBing(strValue) {
+        //	            var arrContBinged = new Array();
+        //	            var bExist = false;//用于弹提示框
+        //	            if (oDesignWindow) {
+        //	                for (var i = 0; i < arrTags.length; i++) {
+        //	                    var oConts = oDesignWindow.document.getElementsByTagName(arrTags[i]);
+        //	                    for (var j = 0; j < oConts.length; j++) {
+        //	                        if ((oConts[j].ColumnName && oConts[j].DtClientId) || (oConts[j].ColumnName == "" && oConts[j].DtClientId == "")) {
+        //	                            if (strValue == oConts[j].ColumnName && selDataSet.value == oConts[j].DtClientId) {
+        //	                                arrContBinged.push(oConts[j].id);
+        //	                                bExistBinged = bExist = true;
+        //	                            }
+        //	                        }
+        //	                    }
+        //	                }
+        //	            }
+        //	            if (bExist && arguments[1] == "alert" )
+        //	                alert("该字段已被ID为：  " + arrContBinged.join(",") + "  选择过了！ ");
+        //	            if (bExist) return true;
+        //	            bExistBinged = false;
+        //	            return false;
+        //	        }
+
+        function uf_ok() {
+            var s = selDataSet.value;
+            if (!SysF_IsNoEmpty(s)) {
+                alert("数据集名称不能为空!");
+                selDataSet.focus();
+                return;
+            }
+
+            var checks = document.getElementsByName("selectfield");
+            for (var i = 0; i < checks.length; i++) {
+                if (checks[i].checked) {
+                    var sRet = s + "," + checks[i].parentNode.parentNode.childNodes[1].innerHTML + "," + checks[i].parentNode.parentNode.childNodes[2].innerHTML;
+                    break;
+                }
+            }
+            if (i == checks.length && seldatas[1] != "upload") {
+                alert("未选择任何字段，请重新选择！");
+                return false;
+                //var sRet = s + "," + "" + "," + "";
+            }
+            //	            if (seldatas[1] != "upload" && !SysF_IsNoEmpty(sRet)) {
+            //	                alert("未选择任何字段，请重新选择！");
+            //	                return false;
+            //	            }
+            if (bExistBinged && confirm("  你选择的字段已被其它控件选择过了!\n点确定将清除之前所有对该字段的绑定，点取消不清除 ")) {
+                sRet += "," + bExistBinged + "," + sBingedContIds;
+            }
+            window.returnValue = sRet;
+            window.close();
+        }
+
+        function AttributeAddQuotes(mystr) {
+            return (mystr.replace(/=([^=>]+)[\s|>]/ig, function ($0, $1) { return $0.replace($1, '"' + $1.replace(/(^\s*)|(\s*$)/g, "") + '"'); }));
+        }
+
+        var sBingedContIds = ""; //已经绑定了字段的控件ID
+        var bExistBinged = false; //用于弹确认框
+        function ValidateBing(sValue) {
+            var arrContBinged = [];
+            var bExist = false; //用于弹提示框
+            var oConts = publicform.obj[2].oContXml.selectNodes("//id");
+            for (var i = 0, len = oConts.length; i < len; i++) {
+                var oEle = publicform.obj[2].document.getElementById(oConts[i].text);
+                if (!oEle.ControlType) { continue; }
+                switch (oEle.ControlType.toLowerCase()) {
+                    case "text":
+                    case "editor":
+                    case "password":
+                    case "textarea":
+                    case "checkbox":
+                    case "datetime":
+                        if (oEle.DtClientId && oEle.ColumnName) {
+                            if (sValue == oEle.ColumnName && selDataSet.value == oEle.DtClientId) {
+                                bExist = true;
+                                if (arguments[1] == "dis") return true;
+                                bExistBinged = true;
+                                arrContBinged.push(oEle.id);
+
+                            }
+                        }
+                        break;
+                    case "webgrid":
+                        //if (oEle.DtClientId && oEle.ColumnName) {
+                            //if (sValue == oEle.ColumnName && selDataSet.value == oEle.DtClientId) {
+                            if (oEle.outerHTML.indexOf(sValue) > -1 && oEle.outerHTML.indexOf(selDataSet.value) > -1) {
+                                bExist = true;
+                                if (arguments[1] == "dis") return true;
+                                bExistBinged = true;
+                                arrContBinged.push(oEle.id);
+                            }
+                        //}
+                        break;
+                    case "radio":
+                    case "combobox":
+                        if (oEle.DataMode == "Value" || (oEle.ValueColumnName != "" && oEle.TextColumnName == "")) {
+                            if (sValue == oEle.ValueColumnName && selDataSet.value == oEle.DtClientId) {
+                                bExist = true;
+                                if (arguments[1] == "dis") return true;
+                                bExistBinged = true;
+                                arrContBinged.push(oEle.id);
+                            }
+                        } else if (oEle.DataMode == "Text" || (oEle.ValueColumnName == "" && oEle.TextColumnName != "")) {
+                            if (sValue == oEle.TextColumnName && selDataSet.value == oEle.DtClientId) {
+                                bExist = true;
+                                if (arguments[1] == "dis") return true;
+                                bExistBinged = true;
+                                arrContBinged.push(oEle.id);
+                            }
+                        } else if (oEle.DataMode == "both" || (oEle.ValueColumnName != "" && oEle.TextColumnName != "")) {
+                            if (sValue == oEle.ValueColumnName && selDataSet.value == oEle.DtClientId) {
+                                bExist = true;
+                                if (arguments[1] == "dis") return true;
+                                bExistBinged = true;
+                                arrContBinged.push(oEle.id + "|Value");
+                            } else if (sValue == oEle.TextColumnName && selDataSet.value == oEle.DtClientId) {
+                                bExist = true;
+                                if (arguments[1] == "dis") return true;
+                                bExistBinged = true;
+                                arrContBinged.push(oEle.id + "|Text");
+
+                            }
+                        }
+                }
+            }
+
+            if (bExist && arguments[1] == "alert") {
+                sBingedContIds = arrContBinged.join(",");
+                alert("该字段已被ID为：  " + arrContBinged.join(",") + "  选择过了！ ");
+                return false;
+            }
+
+            bExistBinged = false;
+            //return false;
+        }
+    </script>
+</body>
+</html>

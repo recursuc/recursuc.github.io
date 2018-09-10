@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <title>选择主表单</title>
+    <link href="../../../../Javascripts/common/tree/dtree.css" rel="stylesheet" type="text/css" />
+    <script src="../../../../Javascripts/common/tree/dtree.js" type="text/javascript"></script>
+</head>
+<body style="height:384px;">
+    <table style="width: 100%; height: 100%; border: 0" cellpadding="0" cellspacing="0">
+        <tr>
+            <td width="100%" valign="top" class="table2">
+                <div style="height: 100%; overflow: auto">
+                    <table style="width: 100%; border: 0; text-align: center" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td width="100%" align="left">
+                                <div id="treeTd">
+                                
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <script type="text/javascript">
+        var d = new dTree("d"),
+        	path="../../../../Javascripts/common/tree/img/";
+        d.icon = {
+                root: path+'base.gif',
+                empty: path+'empty.gif',
+                line: path+'line.gif',
+                join: path+'join.gif',
+                joinBottom: path+'joinbottom.gif',
+                plus: path+'plus.gif',
+                plusBottom: path+'plusbottom.gif',
+                minus: path+'minus.gif',
+                minusBottom: path+'minusbottom.gif',
+                nlPlus: path+'nolines_plus.gif',
+                nlMinus: path+'nolines_minus.gif'
+            };
+        window.onload = function () {
+        	var icon= path+"treeTop.gif",iconopen=path+"treebottom.gif",args = getArgs();
+        	args.showType == "showRadio" ? d.config.showRadio = true : d.config.showCheckbox = true;
+        	var _this = d;
+        	window.parent.FormDesign.getNameList("form", function(frms){
+        		_this.add("0", "-1", "表单", "", "", "", icon, iconopen, "", true);
+        		for ( var i = 0, len = frms.childNodes.length; i < len; i++) {
+        			var xnFrms = frms.childNodes[i];
+					if (xnFrms.nodeType == "1") {
+						var frmsId = xnFrms.getAttribute("Id");
+						_this.add(frmsId, "0", xnFrms.getAttribute("Name"), "", "", "", icon, iconopen, "", true);
+						for (var j = 0, l = xnFrms.childNodes.length; j < l; j++) {
+							var xnFrm = xnFrms.childNodes[j];
+							if(xnFrm.nodeType == "1"){
+								_this.add(xnFrm.getAttribute("Id") + "#" + xnFrm.getAttribute("Name"), frmsId, xnFrm.getAttribute("Name"), "", "", "", icon, iconopen);
+							}
+						}
+					}
+        		}
+        	});
+        	document.getElementById("treeTd").innerHTML = d.toString();
+        }
+
+        //确定获取选中的表单
+        function Submit() {
+            var radioId = d.collect();
+            if(radioId == ""){
+            	alert("您还没有选择表单！");
+            	return;
+            }
+            alert("表单已选择！");
+            var curId = radioId.split("$#")[0];
+            var paEle = document.getElementById(radioId).parentNode;
+            return [curId.split("#")[0], paEle.innerText || paEle.textContent, curId.split("#")[1]];
+        }
+        
+        function getArgs(){
+   	        var params=document.location.search,reg=/(?:^\?|&)(.*?)=(.*?)(?=&|$)/g,temp,args={};
+   	        while((temp=reg.exec(params))!=null) args[temp[1]]=decodeURIComponent(temp[2]);
+   	        return args;
+        }
+    </script>
+</body>
+</html>

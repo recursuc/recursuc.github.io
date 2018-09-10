@@ -1,0 +1,619 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="../../../sfk/panel/sfk_panel.css" rel="stylesheet" type="text/css" />
+    <link href="../../../sfk/accordion/sfk_accordion.css" rel="stylesheet" type="text/css" />
+    <link href="../../../sfk/tab/sfk_tab.css" rel="stylesheet" type="text/css" />
+    <script src="../../../sfk/sfk.js" type="text/javascript"></script>
+    <script src="../../../sfk/panel/sfk_panel.js" type="text/javascript"></script>
+    <script src="../../../sfk/accordion/sfk_accordion.js" type="text/javascript"></script>
+    <style type="text/css">
+        .attrTable
+        {
+            table-layout: fixed;
+            font-size: 11px;
+            border-collapse: collapse;
+            position: static;
+            text-align: left;
+            width: 100%;
+        }
+        
+        .attrTable td
+        {
+            overflow: hidden;
+        }
+        .attrTable td input
+        {
+            width: 105px;
+        }
+    </style>
+</head>
+<body style="background: rgb(240,240,240); margin: 0px;">
+    <form>
+    <div id="txtContainer" style="margin: 0px 3px; height: 80%;">
+        <ul class="acc_nav" id="barContainer">
+            <li>
+                <div>
+                    <div class="title">
+                        基本属性<div class="oper">
+                            <a href="#" panel="1">un</a></div>
+                    </div>
+                    <div class="content">
+                        <table class="attrTable" border="1" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td style="width: 60px;">
+                                    节点名称：
+                                </td>
+                                <td>
+                                    <input type="text" wlAttr="Name" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 60px;">
+                                    处理人：
+                                </td>
+                                <td>
+                                    <textarea disabled="disabled" wlAttr="AccepterViewNames"></textarea><br />
+                                    <input type="button" name="AccViewNames" value="选择" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 60px;" rowspan="3">
+                                </td>
+                                <td>
+                                    <input style="width: 20px;vertical-align: middle;" type="checkbox" wlAttr="AllowAddAccepter" />允许添加非设定处理人
+                                </td>
+                            </tr>
+                            <tr>
+                            	<td>
+                                    <input style="width: 20px;vertical-align: middle;" type="checkbox" wlAttr="IsRememberSendUser" />允许记住发起人
+                                </td>
+                            </tr>
+                            <tr>
+                            	<td>
+                                    <input style="width: 20px;vertical-align: middle;" type="checkbox" wlAttr="IsCodeterminant" />允许多人处理
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 60px;">
+                                    会签通过人数：
+                                </td>
+                                <td>
+                                    <input type="text" wlAttr="TerminateMansNumber" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 60px;">
+                                    会签主办人：
+                                </td>
+                                <td>
+                                    <textarea disabled="disabled" wlAttr="DecisionerViewNames"></textarea><br />
+                                    <input type="button" name="DecViewNames" value="选择" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 60px;" rowspan="8">
+                                功能选项：
+                                </td>
+                                <td>
+                                    <input style="width: 20px;vertical-align: middle;" type="checkbox" wlAttr="AllowDelegate" />允许交办代办
+                                </td>
+                            </tr>
+                            <tr>
+                            	<td>
+                            		<input style="width: 20px;vertical-align: middle;" type="checkbox" wlAttr="AllowJump" />允许任意跳转
+                            	</td>
+                            </tr>
+                            <tr>
+                            	<td>
+                            		<input style="width: 20px;vertical-align: middle;" type="checkbox" wlAttr="AllowCirculation" />允许传阅
+                            	</td>
+                            </tr>
+                            <tr>
+                            	<td>
+                            		<input style="width: 20px;vertical-align: middle;" type="checkbox" wlAttr="AllowBack" />允许单步回退
+                            	</td>
+                            </tr>
+                            <tr>
+                            	<td>
+                            		<input style="width: 20px;vertical-align: middle;" type="checkbox" wlAttr="AllowBacks" />允许任意回退
+                            	</td>
+                            </tr>
+                            <tr>
+                            	<td>
+                            		<input style="width: 20px;vertical-align: middle;" type="checkbox" wlAttr="AllowGetBack" />允许收回
+                            	</td>
+                            </tr>
+                            <tr>
+                            	<td>
+                            		<input style="width: 20px;vertical-align: middle;" type="checkbox" wlAttr="IsSelfTurnNode" />允许自循环
+                            	</td>
+                            </tr>
+                            <tr>
+                            	<td>
+                            		<input style="width: 20px;vertical-align: middle;" type="checkbox" wlAttr="AllowGoCome" />自动提交至上步处理人
+                            	</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <div class="title">
+                       数据配置<div class="oper">
+                            <a href="#" panel="1">un</a>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <table id="dataConfig" class="attrTable" border="1" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td style="width:60px"> 表单集：</td>
+                                <td>
+                                    <select id="FormTabsId" wlAttr="FormTabsId">
+                                    	<option value="0" selected>---请选择---</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                	<table id="FormList">
+                                	</table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width:60px">
+                                    页面URL：
+                                </td>
+                                <td>
+                                    <textarea wlAttr="BusinessUrl"></textarea>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <div class="title">
+                       时限配置<div class="oper">
+                            <a href="#" panel="1">un</a>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <table class="attrTable" border="1" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td style="width:60px">
+                                    响应时限：
+                                </td>
+                                <td>
+                                <input type="text" wlAttr="RespondLimitNumber" style="width:30px;" />
+                                    <select wlAttr="RespondLimitTimeUnit">
+	                                    <option value="Month">月</option>
+	                                    <option value="Day">天</option>
+	                                    <option value="Hour">小时</option>
+	                                    <option value="Minute">分</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    处理时限：
+                                </td>
+                                <td>
+                                <input type="text" wlAttr="DisposalLimitNumber" style="width:30px;" />
+                                    <select wlAttr="DisposalLimitTimeUnit">
+	                                    <option value="Month">月</option>
+	                                    <option value="Day">天</option>
+	                                    <option value="Hour">小时</option>
+	                                    <option value="Minute">分</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <div class="title">
+                        应用接口<div class="oper">
+                            <a href="#" panel="1">un</a>
+                        </div>
+                    </div>
+                    <div class="content">
+                    前置API配置
+                        <table name="beforeAPI" id="beforeAPI" class="attrTable" border="1" cellpadding="0" cellspacing="0" >
+                            <tr>
+                                <td style="width:60px">
+                                    类型：
+                                </td>
+                                <td>
+                                    <select id="inovkeType"  wlAttr="BeforeAPIType" name="inovkeType">
+                                    	<option value="Null">无</option>
+                                        <option value="JAR">JAR</option>
+                                        <option value="webService">web服务</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr id="trUrlPath">
+                                <td>
+                                    服务地址：
+                                </td>
+                                <td>
+                                    <input id="urlPath" type="text" wlAttr="BeforeAPIPath"  name="urlPath"/>
+                                </td>
+                            </tr>
+                            <tr id="trClassName">
+                                <td>
+                                    引用类名：
+                                </td>
+                                <td>
+                                    <input id="className" type="text" wlAttr="BeforeAPIClass" name="className"/>
+                                </td>
+                            </tr>
+                            <tr id="trMethodName">
+                                <td>
+                                    调用方法名：
+                                </td>
+                                <td>
+                                    <input id="methodName" type="text" wlAttr="BeforeAPIMethod" name="methodName"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    参数：
+                                </td>
+                                <td>
+                                    <input style="width: 20px;vertical-align: middle;" type="checkbox" wlAttr="BeforeAPIPara" />流程主信息
+                                </td>
+                            </tr>
+                        </table>
+                        后置API配置
+                        <table  id="afterAPI" name="afterAPI" class="attrTable" border="1" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td style="width:60px">
+                                    类型：
+                                </td>
+                                <td>
+                                    <select wlAttr="EndAPIType" id="AfterInovkeType"  >
+                                    	<option value="Null">无</option>
+                                        <option value="JAR">JAR</option>
+                                        <option value="webService">web服务</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    服务地址：
+                                </td>
+                                <td>
+                                    <input id="urlPath" type="text" wlAttr="EndAPIPath" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    引用类名：
+                                </td>
+                                <td>
+                                    <input id="className" type="text" wlAttr="EndAPIClass" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    调用方法名：
+                                </td>
+                                <td>
+                                    <input id="methodName" type="text" wlAttr="EndAPIMethod" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    参数：
+                                </td>
+                                <td>
+                                    <input style="width: 20px;vertical-align: middle;" type="checkbox" wlAttr="EndAPIPara" />流程主信息
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    </form>
+    <script type="text/javascript">
+    window.onload = function () {
+        var doc = document,
+        heDataConfig = doc.getElementById("dataConfig"),
+        url = window.location.href,
+        tid = url.substring(url.indexOf("=") + 1, url.length),
+            accor = new Accordion({
+                target: doc.getElementById("barContainer"),
+                container: doc.getElementById("txtContainer"),
+                titleStyle: {},
+                contentStyle: {},
+                mode: 1,
+                active: false
+            });		
+        window.taskObj = parent.workflow.getFigure(tid);
+        window.task = taskObj.ExtAttributes;
+        window.flag = false;
+        if(task.NodeType == "ClusterNode")
+        	heDataConfig.rows[2].style.display = "none";
+        else{
+        	heDataConfig.rows[0].style.display = "none";
+        	heDataConfig.rows[1].style.display = "none";
+        }
+
+        initFormTabs();
+        SetForm();
+    }
+    
+    function changeAttr(element){
+    	var newVal = element.value, 
+    		oldVal = element.getAttribute("source"), 
+    		wlAttr = element.getAttribute("wlAttr"),
+    		eType = element.type;
+    	if(eType == "checkbox"){
+    		if(wlAttr == "BeforeAPIPara" || wlAttr == "EndAPIPara")
+    			newVal = element.checked ? "FlowInfo" : "";
+    		else{
+    			newVal = element.checked ? "1" : "0";
+    		}
+    	}
+    	
+       	if(wlAttr == "FormTabsId"){
+       		changeFormTabs(newVal);
+       		getDataConfig(element);
+       	}else{
+       		parent.workflow.getCommandStack().execute(new parent.draw2d.CommandAttribute(taskObj, wlAttr, newVal, oldVal));
+           	element.setAttribute("source", newVal);
+       	}
+    }
+    
+    var xnForms;
+    function initFormTabs(){
+    	//初始化表单集
+    	xnForms = window.parent.FormDesign.getNameList();
+    	var heFormTabsId = document.getElementById("FormTabsId");
+    	for ( var i = 0, len = xnForms.childNodes.length; i < len; i++) {
+    		if (xnForms.childNodes[i].nodeType == "1") {
+    			var item = new Option(xnForms.childNodes[i].getAttribute("Name"), xnForms.childNodes[i].getAttribute("Id"));
+    			heFormTabsId.options.add(item);
+    		}
+    	}
+    }
+    
+    function changeFormTabs(formTabsId){
+    	var heFormList = document.getElementById("FormList");
+    	if(formTabsId != "0"){
+    		for ( var i = 0, len = xnForms.childNodes.length; i < len; i++) {
+        		if (xnForms.childNodes[i].nodeType == "1") {
+        			if(xnForms.childNodes[i].getAttribute("Id") == formTabsId){
+        				var heTr = "";
+        				for ( var j = 0, leng = xnForms.childNodes[i].childNodes.length; j < leng; j++) {
+							if(xnForms.childNodes[i].childNodes[j].nodeType == "1"){
+								var oFormStates = getFormStates(xnForms.childNodes[i].childNodes[j].getAttribute("Id"));
+								var strFormStates = "";
+								
+								strFormStates += "<option value='0'>请选择</option>";
+								for(var n = 0, l = oFormStates.rows.length; n < l ; n++){
+									strFormStates += "<option value='"+oFormStates.rows[n].id + "'>" + oFormStates.rows[n].name + "</option>";
+								}
+								
+								heTr += "<tr>"
+									+ "<td maintable='" + xnForms.childNodes[i].childNodes[j].getAttribute("MainTable")
+									    + "' value=" + xnForms.childNodes[i].childNodes[j].getAttribute("Id")
+										+ ">【" + xnForms.childNodes[i].childNodes[j].getAttribute("Name")+ "】</td>"
+									+ "<td>"
+									+ 	"<select formId='' onchange='getDataConfig()'>" + strFormStates + "</select>"
+									+ "</td>"
+									+ "</tr>";
+							}
+        				}
+        				heFormList.innerHTML = heTr;
+        			}
+        		}
+    		}
+    	}else{
+    		heFormList.innerHTML = "";
+    	}
+    }
+    
+    function getDataConfig(element){
+    	var element = (typeof element !="undefined") ? element: document.getElementById("FormTabsId"), oldVal = element.getAttribute("source");
+    	task.FormTabsId = element.value;
+    	task.FormTabsName = element.options[element.selectedIndex].text;
+    	task.FormList = getFormListData();
+		
+   		newVals = [task["FormTabsId"], task["FormTabsName"], task["FormList"]];
+		wlAttrs = ["FormTabsId", "FormTabsName", "FormList"];
+		parent.workflow.getCommandStack().execute(new parent.draw2d.CommandAttribute(taskObj, wlAttrs, newVals, oldVal));
+		element.setAttribute("source", task.FormTabsId + "|" + task.FormTabsName + "|" + task.FormList);
+    }
+    
+    function getFormListData(){
+    	var heFormList = document.getElementById("FormList");
+    	var val = "";
+    	for(var n = 0, l = heFormList.rows.length; n < l; n++){
+    		var heRow = heFormList.rows[n];
+    		val += heRow.cells[0].getAttribute("value") + "," + heRow.cells[0].innerText + "," + heRow.cells[1].firstChild.value + "," + heRow.cells[0].getAttribute("maintable") + ";";
+    	} 
+    	return val;
+    }
+    
+  //查询表单的状态
+    function getFormStates(formId){
+    	var formStates = null;
+    	$Ajax({
+           type: "get",
+           url: "formStateAction!getFormStatesByForm?formId=" + formId,
+           async: false,
+           success: function (xhr, data) {
+        	   formStates = eval("(" + xhr.responseText + ")");
+           },
+           error: function (xhr, error) {
+               alert('Failure: ' + xhr.status);
+           }
+    	});
+    	return formStates;
+    }
+    
+    function SetForm() {
+        var form = document.forms[0], element, wlAttr, attrVal;
+        for (var i = form.length - 1; i >= 0; i--) {
+            element = form[i],
+            wlAttr = element.getAttribute("wlAttr");
+            if(wlAttr != null)
+            	attrVal = task["" + wlAttr + ""];
+            switch (element.type) {
+                case "text":
+                	element.value = attrVal;
+                	if(!flag){
+	                    addEvent(element, "change", wlAttr);
+	                    if(wlAttr == "Name") 
+	                    	$E.on(element, "blur", function(evt, element){
+	                    		taskObj.setTitle(element.value);
+	                    	}, element, element);
+	                    element.setAttribute("source", attrVal);
+                	}
+                    break;
+                case "select-one":
+                    element.value = attrVal;
+                    !flag && (addEvent(element, "change", wlAttr), element.setAttribute("source", attrVal));
+                    
+                    if(!flag){
+                    	if(wlAttr == "FormTabsId"){
+                       		element.setAttribute("source", attrVal + "|" + task["FormTabsName"] + "|" + task["FormList"]);
+                       		changeFormTabs(attrVal);
+                       		
+                           	var fs = task["FormList"].split(';');
+                           	var heFormList = document.getElementById("FormList");
+                           	for(var m = 0, lt = fs.length; m < lt; m++){
+                           		if(fs[m] != ""){
+       	                    		for(var n = 0, l = heFormList.rows.length; n < l; n++){
+       	                        		var heRow = heFormList.rows[n];
+       	                        		if(heRow.cells[0].getAttribute("value") == fs[m].split(',')[0]){
+       	                        			heRow.cells[1].firstChild.value = fs[m].split(',')[2];
+       	                        			break;
+       	                        		}
+       	                        	} 
+                           		}
+                           	}
+                    	}else{
+                    		element.setAttribute("source", attrVal);
+                    	}
+                    }
+                    
+                    break;
+                case "checkbox":
+                	if(attrVal != ""){
+	                    if (attrVal == "1"){
+	                        element.checked = true;
+	                    	if(wlAttr == "IsCodeterminant") displayTr(element);
+	                    }else{
+	                    	element.checked = false;
+	                    	if(wlAttr == "IsCodeterminant") displayTr(element);
+	                    }
+                    	if(wlAttr == "BeforeAPIPara" || wlAttr == "EndAPIPara")
+	                    	element.checked = true;
+                    }else{
+                    	element.checked = false;
+                    }
+                	!flag && (element.setAttribute("source", attrVal), addEvent(element, "click", wlAttr));
+                    
+                    break;
+                case "textarea":
+                	element.value = attrVal || "";
+                	if(!flag){
+	                	wlAttr == "BusinessUrl" && (addEvent(element, "change", wlAttr), element.setAttribute("source", attrVal || ""));
+	                	if(wlAttr == "AccepterViewNames")
+	                		element.setAttribute("source", task["AccepterIds"] + "," + task["AccepterNames"] + "," + attrVal || "");
+	                	else if(wlAttr == "DecisionerViewNames")
+	                		element.setAttribute("source", task["DecisionerManIds"] + "," + task["DecisionerManNames"] + "," + attrVal || "");
+                	}
+                    break;
+                case "button":
+                	!flag && $E.on(element, "click", function (evt, element) {
+                		parent.sDialog.open({
+                            title: "组织人员选择",
+                            content: {src: "Flow/attribute/personTree.htm"},
+                            width: 400,
+                            height: 400,
+                            onConfirm: function () {
+                                    	var reVal = this.heIframe.contentWindow.Submit();
+                                    	if(!reVal){
+                                    		return;
+                                    	}
+                                    	switch(element.name){
+                                        	case "DecViewNames":
+                                        		task.DecisionerManIds = reVal[0];
+                                        		task.DecisionerManNames= reVal[2];
+                                        		task.DecisionerViewNames = reVal[1];
+                                        			
+                                        		break;
+                                        	case "AccViewNames":
+                                        		task.AccepterIds = reVal[0];
+                                        		task.AccepterNames = reVal[2];
+                                        		task.AccepterViewNames = reVal[1];
+                                        		break;
+                                    	}
+                                    	var parObj = element.parentNode.children[0],
+	                                		oldVal = parObj.getAttribute("source"), 
+	                                		wlAttr = parObj.getAttribute("wlAttr"),
+	                                		wlAttrs = [], newVals = [];
+                                    	if(parObj.value != reVal[1])
+                                    	{
+                                    		if(wlAttr == "AccepterViewNames"){
+                                    			newVals = [task["AccepterIds"], task["AccepterNames"], task["AccepterViewNames"]];
+                                    			wlAttrs = ["AccepterIds", "AccepterNames", "AccepterViewNames"];
+                                    		}
+                                        	else if(wlAttr == "DecisionerViewNames"){
+                                        		newVals = [task["DecisionerManIds"], task["DecisionerManNames"], task["DecisionerViewNames"]];
+                                        		wlAttrs = ["DecisionerManIds", "DecisionerManNames", "DecisionerViewNames"];
+                                        	}
+                                    		parObj.setAttribute("source", newVals);
+                                    		parent.workflow.getCommandStack().execute(new parent.draw2d.CommandAttribute(taskObj, wlAttrs, newVals, oldVal.split(",")));
+                                    	}
+                                    	parObj.value = reVal[1];    
+                                    	return true;
+                                    }
+                        });
+                    }, element, element);
+            }
+        }
+        window.flag = true;
+    }
+
+    function addEvent(element, type, wlAttr) {
+        $E.on(element, type, function () {
+        	if(element.type == "checkbox"){
+        		if(wlAttr == "BeforeAPIPara" || wlAttr == "EndAPIPara")
+        			task["" + wlAttr + ""] = element.checked ? "FlowInfo" : "";
+        		else{
+	        		task["" + wlAttr + ""] = element.checked ? "1" : "0";
+	        		if(wlAttr == "IsCodeterminant")
+	        			displayTr(element);
+        		}
+        	}else
+        		task["" + wlAttr + ""] = element.value;
+        });
+        
+        $E.on(element, "change", function(){
+        	changeAttr(element);
+        });
+    }
+    
+    function displayTr(element) {
+        var flag = element.checked,
+        	container = element.parentNode.parentNode.parentNode,
+        	curRindex = element.parentNode.parentNode.rowIndex;
+        container.rows[curRindex + 1].style.display = flag ? "" : "none";
+        container.rows[curRindex + 2].style.display = flag ? "" : "none";
+    }
+    </script>
+</body>
+</html>

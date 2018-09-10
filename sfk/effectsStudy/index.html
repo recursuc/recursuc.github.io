@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <style type="text/css">
+    .clearfix:after{content: ".";display:block;height:0;clear:both;visibility:hidden}
+    </style>
+    <link rel="stylesheet" href="prd/index.css">
+
+</head>
+
+<body id="body">
+    <div class="clearfix" data-type="transferExpertInfo" id="transferExpertInfo" style="position:relative;border:1px solid red;float:left;height: 150px;font-size: 12px;color: #ff770d;margin-right:20px;vertical-align: bottom;"><span style="position:absolute;bottom:0px;">&nbsp;正在结构 四达大厦</span></div>
+    <input id="dp" />
+  
+    <div id="container" style="display:none;position:relative;border:1px solid red;width:400px;height:600px;overflow:auto;">
+        <div id="content" style="position:absolute;left:20px;top:20px;border:1px solid blue;width:300px;height:700px;overflow:auto;">
+            <div id="wrap1" style="position:relative;left:20px;top:20px;border:1px solid black;width:200px;height:100px;"></div>
+            <div id="wrap2" style="position:relative;left:20px;top:20px;border:1px solid red;width:200px;height:800px;overflow:auto;">
+                <div id="test2" style="position:relative;left:20px;top:20px;border:1px solid blue;width:100px;height:900px;">tes
+                      <div id="wrap" style="position:relative;left:20px;top:20px;border:1px solid red;width:200px;height:800px;overflow:auto;">
+                        <div id="test" style="position:relative;left:20px;top:20px;border:1px solid blue;width:100px;height:900px;">test</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+    var str = "1,2,5,78,76,3"; // "张韶涵,b土,abort,张学友,something,苹果,五月天,刘德华,香蕉,apple,范玮琪,阿桑,张学啊";
+    var strArr = str.split(',');
+    //alert(strArr.sort());
+    // alert(strArr.sort(function(b, a){
+    //  return a.localeCompare(b);
+    // }));
+    // lowest common ancestor
+	
+	(function(){
+		var timer = null,
+			start = function(){
+				handle();
+				timer = window.setTimeout(arguemnts.callee, timeout);
+			};
+		he.on("keydown", function(){
+			start();
+		})
+		
+		he.on("keyup", function(){
+			clearTimeout(timer);
+		})
+	})()
+    function sca(he1, he2){
+        if(he1 == he2){
+            return he1;
+        }else if(he1 == null || he2 == null){
+              return null;
+        }else{
+            var he = sca(he1.parentNode, he2);
+            if(he){
+                return he;
+            }
+
+            he = sca(he1, he2.parentNode);
+            if(he){
+                return he;
+            }
+
+            return null;
+        }
+    }
+    var anc = sca(document.getElementById("test"), document.getElementById("wrap1"));
+    alert(anc && (anc.id || anc.nodeName));
+    /*
+    node* lca(node* root,node* p1,node* p2,int& num){
+      if(!root) { num = 0;return NULL;}
+      int leftnum =0,rightnum=0;
+      node* left = lca(root->left,p1,p2,leftnum);  //左子树找到直接返回
+      if(leftnum==2) return left;
+      node* right = lca(root->right,p1,p2,rightnum);//右子树
+      if(rightnum==2) return right;
+      num = left+right;
+      if(p1==root) num++;
+      if(p2==root) num++;
+      if(num==2) return root;      //找不到计算当前树
+      return NULL;                  //都找不到返回NULL
+    }
+    */
+	
+	var throttle = function (func, threshold, alt) { 
+		var last = Date.now(); 
+		threshold = threshold || 100; 
+		return function () { 
+			var now = Date.now(); 
+			if (now - last < threshold) { 
+				if (alt) { 
+					alt.apply(this, arguments); 
+				} 
+				return; 
+			} 
+			last = now; 
+			func.apply(this, arguments); 
+		}; 
+	}; 
+	
+	
+	var debounce = function (func, threshold, execASAP) { 
+		var timeout = null; 
+		threshold = threshold || 100; 
+		return function () { 
+			var self = this; 
+			var args = arguments; 
+			var delayed = function () { 
+				if (!execASAP) { 
+					func.apply(self, args); 
+				} 
+				timeout = null; 
+			}; 
+			if (timeout) { 
+				clearTimeout(timeout); 
+			} else if (execASAP) { 
+				func.apply(self, args); 
+			} 
+			timeout = setTimeout(delayed, threshold); 
+		}; 
+	}; 
+	
+	
+	
+	var test = function (wrapper, threshold) { 
+		var log = function () { 
+			console.log(Date.now() - start); 
+		}; 
+		var wrapperedFunc = wrapper(log, threshold); 
+		var start = Date.now(); 
+		var arr = []; 
+		for (var i = 0; i < 10; i++) { 
+			arr.push(wrapperedFunc); 
+		} 
+		while(i > 0) { 
+			var random = Math.random() * 1000; 
+			console.log('index: ' + i); 
+			console.log('random: ' + random); 
+			setTimeout(arr[--i], random); 
+		} 
+	}; 
+	test(debounce, 1000); 
+	test(throttle, 1000); 
+    </script>
+</body>
+</html>

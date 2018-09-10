@@ -1,0 +1,940 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+    <title>单元格属性页</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <link rel="Stylesheet" type="text/css" href="../ext/resources/css/ext-all.css" />
+    <link rel="Stylesheet" type="text/css" href="../ext/resources/css/xtheme-gray.css" />
+    <link rel="Stylesheet" type="text/css" href="../ext/resources/css/tabs.css" />
+    <script src="../js/table_operate.js" type="text/javascript"></script>
+    <script src="../js/attribute.js" type="text/javascript"></script>
+    <script src="../js/public_function.js" type="text/javascript"></script>
+    <style type="text/css">
+        .x-tab-panel-body .x-panel-body
+        {
+            padding: 10px;
+        }
+        #textLeftCell
+        {
+            width: 113px;
+        }
+        #textTopCell
+        {
+            width: 113px;
+        }
+        #textCtext
+        {
+            width: 113px;
+        }
+        #textStyleName
+        {
+            width: 113px;
+        }
+        .style1
+        {
+            width: 108px;
+        }
+        .style3
+        {
+            height: 40px;
+        }
+        #dFromatList td
+        {
+            border: solid 1 gray;
+        }
+    </style>
+</head>
+<body onload="_start()" onkeydown="submit();" onclick="if(cellDFDiv.style.display !='none')cellDFDiv.style.display ='none';">
+    <div id="tabs">
+        <!--常规-->
+        <div id="cellExp" class="x-hide-display">
+            <table style="font-size: 12px; width: 100%;">
+                <tr>
+                    <td>
+                        <hr style="border: solid 1 #B9D2ED" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" name="dataRadio" value="0" id="dataValue" />数据值 &nbsp; &nbsp;
+                        <input type="radio" name="dataRadio" value="1" id="dataExp" />表达式
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <textarea id="dataString" style="overflow-y: scroll" rows="2" cols="40">
+      </textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <hr style="border: solid 1 #B9D2ED" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" name="displayRadio" id="displayValue" />
+                        显示值 &nbsp; &nbsp;
+                        <input type="radio" name="displayRadio" id="displayExp" />
+                        表达式
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <textarea id="displayStr" style="overflow-y: scroll" rows="2" cols="40">
+      </textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <hr style="border: solid 1 #B9D2ED" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        显示格式：
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div>
+                            <table style="font-size: 12px;">
+                                <tr>
+                                    <td width="20%">
+                                        分类:
+                                    </td>
+                                    <td>
+                                        &nbsp;&nbsp;
+                                    </td>
+                                    <td>
+                                        <select id="dataFomatType" onchange="dTypeChangeEvent()">
+                                            <option value="0">默认</option>
+                                            <option value="1">数值</option>
+                                            <option value="2">日期</option>
+                                            <option value="3">时间</option>
+                                            <option value="4">日期时间</option>
+                                            <option value="5">货币</option>
+                                            <option value="6">分数</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div id="dFromatDiv">
+                            <table style="font-size: 12px;">
+                                <tr>
+                                    <td>
+                                        格式串：
+                                    </td>
+                                    <td>
+                                        <input type="text" size="25%" id="dFromatText" />
+                                    </td>
+                                    <td>
+                                        <input type="button" id="selectDataString" value="选择" onclick="showDFromatList()" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- 扩展-->
+        <div id="ab" class="x-hide-display">
+            <table style="font-size: 12px; width: 100%;">
+                <tr>
+                    <td>
+                        单元类型:
+                    </td>
+                    <td align="left">
+                        <select id="selCellType" onchange="selCellTypeChange(this)" preselectedindex="0">
+                            <option value="0">非扩展单元格</option>
+                            <option value="1">扩展单元格</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        扩展方向:
+                    </td>
+                    <td align="left">
+                        <select id="selExtensible" onchange="changeRCSet(this)">
+                            <option value="0" selected="selected">不可扩展</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="style1">
+                        左顶格:
+                    </td>
+                    <td>
+                        <input id="textLeftCell" type="text" disabled="disabled" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="style1">
+                        上顶格:
+                    </td>
+                    <td>
+                        <input id="textTopCell" type="text" disabled="disabled" />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <hr style="color: #8db2e3; width: 100%; height: 1px;" />
+                    </td>
+                </tr>
+            </table>
+            <table style="font-size: 12px; width: 100%;">
+                <tr>
+                    <td>
+                        起始行
+                    </td>
+                    <td>
+                        <input id="startRow" type="text" size="8" disabled="disabled" />
+                    </td>
+                    <td>
+                        结束行
+                    </td>
+                    <td>
+                        <input id="endRow" type="text" size="8" disabled="disabled" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        起始列
+                    </td>
+                    <td>
+                        <input id="startCol" type="text" size="8" disabled="disabled" />
+                    </td>
+                    <td>
+                        结束列
+                    </td>
+                    <td>
+                        <input id="endCol" type="text" size="8" disabled="disabled" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- 样式编辑Tab页 -->
+        <div id="st" class="x-hide-display">
+            <table style="font-size: 12px;">
+                <tr style="height: 25px; vertical-align: bottom;">
+                    <td colspan="2" style="font-weight: bold; color: #15428b;">
+                        颜色信息
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <hr style="color: #8db2e3; width: 100%; height: 1px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table border="1px" style="border-left: 1px; border-right: 1px; border-top: 1px;
+                            border-bottom: 1px; table-layout: fixed; border-collapse: collapse; left: 39px;
+                            font-size: 12px;" bgcolor="#ffffff" bordercolor="black">
+                            <tr>
+                                <td style="width: 90%" valign="middle" align="center" height="55px">
+                                    <span id="displayfont" style="font-size: 12px; overflow: hidden;">
+                                        <div nowrap="false">
+                                            字体颜色</div>
+                                    </span>
+                                </td>
+                                <td style="width: 10%">
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <input id="cmdBgcolor" style="font-size: 12px; width: 24px; height: 24px; border: 0px;
+                                                    background-image: url(../skins/blue/images/ef_run_button_color.gif); border-style: none;
+                                                    background-color: #ffffff;" onclick="SelColor()" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input id="cmdFont" style="font-size: 12px; width: 24px; height: 24px; background-image: url(../skins/blue/images/ef_run_button_font.gif);
+                                                    border: 0px; border-style: none; background-color: #ffffff;" onclick="window.showModalDialog('fontlist.htm',displayfont,'dialogHeight:330px;dialogWidth:380px');" />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <hr style="color: #8db2e3; width: 100%; height: 1px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table style="font-size: 12px;">
+                            <tr>
+                                <td>
+                                    <table style="font-size: 12px;">
+                                        <tr>
+                                            <td style="height: 40px">
+                                                水平对齐方式：
+                                            </td>
+                                            <td style="height: 40px">
+                                                <select id="selHAlign" style="display: block; font-size: 12px; left: 85px; width: 79px;
+                                                    height: 20px; background-color: #ffffff">
+                                                    <option value="left">左对齐</option>
+                                                    <option value="center" selected="selected">居中</option>
+                                                    <option value="right">右对齐</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="height: 40px">
+                                                垂直对齐方式：
+                                            </td>
+                                            <td style="height: 40px">
+                                                <select id="selVAlign" style="display: block; font-size: 12px; left: 85px; width: 79px;
+                                                    height: 20px; background-color: #ffffff">
+                                                    <option value="top">上对齐</option>
+                                                    <option value="middle" selected="selected">居中对齐</option>
+                                                    <option value="bottom">下对齐</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table style="font-size: 12px;">
+                            <tr>
+                                <td width="43%">
+                                    ClassName：
+                                </td>
+                                <td align="left">
+                                    <input id="textStyleName" type="text" />
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!--单元格其他属性-->
+        <div id="otherAttr" class="x-hide-display">
+            <table style="font-size: 12px; text-align: left; width: 100%;">
+                <!--   <tr width="100%">
+                    <td>
+                        是否可见公式值:
+                        <input type="button" value="fx" size="2" />
+                    </td>
+                    <td>
+                        <input type="checkbox" name="checkPage" />
+                           是否可见
+                    </td>
+                </tr>
+                <tr>
+                <td colspan="2"><input type="text" id="isShow" style="width:100%"/></td>
+                </tr>-->
+                <!--<tr width="100%">
+                    <td width="40%">
+                        自动换行公式值:
+                        <input type="button" value="fx" size="2" />
+                    </td>
+                 
+                    <td>
+                        <input type="checkbox" name="checkPage" />
+                         自动换行
+                    </td>
+                </tr>-->
+                <!--   <tr>
+                <td colspan="2"><input type="text" id="rowBreak" style="width:100%"/></td>
+                </tr>
+-->
+                <!--  <tr width="100%">
+                    <td>
+                        行后分页公式值:
+                        <input type="button" value="fx" size="2" />
+                    </td>
+                    <td>
+                        <input type="checkbox" name="checkPage" id="rowPaging" />
+                        行后分页
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input type="text" id="rowPage" style="width: 100%" />
+                    </td>
+                </tr>
+                <tr width="100%">
+                    <td>
+                        列后分页公式值:
+                        <input type="button" value="fx" size="2" />
+                    </td>
+                    <td>
+                        <input type="checkbox" name="checkPage" id="colPaging" />
+                        列后分页
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input type="text" id="colPage" style="width: 100%" />
+                    </td>
+                </tr>-->
+                <tr>
+                    <td colspan="2" style="font-size: 12px">
+                        <fieldset>
+                            <legend style="color: #66CCFF">内容超过单元格时</legend>
+                            <form id="displayStyleForm" action="">
+                            <input type="radio" value="0" name="selDisType" checked="checked" /><span>单元格不变</span>
+                            <input type="radio" value="1" name="selDisType" /><span>折行</span>
+                            <input type="radio" value="2" name="selDisType" /><span>字体变小</span>
+                            <input type="radio" value="3" name="selDisType" /><span>单元格变大</span>
+                            </form>
+                        </fieldset>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <!-- 按钮区域 -->
+    <div id="buttons" style="text-align: right;">
+        <table>
+            <tr>
+                <td style="padding-right: 20px;">
+                    <!-- 确定按钮 -->
+                    <button id="cmdOk" style="display: block; font-size: 12px; width: 65px; height: 21px;
+                        background-color: #ffffff; border-style: none; border: 0px; background-image: url(../skins/blue/img/button_ok.gif);"
+                        onclick="ok()">
+                    </button>
+                </td>
+                <td style="padding-right: 20px;">
+                    <!-- 取消按钮 -->
+                    <button id="cmdClose" style="display: block; font-size: 12px; width: 65px; height: 21px;
+                        background-color: #ffffff; border-style: none; border: 0px; background-image: url(../skins/blue/img/button_close.gif);"
+                        onclick="closeWin()">
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <!-- 浏览器颜色控件 -->
+    <object id="dlgHelper" classid="clsid:3050f819-98b5-11cf-bb82-00aa00bdce0b" width="0px"
+        height="0px" viewastext>
+    </object>
+    <!-- 单元格显示格式选择DIV-->
+    <div id="cellDFDiv" style="display: none; position: absolute; height: 100px; overflow-y: scroll;
+        background-color: White;" onmousemove="changeBackcolor()" onmouseout="removeBackcolor()"
+        onclick="selectType()">
+        <table id="dFromatList" cellpadding="0" cellspacing="0" style="font-size: 12px; text-align: left;
+            width: 100%;">
+        </table>
+    </div>
+    <script type="text/javascript" src="../ext/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="../ext/ext-all.js"></script>
+    <script type="text/javascript">
+        Ext.onReady(function () {
+            var tabs = new Ext.TabPanel({
+                renderTo: 'tabs',
+                width: "100%",
+                height: ChangeTabsSize(),
+                activeTab: 0,
+                frame: true,
+                defaults: { autoHeight: true },
+                items: [
+                { contentEl: 'cellExp', title: '常规' },
+                    { contentEl: 'ab', title: ' 扩展  ' },
+                     { contentEl: 'st', title: '  样式  ' },
+                     { contentEl: 'otherAttr', title: '其他' }
+                ]
+            });
+        });
+
+        //改变TAB的样式
+        function ChangeTabsSize() {
+            var PageWidth = document.body.clientWidth;
+            var PageHeight = document.body.clientHeight;
+            var ButtonsHeight = document.getElementById("buttons").offsetHeight;
+            var TabsHeight = PageHeight - ButtonsHeight - 10;
+            return TabsHeight;
+        }
+
+        var obj = window.dialogArguments;       //获取父窗口传过来的参数
+        var table = null;                       //前台的报表对象
+
+        if (obj != undefined)
+            table = obj.document.getElementById("tbData");      //获得报表对象
+
+        var cell = null;                        //选中的单元格对象
+        var isFirstInit = false;
+        function _start() {
+            cell = table.rows[obj.oTdPos.x].childNodes[obj.oTdPos.y];  //获得选中的单元格对象
+            if (cell.IsExt != undefined) {
+                selCellType.value = cell.IsExt;
+                selCellType.onchange();
+            }
+
+            if (cell.Extensible != undefined) {
+                selExtensible.value = cell.Extensible;
+            }
+
+            if (cell.LeftCell != undefined) {
+                textLeftCell.value = cell.LeftCell;
+                textLeftCell.disabled = false;
+                textTopCell.disabled = false;
+            }
+            if (cell.TopCell != undefined) {
+                textTopCell.value = cell.TopCell;
+                textTopCell.disabled = false;
+                textLeftCell.disabled = false;
+            }
+
+            if (cell.className != undefined) {
+                textStyleName.value = cell.className;
+            }
+
+            if (cell.StartCol != undefined) {
+                startCol.value = cell.StartCol;
+            }
+
+            if (cell.EndCol != undefined) {
+                endCol.value = cell.EndCol;
+            }
+            if (cell.StartRow != undefined) {
+                startRow.value = cell.StartRow;
+            }
+            if (cell.EndRow != undefined) {
+                endRow.value = cell.EndRow;
+            }
+
+            if (cell.StartCol || cell.EndCol) {
+                startCol.disabled = false;
+                endCol.disabled = false;
+            }
+
+            if (cell.StartRow || cell.EndRow) {
+                startRow.disabled = false;
+                endRow.disabled = false;
+            }
+            if (cell.IsPaginatingAfterRow === "true") {
+                rowPaging.checked = true;
+            }
+
+            if (cell.IsPaginatingAfterCol === "true") {
+                colPaging.checked = true;
+            }
+
+            if (cell.DataExp != undefined && cell.DataExp != "") {
+                dataExp.checked = true;
+                dataString.value = cell.innerText;
+            } else {
+                dataValue.checked = true;
+                if (cell.DataValue != undefined && cell.DataValue != "") {
+                    dataString.value = cell.innerText;
+                } else {
+                    dataString.value = cell.innerText;
+                }
+            }
+
+            if (cell.DisplayExp != undefined && cell.DisplayExp != "") {
+                displayExp.checked = true;
+                displayStr.value = cell.DisplayExp;
+            } else {
+                displayValue.checked = true;
+                if (cell.DisplayValue != undefined && cell.DisplayValue != "") {
+                    displayStr.value = cell.DisplayValue;
+                } else {
+                    displayStr.value = "";
+                }
+            }
+            if (cell.DisplayFormatType != undefined && cell.DisplayFormatType != "") {
+                dataFomatType.selectedIndex = parseInt(cell.DisplayFormatType);
+            }
+            if (cell.DisplayString != undefined && cell.DisplayString != "") {
+                dFromatText.value = cell.DisplayString;
+                isFirstInit = true;
+            }
+            //样式
+            selHAlign.value = cell.style.textAlign ? cell.style.textAlign : "center";
+            selVAlign.value = cell.style.verticalAlign ? cell.style.verticalAlign : "middle";
+            document.getElementById("displayfont").style.backgroundColor = cell.style.backgroundColor;
+            document.getElementById("displayfont").style.fontFamily = cell.style.fontFamily;
+            document.getElementById("displayfont").style.fontSize = cell.style.fontSize;
+            document.getElementById("displayfont").style.fontWeight = cell.style.fontWeight;
+            document.getElementById("displayfont").style.fontStyle = cell.style.fontStyle;
+            document.getElementById("displayfont").style.color = cell.style.color;
+
+            //其他
+            if (cell.CellDisplayType != null && cell.CellDisplayType != "") {
+                var arrSelDisType = document.getElementsByName("selDisType");
+                for (var i = 0; i < arrSelDisType.length; i++) {
+                    if (arrSelDisType[i].value == cell.CellDisplayType) {
+                        arrSelDisType[i].checked = true;
+                    }
+                }
+            }
+
+        }
+
+        //提交
+        function ok() {
+            //常规
+            if (dataValue.checked == true) {
+                cell.DataValue = dataString.value;
+                cell.DataExp = "";
+            } else {
+                if (dataString.value == "" || dataString.value == null) {
+                    alert("表达式不能为空！");
+                    return;
+                }
+                cell.DataExp = dataString.value;
+                cell.DataValue = "";
+            }
+
+            cell.innerText = dataString.value;
+            if (displayValue.checked == true) {
+                cell.DisplayValue = displayStr.value;
+                cell.DisplayExp = "";
+            } else {
+                if (displayStr.value == "" || displayStr.value == null) {
+                    alert("表达式不能为空！");
+                    return;
+                }
+                cell.DisplayExp = displayStr.value;
+                cell.DisplayValue = "";
+            }
+            cell.DisplayFormatType = dataFomatType.value || "1";
+            cell.DisplayString = dFromatText.value;
+            //扩展
+
+            var regxRC = /[a-zA-Z]+/g;
+            if (startCol.value != "" && regxRC.test(startCol.value)) {
+                alert("起始列应为数字");
+                return;
+            }
+            if (endCol.value != "" && regxRC.test(endCol.value)) {
+                alert("结束列应为数字");
+                return;
+            }
+            if (startRow.value != "" && regxRC.test(startRow.value)) {
+                alert("起始行应为数字");
+                return;
+            }
+            if (endRow.value != "" && regxRC.test(endRow.value)) {
+                alert("结束行应为数字");
+                return;
+            }
+            cell.IsExt = selCellType.value;
+            cell.Extensible = selExtensible.value;
+            if (!bulidRetion(cell.LeftCell, textLeftCell.value, '左顶格')) return;
+            if (!bulidRetion(cell.TopCell, textTopCell.value, '上顶格')) return;
+            cell.LeftCell = textLeftCell.value;
+            cell.TopCell = textTopCell.value;
+
+            cell.StartCol = startCol.value;
+            cell.EndCol = endCol.value;
+            cell.StartRow = startRow.value;
+            cell.EndRow = endRow.value;
+
+            //样式
+            cell.style.textAlign = selHAlign.value;
+            cell.style.verticalAlign = selVAlign.value;
+            cell.style.backgroundColor = document.getElementById("displayfont").style.backgroundColor;
+            cell.style.fontFamily = document.getElementById("displayfont").style.fontFamily;
+            cell.style.fontSize = document.getElementById("displayfont").style.fontSize;
+            cell.style.fontWeight = document.getElementById("displayfont").style.fontWeight;
+            cell.style.fontStyle = document.getElementById("displayfont").style.fontStyle;
+            cell.style.color = document.getElementById("displayfont").style.color;
+            cell.setAttribute("Class", textStyleName.value);
+            var oCells = null;
+            //其他
+            //            if (rowPaging.checked == true) {
+            //                oCells = cell.parentNode.cells;
+            //                for (var i = 0; i < oCells.length; i++) {
+            //                    var oCell = oCells[i];
+            //                    oCell.setAttribute("IsPaginatingAfterRow", "true");
+            //                }
+            //            }
+            //            if (colPaging.checked = true) {
+            //                oCells = cell.parentNode.cells;
+            //                for (var i = 0; i < table.rows.length; i++) {
+            //                    var oCell = table.rows[i].childNodes[obj.oTdPos.y];
+            //                    if (oCell.nodeName == "Td") {
+            //                        oCell.setAttribute("IsPaginatingAfterCol", "true");
+            //                    }
+            //                }
+
+            //            }
+
+            var arrSelDisType = document.getElementsByName("selDisType");
+            for (var i = 0; i < arrSelDisType.length; i++) {
+                if (arrSelDisType[i].checked == true) {
+                    cell.CellDisplayType = arrSelDisType[i].value;
+                }
+            }
+            window.close();
+        }
+
+        //为父单元格设置子单元格
+        function bulidRetion(sOldParentId, sNowParentId, sLeftOrTop) {
+            var oParentTd = {};
+            var arrChildCell = [];
+            if (sNowParentId) {
+                oParentTd = obj.document.getElementById(sNowParentId);
+                if (!oParentTd) {
+                    alert(sLeftOrTop + sNowParentId + '不存在');
+                    return false;
+                }
+                if (sOldParentId && sOldParentId != sNowParentId) {
+                    oParentTd = obj.document.getElementById(sOldParentId);
+                    if (oParentTd) {
+                        arrChildCell = oParentTd ? oParentTd.ChildCells.split(',') : [];
+                        for (var i = 0; i < arrChildCell.length; i++) {
+                            if (arrChildCell[i] == cell.id) {
+                                arrChildCell.splice(i, 1);
+                                oParentTd.ChildCells = arrChildCell.join(',');
+                                break;
+                            }
+                        }
+                    }
+                }
+                oParentTd = obj.document.getElementById(sNowParentId);
+                if (sNowParentId != sOldParentId) {
+                    oParentTd.ChildCells = oParentTd.ChildCells ? oParentTd.ChildCells + cell.id + ',' : cell.id + ',';
+                }
+            } else {
+                if (sOldParentId) {
+                    oParentTd = obj.document.getElementById(sOldParentId);
+                    arrChildCell = oParentTd ? oParentTd.ChildCells.split(',') : [];
+                    for (var i = 0; i < arrChildCell.length; i++) {
+                        if (arrChildCell[i] == cell.id) {
+                            arrChildCell = arrChildCell.splice(i, 1);
+                            oParentTd.ChildCells = arrChildCell.join(',');
+                            break;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
+        function selCellTypeChange(oSelCellType) {
+            var arr = [
+                { 0: "不可扩展" },
+                { 1: "纵向扩展", 2: "横向扩展" }
+            ];
+
+            var oSelExtensible = document.getElementById("selExtensible");
+            oSelExtensible.options.length = 0;
+            //            for (var i = oSelExtensible.options.length - 1; i >= 0; i--) {
+            //                oSelExtensible.removeChild(oSelExtensible.options[i]);
+            //            }
+            var iIndex = oSelCellType.selectedIndex == 1 ? 1 : 0;
+            for (var prop in arr[iIndex]) {
+                oSelExtensible.options.add(new Option(arr[iIndex][prop], prop));
+            }
+
+            oSelExtensible.options[0].selected = true;
+            if (oSelCellType.options[oSelCellType.selectedIndex].value == "1") {
+                document.getElementById("selExtensible").disabled = false;
+                startRow.disabled = false;
+                endRow.disabled = false;
+                textLeftCell.disabled = false;
+                textTopCell.disabled = false;
+
+            } else {
+                document.getElementById("selExtensible").disabled = true;
+                startRow.disabled = true;
+                endRow.disabled = true;
+                startCol.disabled = true;
+                endCol.disabled = true;
+                textLeftCell.disabled = true;
+                textTopCell.disabled = true;
+                textLeftCell.value = "";
+                textTopCell.value = "";
+                startRow.value = "";
+                endRow.value = "";
+                startCol.value = "";
+                endCol.value = "";
+            }
+
+        }
+
+        function submit() {             //按enter键提交
+            if (event.keyCode == 13) {
+                ok();
+            }
+        }
+
+        /****************** 选中颜色框中的颜色 *****************/
+        function SelColor(obj, sTag) {
+            var oFont = document.getElementById('displayfont');
+            if (typeof obj != "undefined") oFont = $id(obj.id);
+            var sInitColor = oFont.style.backgroundColor;
+            if (sTag == 1) sInitColor = oFont.style.borderColor;
+            var sColor;
+            if (sInitColor.length == 0) sColor = dlgHelper.ChooseColorDlg();
+            else sColor = dlgHelper.ChooseColorDlg(sInitColor);
+            sColor = sColor.toString(16);
+            if (sColor.length < 6) {
+                var sTempString = "000000".substring(0, 6 - sColor.length);
+                sColor = sTempString.concat(sColor);
+            }
+            if (typeof (sTag) == "undefined") {
+                oFont.style.backgroundColor = sColor;
+                oFont.changebg = "是";
+            } else {
+                if (sTag == 1) sTag = "borderColor";
+                var sCommand = obj.id + ".style." + sTag + "=\"" + sColor + "\"";
+                eval(sCommand);
+            }
+        }
+
+        function SelFgColor(obj) {
+            var oFont = document.getElementById('displayfont');
+            if (typeof obj != "undefined") oFont = $id(obj.id);
+
+            var sInitColor = oFont.style.color;
+            var sColor;
+            if (sInitColor.length == 0) sColor = dlgHelper.ChooseColorDlg();
+            else sColor = dlgHelper.ChooseColorDlg(sInitColor);
+            sColor = sColor.toString(16);
+            if (sColor.length < 6) {
+                var sTempString = "000000".substring(0, 6 - sColor.length);
+                sColor = sTempString.concat(sColor);
+            }
+            oFont.style.color = sColor;
+        }
+
+        /******************数据类型选择 *****************/
+        var DataFormatTypeObj = {
+            0: [""],
+            1: ["#0.0", "#.00", "#0.00", "#.#", "#0.000", "#.000", "#,##00.00", "#,###.00", "#,###.#", "#,##0.000", "#,###.000"],
+            2: ["yyyy-MM-dd", "yyyy年MM月dd日", "yyyy/MM/dd", "yy-MM-dd", "yy年MM月dd日", "yy/MM/dd"],
+            3: ["HH:mm:ss", "HH:mm:ssS", "kk:mm:ss"],
+            4: ["yyyy-MM-dd HH:mm:ss", "yyyy年MM月dd日 HH:mm:ss", "yyyy/MM/dd HH:mm:ss", "yy-MM-dd HH:mm:ss", "yy年MM月dd日 HH:mm:ss", "yy/MM/dd HH:mm:ss"],
+            5: ["￥#,#.000", "￥#0.00", "￥#.00", "￥#.#", "￥#0.000", "￥#.000", "$#0.00"],
+            6: ["#0.00%", "#.00%", "#0.0%", "#.#%", "#0.000%", "#.000%", "#,##0.00%"]
+        }//数据类型对象
+
+
+        function dTypeChangeEvent() {
+            dFromatText.value = "";
+        }
+        //数据类型选择框设置
+        function setDFromatList() {
+            var iSelectIndex = dataFomatType.selectedIndex;
+            var arrDataString = DataFormatTypeObj[iSelectIndex.toString()];
+            if (dFromatList.childNodes[0].hasChildNodes()) {
+                var iRows = dFromatList.rows.length;
+                for (var i = 0; i < iRows; i++) {
+                    dFromatList.deleteRow(0);
+                }
+            }
+            for (var i = 0; i < arrDataString.length; i++) {
+                var oTr = dFromatList.insertRow();
+                var oTd = oTr.insertCell();
+                oTd.innerText = arrDataString[i];
+            }
+        }
+
+        //显现选择框
+        function showDFromatList() {
+            if (isFirstInit || dFromatText.value == "") {
+                setDFromatList();
+            }
+
+            var oEvent = window.event || arguments[0];
+            //设置单元格默认格式是数值型
+            if (!dFromatList.childNodes[0].hasChildNodes()) {
+                for (var i = 0; i < DataFormatTypeObj["0"].length; i++) {
+                    var oTr = dFromatList.insertRow();
+                    var oTd = oTr.insertCell();
+                    oTd.innerText = DataFormatTypeObj["0"][i];
+                }
+            }
+            var cellDFDivX = dFromatText.parentNode.offsetLeft + document.body.clientLeft + 14;
+            var cellDFDivY = dFromatDiv.parentNode.offsetTop + document.body.clientTop - 60;
+            var cellDFDivWidth = dFromatText.offsetWidth;
+            cellDFDiv.style.left = cellDFDivX;
+            cellDFDiv.style.top = cellDFDivY;
+            cellDFDiv.style.width = cellDFDivWidth;
+            // cellDFDiv.setCapture(false);
+            if (cellDFDiv.style.display == "none") {
+                cellDFDiv.style.display = "";
+
+            } else {
+                cellDFDiv.style.display = "none";
+                //cellDFDiv.releaseCapture();
+            }
+            oEvent.cancelBubble = true;
+        }
+
+        //改变背景颜色
+        function changeBackcolor() {
+            var oEvent = window.event || arguments[0];
+            var oSrcEvent = oEvent.srcElement || oEvent.target;
+            if (oSrcEvent.nodeName.toLocaleLowerCase() == "td" && oSrcEvent.parentNode.parentNode.parentNode === dFromatList) {
+                oSrcEvent.style.backgroundColor = "#CCFFFF";
+            }
+            oEvent.cancelBubble = true;
+        }
+
+        function removeBackcolor() {
+            var oEvent = window.event || arguments[0];
+            var oSrcEvent = oEvent.srcElement || oEvent.target;
+            if (oSrcEvent.nodeName.toLocaleLowerCase() == "td" && oSrcEvent.parentNode.parentNode.parentNode === dFromatList) {
+                oSrcEvent.style.backgroundColor = "";
+            }
+            oEvent.cancelBubble = true;
+        }
+
+        //选择格式
+        function selectType() {
+            var oEvent = window.event || arguments[0];
+            var oSrcEvent = oEvent.srcElement || oEvent.target;
+            if (oSrcEvent.nodeName.toLocaleLowerCase() == "td" && oSrcEvent.parentNode.parentNode.parentNode === dFromatList) {
+                var selectedType = document.getElementById("selectedType");
+                if (selectedType != undefined && selectedType != null) {
+                    selectedType.style.color = "";
+                    selectedType.setAttribute("id", "");
+                }
+                oSrcEvent.id = "selectedType";
+                oSrcEvent.style.color = "red";
+                dFromatText.value = oSrcEvent.innerText;
+                cellDFDiv.style.display = "none";
+                cellDFDiv.releaseCapture();
+            }
+            oEvent.cancelBubble = true;
+        }
+
+        //更改起始行列设置
+        function changeRCSet(oSel) {
+            var oOption = oSel.options[oSel.selectedIndex];
+            if (oOption.value === "1") {
+                startRow.disabled = false;
+                endRow.disabled = false;
+                startCol.disabled = true;
+                endCol.disabled = true;
+                textLeftCell.disabled = false;
+                textTopCell.disabled = false;
+            } else if (oOption.value === "2") {
+                startCol.disabled = false;
+                endCol.disabled = false;
+                startRow.disabled = true;
+                endRow.disabled = true;
+                textLeftCell.disabled = false;
+                textTopCell.disabled = false;
+            } else {
+                textLeftCell.disabled = true;
+                textTopCell.disabled = true;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,362 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>报表参数</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <script type="text/javascript" src="../js/public_function.js"></script>
+    <style type="text/css">
+        .buttonStyle
+        {
+            margin-right: 10px;
+        }
+        a:link
+        {
+            text-decoration: none;
+            color: blue;
+        }
+        a:hover
+        {
+            text-decoration: none;
+            color: red;
+        }
+        a:visited
+        {
+            text-decoration: none;
+            color: #6600CC;
+        }
+        table
+        {
+            border-collapse: collapse;
+        }
+        table th
+        {
+            background-color: #87CEFA;
+            font-size: 12px;
+            height: 19px;
+        }
+        table td
+        {
+            text-align: center;
+            font-size: 12px;
+            overflow: hidden;
+        }
+        table tr
+        {
+            height: 19px;
+        }
+    </style>
+</head>
+<body>
+    <div style="position: absolute; top: 10px; left: 10px; width: 600px;">
+        <input type="button" id="Button1" value="添加" class="buttonStyle" onclick="insertArgs()" />
+        <input type="button" id="Button2" value="删除" class="buttonStyle" onclick="deleteArgs()" />
+        <input type="button" id="Button3" value="确定" class="buttonStyle" onclick="saveArgs()" />
+        <input type="button" id="Button4" value="取消" class="buttonStyle" onclick="winClose()" />
+        <!-- <a href="#" style="margin-left: 30px" onclick="clearArgs()"><font size="2">清空报表参数表单的内容</font></a>-->
+        <div style="position: absolute; top: 2px; left: 220px; width: 600px;">
+            <label>
+                <font size="2em" color="red">注意：<span style="color: Gray">设置的参数名在设计器使用时请加上</span><strong>：</strong></font></label>
+        </div>
+    </div>
+    <div style="position: absolute; top: 35px; left: 10px; width: 560px">
+        <table width="543px" border="1px">
+            <tr>
+                <th width="15%" align="center" title="">
+                    英文名
+                </th>
+                <th width="20%" align="center">
+                    中文名
+                </th>
+                <th width="15%" align="center">
+                    数据类型
+                </th>
+                <th width="10%" align="center">
+                    宽度
+                </th>
+                <th width="40%" align="center">
+                    参数值
+                </th>
+            </tr>
+        </table>
+    </div>
+    <div id="argsDiv" style="position: absolute; top: 56px; left: 10px; width: 560px;
+        height: 200px; overflow-y: scroll" onclick="selecteArgs()">
+        <table id="argsTb" width="100%" border="1px" cellpadding="0" cellspacing="0" style="table-layout: fixed;
+            word-break: break-all;">
+            <thead>
+                <tr height="20px" style="display: none">
+                    <th width="15%">
+                    </th>
+                    <th width="20%">
+                    </th>
+                    <th width="15%">
+                    </th>
+                    <th width="10%">
+                    </th>
+                    <th width="40%">
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <!--文本框Div-->
+    <div id="textDiv" style="position: absolute; left: -100px">
+        <input type="text" style="width: 60px; height: 20px; margin: 0px; padding: 0px; border: solid 1px  black;"
+            id="text" />
+    </div>
+    <!--下拉列表Div-->
+    <div id="selectDiv" style="position: absolute; left: -100px">
+        <select id="selectType">
+            <option value="">类型选择</option>
+            <option value="整型">整型</option>
+            <option value="实数">实数</option>
+            <option value="字符串">字符串</option>
+            <option value="日期">日期</option>
+            <option value="时间">时间</option>
+            <option value="日期时间">日期时间</option>
+            <option value="整数组">整数组</option>
+            <option value="实数组">实数组</option>
+            <option value="字符串组">字符串组</option>
+            <option value="默认">默认</option>
+        </select>
+    </div>
+    <script src="../table_operate.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var arrArgs = []; //参数名数组
+        var argRowNum = 0;
+        var index; //下拉列表选中索引
+        //初始化参数
+        window.onload = function () {
+            var xnArgs = window.dialogArguments; //参数根节点
+            if (xnArgs != undefined && xnArgs.childNodes.length > 0 && xnArgs.childNodes != null && xnArgs.childNodes.xml != "") {
+                var arguments = xnArgs.childNodes[0].childNodes.length ? xnArgs.childNodes[0].childNodes : xnArgs.childNodes;
+                var argsTb = document.getElementById("argsTb");
+                var argsLength = arguments.length;
+                for (var i = 0; i < argsLength; i++) {
+                    var args = arguments[i];
+                    var oTr = argsTb.insertRow();
+                    var cell0 = oTr.insertCell();
+                    cell0.innerText = args.getAttribute("Name");
+                    arrArgs.push(args.getAttribute("Name"));
+                    var cell1 = oTr.insertCell();
+                    cell1.innerText = args.getAttribute("ChineseName");
+                    var cell2 = oTr.insertCell();
+                    cell2.innerText = enumTosArgs(parseInt(args.getAttribute("DataType")));
+                    var cell3 = oTr.insertCell();
+                    var width = parseInt(args.getAttribute("MaxLength")) - parseInt(args.getAttribute("minLength"));
+                    if (width >= 0) {
+                        cell3.innerText = width;
+                    } else {
+                        cell3.innerText = "";
+                    }
+                    var cell4 = oTr.insertCell();
+                    cell4.innerText = args.getAttribute("Value");
+
+                    var hiddenInput = document.createElement("input");
+                    hiddenInput.setAttribute("type", "hidden");
+                    hiddenInput.setAttribute("id", i + 1);
+                    hiddenInput.setAttribute("value", args.getAttribute("RefDsDetail"));
+                    hiddenInput.setAttribute("display", "none");
+                    argsDiv.appendChild(hiddenInput);
+                }
+            }
+        }
+
+        //添加参数
+        function insertArgs() {
+            var argsTb = document.getElementById("argsTb");
+            var oTr = argsTb.insertRow();
+            var cell0 = oTr.insertCell();
+            for (var i = 0; i < arrArgs.length; i++) {
+                if (arrArgs[i] == "arg" + argRowNum) {
+                    argRowNum = argRowNum + 1;
+                }
+            }
+            cell0.innerText = "arg" + argRowNum;
+            arrArgs.push("arg" + argRowNum);
+            var cell1 = oTr.insertCell();
+            cell1.innerText = "参数" + argRowNum;
+            var cell2 = oTr.insertCell();
+            cell2.innerText = "字符串";
+            var cell3 = oTr.insertCell();
+            var cell4 = oTr.insertCell();
+            var ref = document.getElementById(oTr.rowIndex + "");
+            if (ref != null) {
+                ref.value = "";
+            }
+            argRowNum++;
+        }
+        //删除参数
+        function deleteArgs() {
+            try {
+                var oTr = document.getElementById("selected");
+                var oTb = oTr.parentNode.parentNode;
+                var i = oTr.rowIndex;
+                //重新设置引用id
+                for (var j = i; ; j++) {
+                    var ref = document.getElementById(j + "");
+                    if (ref == null) {
+                        break;
+                    }
+                    if (j == i) {
+                        ref.setAttribute("id", "");
+                        continue;
+                    }
+
+                    ref.setAttribute("id", j - 1 + "")
+                }
+                oTb.deleteRow(i);
+                arrArgs.splice(i - 1, 1);
+            } catch (e) {
+                alert("请选择要删除的行！");
+            }
+
+        }
+        //选择参数
+        function selecteArgs() {
+            var oTr = document.getElementById("selected");
+            var textDiv = document.getElementById("textDiv"); //文本框div
+            var text = document.getElementById("text"); //文本框
+            var selectDiv = document.getElementById("selectDiv"); //下拉列表div
+            var selectType = document.getElementById("selectType"); //下拉列表
+            var argsTb = document.getElementById("argsTb");
+            var argsDiv = document.getElementById("argsDiv");
+            var srcCell = event.srcElement;
+            var nowTr;
+            if (oTr != null) {
+                oTr.bgColor = "#ffffff";
+                oTr.setAttribute("id", "");
+                if (oTr.nodeName.toLocaleLowerCase() == "tr") {
+                    for (var i = 0; i < 5; i++) {
+                        oTr.children[i].bgColor = "";
+                    }
+                }
+            }
+            if (srcCell.nodeName.toLocaleLowerCase() == "td") {
+                nowTr = srcCell.parentNode;
+                srcCell.bgColor = "#3399ff"
+                var x = srcCell.offsetLeft + argsTb.offsetLeft + argsDiv.offsetLeft + document.body.clientLeft; //单元格X坐标
+                var y = srcCell.offsetTop + argsTb.offsetTop + argsDiv.offsetTop + document.body.clientTop - 1 - argsDiv.scrollTop; //单元格Y坐标
+                var width = parseInt(srcCell.offsetWidth); //单元格宽
+                var height = parseInt(srcCell.offsetHeight); //单元格高
+                srcCell.onkeydown = srcCell.ondblclick = function () {
+                    if (srcCell.cellIndex != 2) {
+                        textDiv.style.display = "";
+                        text.focus();
+                        textDiv.style.left = x;
+                        textDiv.style.top = y;
+                        text.style.width = width;
+                        text.style.height = height;
+                        text.value = srcCell.innerHTML;
+                        text.onblur = function () {
+                            if (text.getAttribute('value') != null) {
+                                for (var i = 0; i < arrArgs.length; i++) {
+                                    if (arrArgs[i] == text.getAttribute('value') && srcCell.innerHTML != text.getAttribute('value') && srcCell.cellIndex == 0) {
+                                        alert("参数名字不能相同");
+                                        return;
+                                    }
+                                }
+                                arrArgs.splice(nowTr.rowIndex - 1, 1);
+                                srcCell.innerHTML = text.getAttribute('value');
+                                arrArgs.push(text.getAttribute('value'));
+                            } else {
+                                srcCell.innerHTML = "";
+                            }
+                            textDiv.style.display = "none";
+                        };
+                    } else {
+                        selectDiv.style.display = "";
+                        selectDiv.style.left = x;
+                        selectDiv.style.top = y;
+                        selectType.style.width = width;
+                        selectType.style.height = height;
+                        selectType.focus();
+                        selectType.onchange = function () {
+                            index = selectType.selectedIndex;
+                        }
+                        selectType.onblur = function () {
+                            if (index != undefined && index != 0) {
+                                srcCell.innerHTML = selectType.options[index].text;
+                                if (selectType.options[index].text == "默认") {
+                                    srcCell.innerHTML = "字符串";
+                                }
+                                index = undefined;
+                            }
+                            selectDiv.style.display = "none";
+                            selectType.selectedIndex = 0;
+                        };
+                    }
+                };
+            } else {
+                nowTr = srcCell;
+            }
+            if (nowTr.nodeName.toLocaleLowerCase() == "tr") {
+                nowTr.setAttribute("id", "selected");
+                nowTr.bgColor = "#c8d9f0";
+            }
+        }
+
+        function Arguments() {
+            this.sName = "";
+            this.sType = "";
+            this.sDataType = "";
+            this.sValue = "";
+            this.sChineseName = "";
+            this.sFormat = "";
+            this.sMinLength = "";
+            this.sMaxLength = "";
+            this.sMaxLength = "";
+            this.sRefDsDetail = ""
+        }
+        Arguments.prototype.serializeXml = function () {
+            var sXml = '<Argument Name="' + this.sName + '" DataType="' + sArgsToEnum(this.sDataType) + '" Value="' + this.sValue
+    + '"  ChineseName="' + this.sChineseName + '" Format="' + this.sFormat + '"  MinLength="' + this.sMinLength + '" MaxLength="'
+    + this.sMaxLength + '"  RefDsDetail="' + this.sRefDsDetail + '" type="' + this.sType + '"></Argument>';
+            return sXml;
+        }
+
+        function saveArgs() {
+            var argsTb = document.getElementById("argsTb");
+            var rows = argsTb.rows;
+            // <?xml version='1.0' encoding='gb2312' ?>
+            var argsXML = "<Arguments>";
+            for (var i = 1; i < rows.length; i++) {
+                var args = new Arguments();
+                args.sName = rows[i].cells[0].innerHTML;
+                args.sChineseName = rows[i].cells[1].innerHTML;
+                args.sDataType = rows[i].cells[2].innerHTML;
+                args.sMinLength = "0";
+                if (rows[i].cells[3].innerHTML != "") {
+                    args.sMaxLength = rows[i].cells[3].innerHTML;
+                } else {
+                    args.sMaxLength = "0";
+                }
+                var ref = document.getElementById(i + "");
+                if (ref != null && ref.value != "") {
+                    args.sRefDsDetail = ref.value;
+                }
+                args.sValue = rows[i].cells[4].innerHTML;
+                argsXML += args.serializeXml();
+            }
+            argsXML += "</Arguments>"
+            var argsDom = new createXMLDOM();
+            argsDom.loadXML(argsXML);
+            window.returnValue = argsDom.childNodes[0];
+            window.close();
+        }
+
+        function winClose() {
+            window.close();
+        }
+
+        function clearArgs() {
+            var oRows = argsTb.tBodies[0].rows;
+            for (var i = 0, rowsLength = oRows.length; i < rowsLength; i++) {
+                argsTb.tBodies[0].deleteRow(0);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,535 @@
+﻿/******************************************************/
+/* -------版本 1.0----------------------------------- */
+/* -------维护者:ls---------------------------------- */
+/* -------最近维护日期:2009-05-20-------------------- */
+/* -------添加原因:实现基础页面框架样式快速修改------ */
+/******************************************************/
+
+/*    重构编辑页面样式
+body 
+{
+	
+}
+
+/* ----------- 编辑页面背景div ---------------------- 
+#pageEdit_DivBgHtml
+{
+	border :#000000 0px dashed;
+	position:relative;
+	top:0px;
+	width:100%;
+}
+
+/* ----------- 编辑页面标题最外层TABLE样式 ---------- 
+#pageEdit_Table
+{
+	width: 99%;
+	border: 0px; 
+	background-image:url(../Images/maintitle_bg02.gif);
+}
+
+/* ----------- 编辑页面标题内容TABLE样式 ------------ 
+#pageEdit_Table_Title
+{
+	border: 0px;
+	background-image:url(../Images/maintitle_bg.gif);
+	text-align: center;
+}
+
+/* ----------- 编辑页面标题左边第一列样式 ----------- 
+#pageEdit_Table_LeftTd
+{
+	 width: 8px;
+	 background-image:url(../Images/maintitle_left.gif);
+	 height: 29px;
+}
+
+#pageEdit_Table_CenterTd
+{
+	font-size:12px;
+	vertical-align: middle;
+	filter:DropShadow(Color=#D7E4FB, OffX=1, OffY=1,Positive=1);
+	margin-right: 5px;
+	margin-left: 5px;
+}
+
+/* ----------- 编辑页面标题右边第一列样式 ----------- 
+#pageEdit_Table_RightTd
+{
+	 width: 8px;
+	 background-image:url(../Images/maintitle_right.gif);
+	 height: 29px;
+}
+
+/* ----------- 编辑页面内容部分 --------------------- 
+#pageEdit_divEditContent
+{
+	border :#000000 0px dashed;
+	z-index:2;
+	position:absolute;
+	top:35px;
+}
+
+/* ----------- 编辑页面内容部分最外层TABLE的第一个TD样式 --- 
+#pageEdit_divEditContent_FirstTd
+{
+	height: 90%;
+	vertical-align: top; 
+}
+
+#divEditContent_Td1
+{
+	height: 95%;
+}
+
+#divEditContent_Td2
+{
+	height: 5%;
+}
+
+/* -----------编辑主体内容样式 ---------------------- 
+#pageEdit_divEditFields
+{
+	border :#000000 0px dashed;
+	position:relative;
+}
+
+/* ----------- 编辑页面编辑区域TABLE样式 ------------ 
+#pageEdit_Table_Main
+{
+	width: 99%;
+	height: 90%;
+	border: 1px solid #CFD7DA;
+	background-color: #F8FBFC;
+}
+
+/* ----------- 编辑页面内部Table -------------------- 
+#pageEdit_divEditContent table
+{
+	width:100%;
+}
+
+/* ----------- 编辑页面按钮区域Table样式 ------------ 
+#pageEdit_ButtonTable
+{
+	width: 100%;
+	height: 25px;
+	border: 0px;
+}
+
+/* ----------- 编辑页面页脚提示左边间隔区域样式 ----- 
+#pageEdit_ButtonLeftNbsp
+{
+	width: 10%;
+}
+
+/* ----------- 编辑页面页脚提示区域样式 ------------- 
+#pageEdit_FootNotice
+{
+	height: 20px;
+}
+
+/* ----------- 编辑页面页脚提示中 '*' 字符样式 ------ 
+#pageEdit_FootNotice font
+{
+	color: Red;
+}
+
+/* ----------- 编辑页面页脚提示右边间隔区域样式 ----- 
+#pageEdit_ButtonRightNbsp
+{
+	width: 5%;
+}
+
+/* ----------- 显示控件区域的tr样式 ----------------- 
+/* ----------- 生成按自定义设置布局html ------------- 
+#editPage_ShowControlField
+{
+	padding-top:5px;
+	height:25px;
+}
+****/
+	
+body 
+{
+	background-color: #C9E3FB;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	font-size: 12px;
+	line-height: 20px;
+	border:0px;
+	/*SCROLLBAR-FACE-COLOR: #FCFAF8;
+	SCROLLBAR-HIGHLIGHT-COLOR: #ffffff;
+	SCROLLBAR-SHADOW-COLOR: #efefef;
+	SCROLLBAR-3DLIGHT-COLOR: #CFD7DA;
+	SCROLLBAR-ARROW-COLOR: #172E83;
+	SCROLLBAR-TRACK-COLOR: #fffffc;
+	SCROLLBAR-DARKSHADOW-COLOR: #CFD7DA;*/
+}
+
+/* ----------- 编辑页面超连接样式 -----------------------*/
+a:link 
+{
+	text-decoration: underline;
+	color: #000000;
+	font-family: 宋体;
+	font-size: 12px;
+}
+
+/* ----------- 编辑页面被访问过的超连接样式 -------------*/
+a:visited 
+{
+	text-decoration: underline;
+	color: #000000;
+	font-family: 宋体;
+	font-size: 12px;
+}
+
+/* ----------- 编辑页面超连接鼠标去经过样式 -------------*/
+a:hover 
+{
+	text-decoration: none;
+	color: #0088ac;
+	font-family: 宋体;
+	font-size: 12px;
+}
+
+/* ----------- 编辑页面TR、TD样式 -----------------------*/
+body, td, th 
+{
+	font-family: 宋体;
+	font-size: 12px;
+	color: #000000;
+}
+
+#pageEdit_TitleLeftSpace
+{
+	 width:1%;
+	 background-image:url(../images/editPage/images_05_2.gif);
+}
+
+#pageEdit_TitleRightSpace
+{
+	width:2%;
+	background-image:url(../images/editPage/images_05_2.gif);
+}
+
+#pageEdit_TitleLeft
+{
+	width:4%;
+	background-image:url(../images/editPage/images_05_2.gif);
+}
+
+#pageEdit_Title
+{
+	width:100%;
+	background-image:url(../images/editPage/images_05_111.gif);
+	font-family: 宋体;
+	font-size: 12px;
+	color: #515151;
+	font-weight: bold;
+	height:10px;
+}
+/* ----------- 编辑页面背景div ---------------------- */
+#pageEdit_DivBgHtml
+{
+	border :#000000 0px dashed;
+	position:relative;
+	top:0px;
+	width:100%;
+}
+
+
+/* ----------- 编辑页面最外层TABLE样式 ----- */
+#pageEdit_MainTable
+{
+	width:99%;
+	height:100%;
+	scellspacing:0px;
+	padding:0px; 
+	text-align :center;
+	border:0px;
+}
+
+#pageEdit_CenterLeftSpace
+{
+	 width:1%;
+	 height:3px;
+	 vertical-align:top;
+	 background-image:url(../images/editPage/images_09.gif);
+}
+
+#pageEdit_CenterMainSpace
+{
+	 width:98%;
+	 height:6px;
+	 vertical-align:top;
+	 background-image:url(../images/editPage/images_09.gif);
+}
+
+#pageEdit_CenterRightSpace
+{
+	 width:1%;
+	 height:3px;
+	 vertical-align:top;
+	 background-image:url(../images/editPage/images_09.gif);
+}
+
+.pageEdit_BottomSpace
+{
+    height:5px;
+    vertical-align:top;
+	background-image:url(../images/editPage/images_11.gif);
+	
+}
+
+#divEditContent_Td2
+{
+	height: 5%;
+}
+
+/* ----------- 编辑页面按钮区域Table样式 ------------ */
+#pageEdit_ButtonTable
+{
+	height: 25px;
+	border: 0px;
+}
+
+/* ----------- 编辑页面页脚提示左边间隔区域样式 ----- */
+#pageEdit_ButtonLeftNbsp
+{
+	width: 10%;
+}
+
+/* ----------- 编辑页面页脚提示区域样式 ------------- */
+#pageEdit_FootNotice
+{
+    width:100%;
+	height: 20px;
+}
+
+/* ----------- 编辑页面页脚提示右边间隔区域样式 ----- */
+#pageEdit_ButtonRightNbsp
+{
+	width: 5%;
+}
+
+/* -----------按钮控件样式 -------------------------- */
+.divButtons_Button
+{
+	CURSOR:hand;
+	font-family: 宋体;
+	font-size: 12px;
+	color: #000000;
+	filter: progid:DXImageTransform.Microsoft.Shadow (Color=#cbd3de,Direction=120,strength=3); 
+	height: 22px;
+	text-align: center;
+	vertical-align: baseline;
+	line-height: 150%; 
+	margin-top: 0px;
+	margin-right: 3px;
+	margin-bottom: 0px;
+	margin-left: 3px;
+	background-image: url(../images/button_bg.gif); 
+	border: 1px solid #90a5c2;
+	letter-spacing: 1px;
+	text-indent: 5px;
+}
+
+/* -----------查询区域div中编辑列表样式  ------------ */
+#MainContent_divQuery_EditTable
+{
+	width: 100%;
+	font-size:13px;
+}
+
+/* -----------开始新的一行 -------------------------- */
+#MainContent_divQuery_EditTr
+{
+	padding-top:5px;
+	height:25px;
+}
+
+/* -----------显示控件区域的LabelTd样式  ------------ */
+#MainContent_divQuery_Td_Lable
+{
+	text-align:right;
+	height:22px;
+	color:#333333;
+}
+
+/* -----------编辑主体内容样式 ---------------------- */
+#pageEdit_divEditFields
+{
+	border :#000000 0px dashed;
+	position:relative;
+}
+
+#pageEdit_tdContent
+{
+	width:100%;
+	vertical-align:middle;
+	text-align:center;
+	font-family: 宋体;
+	font-size: 12px;
+	color: #000000; 
+	background-color: #fcfaf8;
+	border-right-width: 1px;
+	border-left-width: 1px;
+	border-right-style: solid;
+	border-left-style: solid; 
+	border-right-color: #2088d5; 
+	border-left-color: #2088d5;
+}
+
+/* -----------编辑中部区域最外层TABLE样式 --------------- */
+#pageEdit_Center_Table
+{
+	 width:98%;
+	 height:100%;
+	 border: 0px;
+}
+
+/* -----------编辑中部区域最外层TD样式 ------------------ */
+#pageEdit_Center_Td_Table
+{
+  vertical-align:top;
+  width:100%;
+  height:99%;
+  background-image: url(''); 
+  /*--images/images_08.gif --*/
+}
+
+#pageEdit_MainTable_Td_Space1
+{
+	 height:7px;
+	 vertical-align:top;
+	 width:100%;
+}
+
+#pageEdit_Main_Td
+{
+	 height: 99%;
+	 vertical-align: top;
+	 width: 100%;
+}
+
+#pageEdit_Main_Td_Table
+{
+	 width: 100%;
+	 height: 100%; 
+	 border: 0px;
+}
+
+/* -----------按钮区域最外层Table样式 ---------------------- */
+#pageEditButton_Table
+{
+	 height: 25px;  
+	 width: 100%; 
+     border:0px;
+}
+
+/* -----------内容区域最外层Table样式 ---------------------- */
+#pageEditContent_Table
+{
+	 
+	 border:0px;
+}
+
+
+ /* -----------蒙版 DIV ------------------------------ */
+#mask
+{
+	display: none;
+	background-color: #cccccc;
+	left: 0px;
+	position:absolute;
+	top:0px;
+	background-image:none;
+}
+	/* -----------列表 DIV  ------------------------ */
+#dialog
+{
+	display:none;
+	background-color:#f7fcfe;
+	z-index:9999;
+	position:absolute;
+}
+
+/* -----------列表最外层TABLE样式  ------------- */
+#dialog_MainTable
+{
+	width: 100%;
+	background-color: #ECF7FF;
+	margin-top: 0px;
+	font-size: 13px;
+}
+
+/* -----------列表窗体标题样式  ---------------- */
+#dialog_Main_Td_Title
+{
+    height: 30px;
+    font-weight:bolder;
+    color:#0062AA;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+    border-bottom-color: #AAD5F4;
+    padding-top: 3px;
+}
+
+/* -----------列表窗体内容部分样式  ------------ */
+#dialog_Main_Table_Content
+{
+	width: 100%;
+	height: 100%;
+	background-color: #FFFFFF;
+	border:1px solid #8EBAD7;
+	font-size: 13px;
+}
+
+/* -----------列表窗体空白部分样式  ------------ */
+#dialog_Main_Table_Ns
+{
+	 width: 200px;
+	 height: 4px;
+}
+
+/* -----------列表形式区域最外层Table样式  ----- */
+/* -----------内容：本页、页面范围、全部  ----------- */
+#dialog_Main_Table_ExportType
+{
+	width: 100%;
+	background-color: #FFFFFF;
+	font-size: 13px;
+}
+
+/* -----------列表编辑页面范围区域样式  -------- */
+#dialog_Main_Table_PageRange
+{
+	border:0px;
+	width: 100%;
+	font-size:13px;
+}
+
+/* -----------列表编辑页面起始页结束页码文本框样式  ------ */
+#sNo,#eNo
+{
+	width:40px;
+	border:1px solid #7F9DB9; 
+	height:18px;
+}
+
+/* -----------列表编辑页面按钮区域Table样式  --- */
+#dialog_Main_Table_Button
+{
+	width: 100%;
+	border:1px;
+	background-color: #FFFFFF;
+}
+
+/* -----------列表编辑页面按钮区域Td样式  --- */
+#dialog_Main_Table_Button td
+{
+	height:25px;
+}

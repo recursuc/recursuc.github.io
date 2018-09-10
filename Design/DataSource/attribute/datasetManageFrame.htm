@@ -1,0 +1,36 @@
+<html>
+<head>
+    <title>数据集管理页面</title>
+     <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <style type="text/css">
+        table
+        {
+            font-size: small;
+        }
+        body
+        {
+            background-color: #c8d9f0;
+        }
+    </style>
+    <script src="../../../sfk/sfk.js" type="text/javascript"></script>
+    <script type="text/javascript">
+//        $P.ready(function () {
+//            alert(window.dialogArgs);
+//        });
+        window.onload = function () {
+            var url = location.href;
+            var paraStr = url.substring(url.indexOf("?") + 1, url.length);
+            var sOperSin = paraStr.substring(paraStr.indexOf("=") + 1, paraStr.length); /**/
+            window.oDataSource = window.dialogArgs[0];
+            window.oDataSet = null;
+            window.argsDom = window.dialogArgs[1];
+            window.otable = window.dialogArgs[2];
+            document.getElementById("dslist").src = "datasetList.htm";
+        }
+    </script>
+</head>
+<frameset cols="200px,*" style="background-color: #c8d9f0; border:0;border:0; frameBorder:0;framespacing:0">
+    <frame id="dslist" name="dslist" src="" style="background-color: #213352; border:0; frameBorder:0;framespacing:0" />
+    <frame id="dsSet" name="dsSet" src="" style="background-color: #213352; border:0; frameBorder:0;framespacing:0"/>
+</frameset>
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+    <style type="text/css">
+        .x-tab-panel-body .x-panel-body 
+        {
+            padding:10px;
+        }
+    </style>
+   <link rel="Stylesheet" type="text/css" href="../skins/blue/css/form.css" />
+    <link rel="Stylesheet" type="text/css" href="../../ext/resources/css/ext-all.css" />
+    <link rel="Stylesheet" type="text/css" href="../../ext/resources/css/xtheme-gray.css" />
+    <link rel="Stylesheet" type="text/css" href="../../ext/resources/css/tabs.css" />
+</head>
+<body onload="uf_open()">
+    <div class="dj" id="SKbillsheet">
+        <div id="tabs">
+            <div id="ab" class="x-hide-display">
+                <table style="font-size: 12px; width:100%;">
+                    <tr>
+                        <td>字体</td>
+                        <td>字型</td>
+                        <td>大小</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input id="SKDBedit1" style=" font-size: 12px; width: 120px;  height: 20px; text-align: left" type="text"/>
+                        </td>
+                        <td>
+                            <input id="SKDBedit2" style=" font-size: 12px; width: 119px; height: 20px; text-align: left" type="text" dataset=""  field="" />
+                        </td>
+                        <td>
+                            <input id="SKDBedit3" style=" font-size: 12px; width: 84px; height: 20px; text-align: left" type="text"  dataset="" field=""/>
+                        </td>
+                        <td>
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <select id=SKDBListBox1 style=" font-size: 12px; width: 120px; height: 146px; background-color: #ffffff;
+                                scrollbar-face-color: #9EBFE8; scrollbar-shadow-color: #FFFFFF; 
+                                scrollbar-highlight-color: #FFFFFF; scrollbar-3dlight-color: #9EBFE8; 
+                                scrollbar-darkshadow-color: #9EBFE8; scrollbar-track-color: #FFFFFF; 
+                                scrollbar-arrow-color: #FFFFFF;" size=8 onclick='PropWinOnload.loadFontList.loadFontFamily();'>
+                                <option value=@Fixedsys>@Fixedsys</option>
+                                <option value=@MingLiU>@MingLiU</option>
+                                <option value=@PMingLiU>@PMingLiU</option>
+                                <option value=@SyStem>@SyStem</option>
+                                <option value=@Terminal>@Terminal</option>
+                                <option value=@方正舒体>@方正舒体</option>
+                                <option value=@方正姚体>@方正姚体</option>
+                                <option value=@仿宋_GB2312>@仿宋_GB2312</option>
+                                <option value=@黑体>@黑体</option>
+                                <option value=@华文彩云>@华文彩云</option>
+                                <option value=@华文细黑>@华文细黑</option>
+                                <option value=@华文新魏>@华文新魏</option>
+                                <option value=@华文行楷>@华文行楷</option>
+                                <option value=@华文中宋>@华文中宋</option>
+                                <option value=@楷体_GB2312>@楷体_GB2312</option>
+                                <option value=@隶书>@隶书</option>
+                                <option value=@宋体>@宋体</option>
+                                <option value=@新宋体>@新宋体</option>
+                                <option value=@幼体>@幼体</option>
+                                <option value=Arial>Arial</option>
+                                <option value="Arial Black">Arial Black</option>
+                                <option value="Arial Narrow">Arial Narrow</option>
+                                <option value=Basemic>Basemic</option>
+                                <option value="Basemic Symbol">Basemic Symbol</option>
+                                <option value="Basemic Times">Basemic Times</option>
+                                <option value="Book Antiaua">Book Antiaua</option>
+                                <option value="Bookman Old Style">Bookman Old Style</option>
+                                <option value="Cemtury Bothic">Cemtury Bothic</option>
+                                <option value="Comic sams MS">Comic sams MS</option>
+                                <option value="Copperplate ">Copperplate</option>
+                                <option value=Gothic>Gothic</option>
+                                <option value="Copperplate ">Copperplate</option>
+                                <option value=Gothic>Gothic</option>
+                                <option value=Courier>Courier</option>
+                                <option value="Courier New">Courier New</option>
+                                <option value=FixedSyS>FixedSyS</option>
+                                <option value=Garamond>Garamond</option>
+                                <option value=Ceorgia>Ceorgia</option>
+                                <option value=HarettemSchweiler>HarettemSchweiler</option>
+                                <option value=Impact>Impact</option>
+                                <option value="Kingsoft Phonetic">Kingsoft Phonetic</option>
+                                <option value="Lucida console">Lucida console</option>
+                                <option value="Lucida Sans ">Lucida Sans</option>
+                                <option value=Unicod>Unicod</option>
+                                <option value=Marlett>Marlett</option>
+                                <option value="Microsoft sans ">Microsoft sans</option>
+                                <option value=ser>ser</option>
+                                <option value=MingLiU>MingLiU</option>
+                                <option value=Modern>Modern</option>
+                                <option value="Monotype corsive">Monotype corsive</option>
+                                <option value="MS Sans serif">MS Sans serif</option>
+                                <option value="Ms Serif">Ms Serif</option>
+                                <option value="palatino Linotype">palatino Linotype</option>
+                                <option value=PMingLiU>PMingLiU</option>
+                                <option value=Roman>Roman</option>
+                                <option value=Script>Script</option>
+                                <option value="Small Fonts">Small Fonts</option>
+                                <option value=Symbol>Symbol</option>
+                                <option value=SyStem>SyStem</option>
+                                <option value=Tahoma>Tahoma</option>
+                                <option value=Terminal>Terminal</option>
+                                <option value="Times New Roman">Times New Roman</option>
+                                <option value="Trebucher MS">Trebucher MS</option>
+                                <option value=Verdana>Verdana</option>
+                                <option value=Webdings>Webdings</option>
+                                <option value=Wingdings>Wingdings</option>
+                                <option value="Wingdings 2">Wingdings 2</option>
+                                <option value="Wingdings 3">Wingdings 3</option>
+                                <option value=方正舒体>方正舒体</option>
+                                <option value=方正姚体>方正姚体</option>
+                                <option value=仿宋_GB2312>仿宋_GB2312</option>
+                                <option value=黑体>黑体</option>
+                                <option value=华文彩云>华文彩云</option>
+                                <option value=华文细黑>华文细黑</option>
+                                <option value=华文新魏>华文新魏</option>
+                                <option value=华文行楷>华文行楷</option>
+                                <option value=华文中宋>华文中宋</option>
+                                <option value=楷体_GB2312>楷体_GB2312</option>
+                                <option value=隶书>隶书</option>
+                                <option value=宋体>宋体</option>
+                                <option value=新宋体>新宋体</option>
+                                <option value=幼圆>幼圆</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select id=SKDBListBox2 style=" font-size: 12px;width: 120px; height: 146px; background-color: #ffffff;
+                                scrollbar-face-color: #9EBFE8; scrollbar-shadow-color: #FFFFFF; 
+                                scrollbar-highlight-color: #FFFFFF; scrollbar-3dlight-color: #9EBFE8; 
+                                scrollbar-darkshadow-color: #9EBFE8; scrollbar-track-color: #FFFFFF; 
+                                scrollbar-arrow-color: #FFFFFF;" size=8 onclick='PropWinOnload.loadFontList.loalFontStyle();'>
+                                <option value=常规>常规</option>
+                                <option value=粗体>粗体</option>
+                                <option value=斜体>斜体</option>
+                                <option value=粗斜体>粗斜体</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select id=SKDBListBox3 style=" font-size: 12px; width: 83px; height: 146px; background-color: #ffffff;
+                                scrollbar-face-color: #9EBFE8; scrollbar-shadow-color: #FFFFFF; 
+                                scrollbar-highlight-color: #FFFFFF; scrollbar-3dlight-color: #9EBFE8; 
+                                scrollbar-darkshadow-color: #9EBFE8; scrollbar-track-color: #FFFFFF; 
+                                scrollbar-arrow-color: #FFFFFF;" size=8 onclick='PropWinOnload.loadFontList.loadFontSize();'>
+                                <option value=8pt>8</option>
+                                <option value=9pt>9</option>
+                                <option value=10pt>10</option>
+                                <option value=11pt>11</option>
+                                <option value=12pt>12</option>
+                                <option value=14pt>14</option>
+                                <option value=16pt>16</option>
+                                <option value=18pt>18</option>
+                                <option value=20pt>20</option>
+                                <option value=22pt>22</option>
+                                <option value=24pt>24</option>
+                                <option value=26pt>26</option>
+                                <option value=28pt>28</option>
+                                <option value=36pt>36</option>
+                                <option value=48pt>48</option>
+                                <option value=72pt>72</option>
+                                <option value=72px>初号</option>
+                                <option value=48px>小初</option>
+                                <option value=36px>一号</option>
+                                <option value=28px>小一</option>
+                                <option value=26px>二号</option>
+                                <option value=24px>小二</option>
+                                <option value=22px>三号</option>
+                                <option value=20px>小三</option>
+                                <option value=18px>四号</option>
+                                <option value=16px>小四</option>
+                                <option value=14px>五号</option>
+                                <option value=12px>小五</option>
+                                <option value=11px>六号</option>
+                                <option value=10px>小六</option>
+                                <option value=9px>七号</option>
+                                <option value=8px>八号</option>
+                            </select>
+                        </td>
+                        <td>
+                            <button id="cmdOk" onclick='uf_ok()' style="display: block; font-size: 12px; width: 65px;height: 21px; 
+                                background-color: #ffffff; border-style:none; border:0px;"></button><br />
+                            <button id="cmdClose" onclick='CloseBill()' style="display: block; font-size: 12px; width: 65px;height: 21px; 
+                                background-color: #ffffff; border-style:none; border:0px;"></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table id="fontTypeTable" style="font-size: 12px; width:100%;">
+                                <tr>
+                                    <td>
+                                        <div id="chkUnderline" style="float:left;" onclick='PropWinOnload.loadFontList.loadUnderline();' value="否">
+                                        <input type="checkbox"/></div>
+                                        <div style="float:left;margin-top:4px;"><span>下划线</span></div>
+                                    </td>
+                                    <td>
+                                        示例
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan=2 align="right">
+                                        <button id="cmdBgcolor" style="font-size: 12px;width: 24px;height: 24px; border:0px; border-style:none; background-color:#ffffff;" onclick='SelFgColor()' ></button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td colspan="3">
+                            <table border="1" style=" border-left:1PX; border-right:1PX; border-top:1PX; border-bottom:1PX;
+                                table-layout:fixed; border-collapse: collapse; background-color:#ffffff; border-color:black">
+                              <tr>
+                                <td valign="middle" align="center"  width="199" height="55" >
+                                <span id="displayfont" style=" font-size: 12px; overflow: hidden; ">
+                                  字体样式
+                                </span></td>
+                              </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <object id="dlgHelper" CLASSID="clsid:3050f819-98b5-11cf-bb82-00aa00bdce0b" width="0px" height="0px"></object>
+    
+    
+    <script type="text/javascript" src="../../ext/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="../../ext/ext-all.js"></script>
+    <script type="text/javascript" src="../../commonjs/public_api.js"></script>   
+    <script type="text/javascript" src="../js/f_core.js"></script>  
+    <script type="text/javascript" src="../../commonjs/design_operation.js"></script> 
+    <script type="text/javascript" src="../../commonjs/property.js"></script>    
+    <script type="text/javascript" src="../../commonjs/opencommonform.js"></script>
+    <script  type="text/javascript" src="../../commonjs/browser_version.js"></script>
+    <script type="text/javascript" src="../../commonjs/sys_common_valid_library.js"></script>  
+    <script type="text/javascript" language="javascript">
+        Ext.onReady(function() {
+            var tabs = new Ext.TabPanel({
+                renderTo: 'tabs',
+                width: "100%",
+                height: 300,
+                activeTab: 0,
+                frame: true,
+                defaults: { autoHeight: "100%" },
+                items: [
+                    { contentEl: 'ab', title: '  属性  ' }
+                ]
+            });
+        });
+
+        public_Form();
+
+        function uf_open() {
+            PropWinOnload.loadButtonImg();
+            PropWinOnload.loadFontList();
+        }
+
+        function uf_ok() {
+            PropWinClickOk.synchronFontList();
+
+            if (!PropWinClickOk.isPassValid) {
+                PropWinClickOk.isHaveValid = false;
+                return;
+            }
+
+            window.close();
+        }
+    </script>
+</body>
+</html>

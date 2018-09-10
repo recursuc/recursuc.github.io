@@ -1,0 +1,375 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+    <title>表达式设置</title>
+    <style type="text/css">
+        *
+        {
+            font-size: 12px;
+        }
+        #dsNameTb td
+        {
+            width: 100%;
+        }
+        #selDsName
+        {
+            color: Red;
+        }
+        #selFunName
+        {
+            color: Red;
+        }
+        #dsColNameDiv td
+        {
+            font-size: 10px;
+        }
+        #selColName
+        {
+            color: Red;
+        }
+      
+    </style>
+</head>
+<body>
+    <table>
+        <tr>
+            <td colspan="3">
+                <textarea rows="8" cols="40" id="expArea" onmouseup="savePos()" onkeyup="addExpFromKey()">
+            </textarea>
+            </td>
+            <td>
+                <div id="expSetDiv" onclick="inputExp()">
+                    <table id="expSetTb">
+                    </table>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                可选数据集 &nbsp; &nbsp;<input type="button" value="增加" onclick="addDsName()" />
+            </td>
+            <td style="text-align: center">
+                分类<select id="selFunType" onchange="showFunName()" style="width: 98px"></select>
+            </td>
+            <td colspan="2">
+                <input type="button" value="添加选中函数" onclick="addFunName()" />
+            </td>
+        </tr>
+        <tr>
+            <td valign="top">
+                <table style="width: 100%">
+                    <tr>
+                        <td>
+                            <div style="border-style: solid; border-width: 1px; width: 130px; height: 50px; overflow-y: scroll;
+                                font-size: 12px" id="dsNameDiv" onmouseover="mouseoverEvent()" onmouseout="mouseoutEvent()"
+                                onclick="showDsColName()" ondblclick="addDsName()">
+                                <table id="dsNameTb" style="width: 100%;">
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            可选字段 &nbsp; &nbsp;<input type="button" value="增加" onclick="addColName()" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div style="border-style: solid; border-width: 1px; width: 130px; height: 100px;
+                                overflow: scroll; font-size: 12px" id="dsColNameDiv" onmouseover="mouseoverEvent()"
+                                onmouseout="mouseoutEvent()" onclick="selectColName()" ondblclick="addColName()">
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td valign="top" style="text-align: center">
+                <div style="border-style: solid; border-width: 1px; width: 120px; height: 180px;
+                    overflow: auto;" id="funNameDiv" onmouseover="mouseoverEvent()" onmouseout="mouseoutEvent()"
+                    onclick="showFunNameInfo()" ondblclick="addFunName()">
+                    <table id="funNameTb" style="width: 100%;">
+                    </table>
+                </div>
+            </td>
+            <td colspan="2" valign="top">
+                <div id="funInfoDiv" style="border: 1px black solid; overflow: auto; width: 180px;
+                    height: 180px">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4" style="text-align: right;">
+                <hr style="border: solid 1 #B9D2ED" />
+                <div id="buttons">
+                    <table>
+                        <tr>
+                            <td style="padding-right: 20px;">
+                                <!-- 确定按钮 -->
+                                <button id="cmdOk" style="display: block; font-size: 12px; width: 65px; height: 21px;
+                                    background-color: #ffffff; border-style: none; border: 0px; background-image: url(../skins/blue/img/button_ok.gif);"
+                                    onclick="submitSet()">
+                                </button>
+                            </td>
+                            <td style="padding-right: 20px;">
+                                <!-- 取消按钮 -->
+                                <button id="cmdClose" style="display: block; font-size: 12px; width: 65px; height: 21px;
+                                    background-color: #ffffff; border-style: none; border: 0px; background-image: url(../skins/blue/img/button_close.gif);"
+                                    onclick="cancelSet()">
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <script src="../js/public_function.js" type="text/javascript"></script>
+    <script src="../js/function_info.min.js" type="text/javascript"></script>
+    <script type="text/javascript" language="javascript">
+        var obj = window.dialogArguments;
+        var oCell = null;
+        var iStart, iEnd, isSelcted = false;
+        if (obj != undefined) table = obj.document.getElementById("tbData");      //获得报表对象
+
+        window.onload = function () {
+            var exp = [["=", "="], ["+", "+"], ["-", "-"], ["*", "*"], ["/", "/"], ["&", "&"], ["{", "{"], ["}", "}"], ["(", "("], [")", ")"], ["[", "["], ["]", "]"], ["与", " and"], ["或", " or"], ["非", " is not null"], ["&acute;", "&acute;"], ["\"", "\""], [",", ","]];
+            var num = 0;
+            var oTr = null;
+            for (var i = 0; i < exp.length; i++) {
+                if (num % 4 == 0) {
+                    oTr = expSetTb.insertRow();
+                }
+                var oTd = oTr.insertCell();
+                oTd.innerHTML = "<input type='button' name='" + exp[i][1] + "' value='" + exp[i][0] + "' style='width:35'>";
+                num++;
+            }
+            //初始化表达式
+            oCell = table.rows[obj.oTdPos.x].childNodes[obj.oTdPos.y];
+            expArea.innerHTML = oCell.innerHTML;
+            //添加数据集名
+            var oDataSource = new createXMLDOM();
+            oDataSource.loadXML(obj.datasource);
+            if (oDataSource != null && oDataSource.xml != "") {
+                var ds = oDataSource.documentElement;
+                for (var i = 0; i < ds.childNodes.length; i++) {
+                    if (ds.childNodes[i].getAttribute("Type") == "1") continue;
+                    var oTr = dsNameTb.insertRow();
+                    var oTd = oTr.insertCell();
+                    //oTd.style.width = "100%";
+                    oTd.innerHTML = ds.childNodes[i].getAttribute("Name");
+                    oTd["DbId"] = ds.childNodes[i].getAttribute("DbId");
+                }
+            }
+            selFunType.add(new Option("选择函数类型"));
+            for (var i = 0; i < FunctionInfo.functionType.length; i++) {
+                var oOption = new Option(FunctionInfo.functionType[i][0])
+                oOption.value = i;
+                selFunType.add(oOption);
+            }
+            //获取选择区域起始位置
+            iStart = iEnd = expArea.innerHTML.length;
+        }
+
+        function inputExp() {
+            var oInupt = event.srcElement;
+            if (oInupt.nodeName.toLowerCase() == "input") {
+                addExp(oInupt.name.replace(/&/g, "&amp;").replace("&acute;", "'"));
+            }
+        }
+
+        function submitSet() {
+            obj.txtMathExp.value = obj.txtEdit.value = oCell.innerHTML = expArea.innerHTML;
+            window.close();
+        }
+        function cancelSet() {
+            window.close();
+        }
+        function mouseoverEvent() {
+            var oSrc = event.srcElement;
+            if (oSrc.nodeName.toLocaleLowerCase() == "td") {
+                oSrc.style.backgroundColor = "#0066CC";
+            }
+        }
+
+        function mouseoutEvent() {
+            var oSrc = event.srcElement;
+            if (oSrc.nodeName.toLocaleLowerCase() == "td") {
+                oSrc.style.backgroundColor = "";
+            }
+        }
+
+        function showDsColName() {
+            var oEventSrc = event.srcElement;
+            if (oEventSrc.nodeName.toLocaleLowerCase() != "td") {
+                return;
+            }
+            var selDsName = document.getElementById("selDsName");
+            if (selDsName != null && oEventSrc.innerHTML == selDsName.innerHTML) {
+                //addExp(oEventSrc.innerHTML+ ".");
+                return;
+            }
+            if (selDsName) selDsName.id = "";
+            oEventSrc.id = "selDsName";
+            var tbName = oEventSrc.innerHTML;
+            var tbID = oEventSrc["DbId"];
+            var Ajax = new AjaxHandler();
+            var callback = {
+                success: function (xhr) {
+                    var xnTable = xhr.responseXML.selectSingleNode("/RAD/Doc/Data/Table");
+                    if (xnTable != null) {
+                        var divId = document.getElementById("dsColNameDiv");
+                        divId.innerHTML = xnTable.xml;
+                        //addExp(oEventSrc.innerHTML + ".");
+                    } else {
+                        alert(xhr.responseText);
+                    }
+                },
+                failure: function (xhr) {
+                    alert(xhr.responseText);
+                }
+            };
+            Ajax.request("Post", "../common/RptDesignAjax.aspx?OperationSign=getDsColName&tbID=" + tbID + "&args=" + (obj.argsDom ? obj.argsDom.xml : "") + "&ReportId=", false, callback, null);
+        }
+
+        function showFunName() {
+            var oSelectedOption = selFunType.options[selFunType.selectedIndex]
+            var sType = oSelectedOption.value
+            if (sType != '') {
+                sType = parseInt(sType);
+                for (var i = funNameTb.rows.length - 1; i >= 0; i--) {
+                    funNameTb.deleteRow(i);
+                }
+                for (var i = 0; i < FunctionInfo.functionType[sType][1].length; i++) {
+                    var oTr = funNameTb.insertRow();
+                    var oTd = oTr.insertCell();
+                    oTd.setAttribute("dsTypeId", i);
+                    oTd.innerHTML = FunctionInfo.functionType[sType][1][i][0];
+                }
+            }
+        }
+        function selectColName() {
+            var oEventSrc = event.srcElement;
+            if (oEventSrc.nodeName.toLocaleLowerCase() != "td") {
+                return;
+            }
+            var selColName = document.getElementById("selColName");
+            if (selColName) selColName.id = "";
+            oEventSrc.id = "selColName";
+            //addExp(oEventSrc.innerHTML);
+            // expArea.innerHTML += oEventSrc.innerHTML;
+        }
+
+        function addColName() {
+            var selColName = document.getElementById("selColName");
+            if (selColName) {
+                addExp(selColName.innerHTML);
+            } else {
+                alert("请选择字段名");
+            }
+        }
+
+        function addDsName() {
+            var selDsName = document.getElementById("selDsName");
+            if (selDsName) {
+                addExp(selDsName.innerHTML + ".");
+            } else {
+                alert("请选择数据集名");
+            }
+        }
+
+        function showFunNameInfo() {
+            var oEventSrc = event.srcElement;
+
+            if (oEventSrc.nodeName.toLocaleLowerCase() != "td") {
+                return;
+            }
+            var selDsName = document.getElementById("selFunName");
+            if (selDsName) selDsName.id = "";
+            oEventSrc.id = "selFunName";
+
+            var oSelectedOption = selFunType.options[selFunType.selectedIndex]
+            var sType = parseInt(oSelectedOption.value);
+            var i = parseInt(oEventSrc["dsTypeId"]);
+            funInfoDiv.innerHTML = FunctionInfo.functionType[sType][1][i][1];
+        }
+        function addFunName() {
+            var selDsName = document.getElementById("selFunName");
+            if (!selDsName) {
+                alert("没有选中函数");
+                return;
+            }
+            addExp(selDsName.innerHTML);
+        }
+
+        function savePos() {
+            iStart = 0;
+            iEnd = 0;
+            var sTextRange = document.selection.createRange();
+            if (sTextRange.parentElement().id = expArea.id) {
+                var oTextRange = document.body.createTextRange();
+                oTextRange.moveToElementText(expArea);
+                while (sTextRange.compareEndPoints("StartToStart", oTextRange) > 0) {
+                    oTextRange.moveStart('character', 1);
+                    iStart++
+                }
+                oTextRange.moveStart('character', -iStart);
+                while (oTextRange.compareEndPoints('StartToEnd', sTextRange) < 0) {
+                    oTextRange.moveStart('character', 1);
+                    iEnd++;
+                }
+            } else {
+                iStart = iEnd = expArea.innerHTML.length;
+            }
+            isSelcted = true;
+        }
+
+        function addExpFromKey() {
+            iStart += 1;
+            iEnd = iStart;
+        }
+
+        function addExp(sExp) {
+            var iRStart = 0;
+            var iREnd = 0;
+            var iHas = 0;
+            //处理&符号
+            var oTextRange = document.body.createTextRange();
+            oTextRange.moveToElementText(expArea);
+            var arrSel = oTextRange.text.substr(0, iStart).split('');
+            for (var i = 0; i < arrSel.length; i++) {
+                if (arrSel[i] == '&') {
+                    iHas++;
+                }
+            }
+            iRStart = iStart + iHas * 4; //找到真正起始位置
+            iHas = 0;
+            arrSel = oTextRange.text.substr(0, iEnd).split('');
+            for (var i = 0; i < arrSel.length; i++) {
+                if (arrSel[i] == '&') {
+                    iHas++;
+                }
+            }
+            iREnd = iEnd + iHas * 4; //找到真正结束位置
+            var iPos = iStart;
+            var exp = expArea.innerHTML;
+            if (isSelcted) {
+                if (iEnd != 0) {
+                    expArea.innerHTML = exp.substr(0, iRStart) + sExp + exp.substr(iREnd);
+                } else {
+                    expArea.innerHTML = sExp + exp.substr(0);
+                }
+            } else {
+                expArea.innerHTML += sExp;
+            }
+            if (sExp == '&amp;') {
+                iStart += 1;
+            } else {
+                iStart += sExp.length;
+            }
+            iEnd = iStart;
+            oTextRange.move("character", iStart);
+            oTextRange.select();
+        }
+    </script>
+</body>
+</html>

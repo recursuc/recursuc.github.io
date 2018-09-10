@@ -1,0 +1,429 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+    <title>自定义数据集</title>
+     <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <style type="text/css">
+        #headDiv th
+        {
+            border: solid 1px gray;
+        }
+        body
+        {
+            background-color: #BDC7D7;
+        }
+        #argsSetTb td
+        {
+            height: 19px;
+            font-size: 12px;
+            border: solid 1px gray;
+        }
+    </style>
+    <script src="../js/public_function.js" type="text/javascript"></script>
+    <script src="../js/table_operate.min.js" type="text/javascript"></script>
+</head>
+<body>
+    <fieldset style="font-size: 12px;">
+        <legend>自定义类配置</legend>
+        <table style="font-size: 12px; width: 100%">
+            <tr>
+                <td width="50%">
+                    &nbsp; &nbsp;数据集名
+                    <input type="text" id="dsName" style="height: 19px; width: 70px" />
+                    &nbsp; &nbsp;自定义数据集名
+                    <input type="text" id="ClassMessage" style="height: 19px; width: 120px;" disabled="disabled"
+                        onmouseover="changeTitle()" />
+                    <iframe name="upIframe" id="upIframe" src="../common/Up_file.aspx" frameborder="no"
+                        style="width: 100%; height: 80px"></iframe>
+                </td>
+                <td valign="top">
+                    <fieldset style="height: 80px">
+                        <legend style="color: Red;">说明</legend><span style="color: Gray;">自定义类必须实现接口：RAD.BusinessObjects.Report.DataSourceConfig.ICustomClass；<br />
+                            类参数在下面设置。 </span>
+                    </fieldset>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    <fieldset style="font-size: 12px;">
+        <legend>自定类参数配置</legend>
+        <div id="argsDiv" style="height: 60px; width: 90%;">
+            <table>
+                <tr>
+                    <td>
+                        <div id="headDiv">
+                            <table width="100%" style="border-collapse: collapse; font-size: 12px">
+                                <tr height="19px">
+                                    <th width="50%" align="center">
+                                        参数名称
+                                    </th>
+                                    <th width="50%" align="center">
+                                        类型
+                                    </th>
+                                </tr>
+                            </table>
+                        </div>
+                        <div id="argsSetDiv" style="width: 100%; overflow-y: scroll; height: 160px; background-color: White"
+                            onclick="selecteArgs()">
+                            <table id="argsSetTb" cellpadding="0" cellspacing="0" style="border: 1px; border-collapse: collapse;
+                                width: 100%; table-layout: fixed; text-align: center;">
+                                <thead>
+                                    <tr style="display: none; height: 19px;">
+                                        <th width="50%">
+                                        </th>
+                                        <th width="50%">
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                    <td>
+                        <table>
+                            <tr>
+                                <td>
+                                    <input type="button" value="添加" style="width: 60px" onclick="insertArgs()" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="button" value="删除" style="width: 60px" onclick="deleteArgs()" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="button" value="上移" style="width: 60px" onclick="argsUP()" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="button" value="下移" style="width: 60px" onclick="argsDown()" />
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </fieldset>
+    <!--文本框Div-->
+    <div id="textDiv" style="position: absolute; left: -100px">
+        <input type="text" style="width: 60px; height: 20px; margin: 0px; padding: 0px; border: solid 1px black;
+            background-color: Cornsilk;" id="text" />
+    </div>
+    <!--下拉列表参数类型Div-->
+    <div id="selectDiv" style="position: absolute; left: -100px">
+        <select id="selectType">
+            <option value="">类型选择</option>
+            <option value="整型">整型</option>
+            <option value="实数">实数</option>
+            <option value="字符串">字符串</option>
+            <option value="日期">日期</option>
+            <option value="时间">时间</option>
+            <option value="日期时间">日期时间</option>
+            <option value="整数组">整数组</option>
+            <option value="实数组">实数组</option>
+            <option value="字符串组">字符串组</option>
+            <option value="默认">默认</option>
+        </select>
+    </div>
+    <hr width="100%" />
+    <table width="100%">
+        <tr>
+            <td align="Center">
+                <input type="button" value="保存" onclick="submitDs()" style="width: 60px" />
+                <input type="hidden" style="width: 100px" />
+                <input type="button" value="取消" onclick="closeDsSet()" style="width: 60px" />
+            </td>
+        </tr>
+    </table>
+    <input type="hidden" id="iframeFileURL" value="" />
+    <input type="hidden" id="iframeNewName" value="" />
+    <input type="hidden" id="OperationSign" value="" />
+    <input type="hidden" id="oldFileName" value="" />
+    <!-- 鼠标拖动改变单元格div -->
+    <div style="display:none;" id="cellColdiv"></div>
+    <div style="display:none;" id="cellRowDiv"></div>
+    <script type="text/javascript">
+
+        var dsId = ""; //数据集ID
+        window.onload = function () {
+            headDiv.style.width = headDiv.offsetWidth - argsSetDiv.offsetWidth + argsSetDiv.clientWidth; //调整div宽度
+            if (Request["DsId".toLowerCase()] != undefined && Request["DsId".toLowerCase()].toString() != "") {
+                dsId = Request["DsId".toLowerCase()].toString();
+            }
+
+            if (dsId != "") {
+                OperationSign.value = "edit"
+                var xmlDoc = CreateBaseXmlDoc('<Operation ParamType="GetDsInfo" value="' + dsId + '"/>');
+                var Ajax = new AjaxHandler();
+                var callback = {
+                    success: function (xhr) {
+                        var returnAjaxValue = xhr.responseXML.selectSingleNode("RAD/Doc/Data/Message").attributes.getNamedItem("value").value;
+                        if (returnAjaxValue == "操作成功") {
+                            var xmlDs = xhr.responseXML.selectSingleNode("RAD/Doc/Data").childNodes[1];
+                            dsName.value = xmlDs.getAttribute("Name");
+                            oldFileName.value = xmlDs.getAttribute("ClassFullName");
+                            var reg = /\-.*(?=\.)/ig;
+                            ClassMessage.value = xmlDs.getAttribute("ClassFullName").replace(reg, "");
+                            if (xmlDs.getAttribute("ClassFullName") != "") {
+                                upIframe.window.loadClassFile.href = "../customClass/" + escape(xmlDs.getAttribute("ClassFullName"));
+                                upIframe.window.loadClassFile.innerHTML = "下载已上传类";
+                            }
+                            if (xmlDs.hasChildNodes()) {
+                                for (var i = 0; i < xmlDs.childNodes.length; i++) {
+                                    var oTr = argsSetTb.insertRow();
+                                    var oTdName = oTr.insertCell();
+                                    var oTdValue = oTr.insertCell();
+                                    oTdName.innerText = xmlDs.childNodes[i].getAttribute("Name");
+                                    oTdValue.innerText = enumTosArgs(xmlDs.childNodes[i].getAttribute("Value"));
+                                }
+                            }
+                        }
+                    },
+                    failure: function (xhr) {
+                        alert('Failure: ' + xhr.status);
+                    }
+                };
+                Ajax.request("Post", "../common/RptDSAjax.aspx", false, callback, xmlDoc);
+            } else {
+                OperationSign.value = "add"
+            }
+
+        }
+
+        //添加参数
+        function insertArgs() {
+            var argsTb = document.getElementById("argsSetTb");
+            var selectedTr = document.getElementById("selected");
+            var oTr = argsTb.insertRow();
+            if (selectedTr != null) {
+                selectedTr.setAttribute("id", "");
+                selectedTr.bgColor = "";
+                if (selectedTr.nodeName.toLocaleLowerCase() == "tr") {
+                    for (var i = 0; i < 2; i++) {
+                        selectedTr.children[i].bgColor = "";
+                    }
+                }
+            }
+            oTr.bgColor = "#c8d9f0";
+            oTr.setAttribute("id", "selected");
+            for (var i = 0; i < 2; i++) {
+                var oTd = oTr.insertCell(i);
+                if (i == 0) {
+                    oTd.bgColor = "#3399ff";
+                }
+            }
+        }
+        //删除参数
+        function deleteArgs() {
+            try {
+                var oTr = document.getElementById("selected");
+                var oTb = oTr.parentNode.parentNode;
+                var i = oTr.rowIndex;
+                oTb.deleteRow(i);
+                var nowSelectedTr;
+                if (i > 1) {
+                    nowSelectedTr = oTb.rows[i - 1];
+                } else if (i == 1) {
+                    nowSelectedTr = oTb.rows[i];
+                }
+                if (nowSelectedTr != null) {
+                    nowSelectedTr.bgColor = "#c8d9f0";
+                    nowSelectedTr.childNodes[0].bgColor = "#3399ff";
+                    nowSelectedTr.setAttribute("id", "selected");
+                }
+            } catch (e) {
+                alert("请选择要删除的行！");
+            }
+
+        }
+        //选择参数
+        var indexSelectedType;
+        function selecteArgs() {
+            var oTr = document.getElementById("selected");
+            var textDiv = document.getElementById("textDiv"); //文本框div
+            var text = document.getElementById("text"); //文本框
+            var selectDiv = document.getElementById("selectDiv"); //下拉列表div
+            var selectType = document.getElementById("selectType"); //下拉列表
+            var argsTb = document.getElementById("argsSetTb");
+            var tbArgsSets = document.getElementById("tbArgsSets");
+            var allTable = document.getElementById("allTable");
+            var argsDiv = document.getElementById("argsSetDiv");
+            var srcCell = event.srcElement;
+            var nowTr;
+            if (oTr != null) {
+                oTr.bgColor = "#ffffff";
+                oTr.setAttribute("id", "");
+                if (oTr.nodeName.toLocaleLowerCase() == "tr") {
+                    for (var i = 0; i < 2; i++) {
+                        oTr.children[i].bgColor = "";
+                    }
+                }
+            }
+            if (srcCell.nodeName.toLocaleLowerCase() == "td") {
+                nowTr = srcCell.parentNode;
+                srcCell.bgColor = "#3399ff"
+                var x = srcCell.offsetLeft + argsSetTb.offsetLeft + argsSetDiv.offsetLeft + document.body.clientLeft - argsSetDiv.scrollLeft + 14; //单元格X坐标
+                var y = srcCell.offsetTop + argsSetTb.offsetTop + argsSetDiv.offsetTop - argsSetDiv.scrollTop + document.body.clientTop + 156; //单元格Y坐标
+                var width = parseInt(srcCell.offsetWidth); //单元格宽
+                var height = parseInt(srcCell.offsetHeight); //单元格高
+                srcCell.onkeydown = srcCell.ondblclick = function () {
+                    switch (srcCell.cellIndex) {
+                        case 1:
+                            {
+                                selectDiv.style.display = "";
+                                selectDiv.style.left = x;
+                                selectDiv.style.top = y;
+                                selectType.style.width = width - 2;
+                                selectType.style.height = height - 2;
+                                selectType.focus();
+                                selectType.onchange = function () {
+                                    indexSelectedType = selectType.selectedIndex;
+                                }
+                                selectType.onblur = function () {
+                                    if (indexSelectedType != undefined && indexSelectedType != 0) {
+                                        srcCell.innerHTML = selectType.options[indexSelectedType].text;
+                                        if (selectType.options[indexSelectedType].text == "默认") {
+                                            srcCell.innerHTML = "字符串";
+                                        }
+                                        indexSelectedType = undefined;
+                                    }
+                                    selectType.selectedIndex = 0;
+                                    selectDiv.style.display = "none";
+                                };
+                                break;
+                            }
+                        case 0:
+                            {
+                                textDiv.style.display = "";
+                                text.focus();
+                                textDiv.style.left = x;
+                                textDiv.style.top = y;
+                                text.style.width = width;
+                                text.style.height = height;
+                                text.value = srcCell.innerHTML;
+                                text.onblur = function () {
+                                    if (text.getAttribute('value') != null) {
+                                        srcCell.innerHTML = text.getAttribute('value');
+                                    } else {
+                                        srcCell.innerHTML = "";
+                                    }
+                                    textDiv.style.display = "none";
+                                };
+                                break;
+                            }
+                    }
+                };
+            } else {
+                nowTr = srcCell;
+            }
+            if (nowTr.nodeName.toLocaleLowerCase() == "tr") {
+                nowTr.setAttribute("id", "selected");
+                nowTr.bgColor = "#c8d9f0";
+            }
+        }
+        //上移参数
+        function argsUP() {
+            var oTr = document.getElementById("selected");
+            var i = oTr.rowIndex; //行索引号
+            var oTb = oTr.parentNode.parentNode;
+            if (i != 1) {
+                var preOTr = oTb.rows[i - 1];
+                oTr.swapNode(preOTr);
+            }
+
+        }
+        //下移参数
+        function argsDown() {
+            var oTr = document.getElementById("selected");
+            var i = oTr.rowIndex; //行索引号
+            var oTb = oTr.parentNode.parentNode;
+            if (i != oTb.rows.length - 1) {
+                var preOTr = oTb.rows[i + 1];
+                oTr.swapNode(preOTr);
+            }
+        }
+        //数据提交
+        function submitDs() {
+            var sSaveXml = null;
+            var oTrList = argsSetTb.rows;
+            if (dsName.value == "") {
+                alert("数据集名不能为空！");
+                return;
+            }
+            if (ClassMessage.value == "") {
+                alert("请选择自定义数据集！");
+                return;
+            }
+            if (upIframe.window.upCustomClass.upFileText.value == "") {
+                alert("请选择上传类！");
+                return;
+            }
+
+            var nowDate = new Date();
+            upIframe.window.upCustomClass.classFileName.value = oldFileName.value;
+            var dateTime = "-" + nowDate.getYear() + "" + (nowDate.getMonth() + 1) + "" + nowDate.getDate() + "" + nowDate.getHours() + "" + nowDate.getMinutes() + "" + nowDate.getSeconds();
+            iframeNewName.value = oldFileName.value = ClassMessage.value.replace(/(?=\-).*(?=\.dll)/ig, dateTime);
+            upIframe.window.upCustomClass.newClassFileName.value = iframeNewName.value;
+            upIframe.window.upCustomClass.submit();
+            if (OperationSign.value == "edit") {//更新
+                sSaveXml = new StringBuilder('<Operation ParamType="SaveDatabase" OperationSign="edit">');
+            } else {//保存
+                sSaveXml = new StringBuilder('<Operation ParamType="SaveDatabase" OperationSign="add">');
+            }
+            sSaveXml.append('<DataSet DsId="' + dsId + '" Name ="' + dsName.value + '" Type="1"  ClassFullName="' + iframeNewName.value + '">');
+            for (var i = 1; i < oTrList.length; i++) {
+                oTr = oTrList[i];
+                sSaveXml.append('<DsArg Name ="' + oTr.cells[0].innerText + '" Value="' + sArgsToEnum(oTr.cells[1].innerText) + '"/>');
+            }
+            sSaveXml.append('</DataSet>');
+            sSaveXml.append('</Operation>');
+            var xmlDoc = CreateBaseXmlDoc(sSaveXml.toString()); //创建DOM
+
+            var Ajax = new AjaxHandler();
+            var callback = {
+                success: function (xhr) {
+                    var returnMessage = xhr.responseXML.selectSingleNode("RAD/Doc/Data/Message").attributes.getNamedItem("value").value;
+                    if (dsId == "") {
+                        dsId = xhr.responseXML.selectSingleNode("RAD/Doc/Data/Message").attributes.getNamedItem("DsId").value;
+                        OperationSign.value = "edit";
+                        upIframe.window.loadClassFile.href = "../customClass/" + escape(oldFileName.value);
+                        upIframe.window.loadClassFile.innerHTML = "下载已上传类";
+                    }
+                    if (parent.dslist != null) {
+                        parent.dslist.location = encodeURI("datasetList.htm?DsId=" + dsId);
+                        alert(returnMessage);
+                    } else {
+                        alert(returnMessage);
+                        window.close();
+                    }
+                },
+                failure: function (xhr) {
+                    alert('Failure: ' + xhr.status);
+                }
+            };
+            Ajax.request("post", "../common/RptDSAjax.aspx", false, callback, xmlDoc);
+        }
+
+        function closeDsSet() {
+            parent.window.close();
+        }
+
+        function checkClass() {
+            var regExp = /[.]+/g;
+            if (regExp.test(Class.value)) {
+                ClassMessage.style.color = "gray";
+            } else {
+                ClassMessage.style.color = "red";
+            }
+        }
+
+        function changeTitle() {
+            ClassMessage.title = ClassMessage.value;
+        }
+    </script>
+</body>
+</html>

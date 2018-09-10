@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+    <title>报表属性页</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+    <link rel="Stylesheet" type="text/css" href="../ext/resources/css/ext-all.css" />
+    <link rel="Stylesheet" type="text/css" href="../ext/resources/css/xtheme-gray.css" />
+    <link rel="Stylesheet" type="text/css" href="../ext/resources/css/tabs.css" />
+    <script type="text/javascript" src="../js/attribute.js"></script>
+    <script type="text/javascript">
+        var obj = window.dialogArguments;       //获取父窗口传过来的参数
+        var table = null;                       //前台的报表对象
+
+        if (obj != undefined)
+            table = obj.document.getElementById("tbData");      //获得报表对象
+
+        function _start() {
+
+            if (isEmpty(table.ClientId)) {
+                textClientId.value = "";
+            }
+            else {
+                textClientId.value = table.ClientId;
+            }
+            if (isEmpty(table.ChineseName)) {
+                textChineseName.value = "";
+            }
+            else {
+                textChineseName.value = table.ChineseName;
+            }
+        }
+        function ok() {
+            table.setAttribute("ClientId", textClientId.value);
+            table.setAttribute("ChineseName", textChineseName.value);
+            window.returnValue = true;
+            window.close();
+        }
+        function submit() {             //按enter键提交
+            if (event.keyCode == 13) {
+                ok();
+            }
+        }
+    </script>
+    <style type="text/css">
+        .x-tab-panel-body .x-panel-body 
+        {
+            padding:10px;
+        }
+        .style1
+        {
+            width: 83px;
+        }
+        #textClientId
+        {
+            width: 116px;
+        }
+        #textChineseName
+        {
+            width: 116px;
+        }
+    </style>
+</head>
+<body  onload="_start()" onkeydown="submit();">
+<div id="tabs">
+    <div id="ab" class="x-hide-display">
+    <table style="font-size: 12px;width:100%;">
+        <tr>
+            <td class="style1">
+                报表编号:
+            </td>
+            <td>
+                <input type="text" id="textClientId" onkeydown="submit();"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="style1">
+                文件名称:</td>
+            <td>
+                <input type="text" id="textChineseName" onkeydown="submit();"/>
+            </td>
+        </tr>
+    </table>
+    </div>
+</div>
+<!-- 按钮区域 -->
+    <div id="buttons" style="text-align:right;">
+        <table>
+            <tr>
+                <td style="padding-right:20px;">
+                    <!-- 确定按钮 -->
+                    <button id="cmdOk" style="display: block; font-size: 12px; width: 65px;height: 21px; background-color: #ffffff; border-style:none; border:0px;background-image:url(../skins/blue/img/button_ok.gif);" onclick="ok()">
+                    </button>
+                </td>
+                <td style="padding-right:20px;">
+                    <!-- 取消按钮 -->
+                    <button id="cmdClose" style="display: block; font-size: 12px; width: 65px;height: 21px; background-color: #ffffff; border-style:none; border:0px; background-image:url(../skins/blue/img/button_close.gif);" onclick="closeWin()">
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+<script type="text/javascript" src="../ext/adapter/ext/ext-base.js"></script>
+<script type="text/javascript" src="../ext/ext-all.js"></script>
+<script type="text/javascript">
+    Ext.onReady(function () {
+        var tabs = new Ext.TabPanel({
+            renderTo: 'tabs',
+            width: "100%",
+            height: ChangeTabsSize(),
+            activeTab: 0,
+            frame: true,
+            defaults: { autoHeight: true },
+            items: [
+                    { contentEl: 'ab', title: '  属性  ' }
+                ]
+        });
+    });
+
+    //改变TAB的样式
+    function ChangeTabsSize() {
+        var PageWidth = document.body.clientWidth;
+        var PageHeight = document.body.clientHeight;
+        var ButtonsHeight = document.getElementById("buttons").offsetHeight;
+        var TabsHeight = PageHeight - ButtonsHeight - 10;
+        return TabsHeight;
+    }
+</script>
+</html>

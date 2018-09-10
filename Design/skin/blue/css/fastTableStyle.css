@@ -1,0 +1,430 @@
+﻿/************ 默认快速表格样式 ***************/
+.Default_Table
+{
+	border-width:1px;
+	border-style:solid;
+	border-color:Gray;
+	width:300px;
+	height:70px;
+}
+
+/************ 纯净表格样式 ***************/
+.Purity_Table
+{
+    border-width:0px;
+	border-style:solid;
+	width:300px;
+	height:70px;
+}
+
+/**************** 白色表格样式 ***************/
+.White_Table
+{
+	border-top-color:#FFFFFF;
+	border-left-color:#FFFFFF;
+	border-right-color:#FFFFFF;
+	border-right-style:solid;
+	border-left-style:solid;
+	border-top-style:solid;
+	border-width:1px;
+	width:300px;
+	height:70px;
+}
+
+/**************** 蓝白间隔表格样式 ***************/
+.Azure_White_Table
+{
+	border-bottom-color:#4bacc6;
+	border-top-color:#4bacc6;
+	border-bottom-style:solid;
+	border-top-style:solid;
+	border-width:1px;
+	width:300px;
+	height:70px;
+}
+
+.Azure_White_Table_N1
+{
+	border-left-color:#4f81bd;
+	border-top-color:#4f81bd;
+	border-left-style:solid;
+	border-top-style:solid;
+	border-width:1px;
+	width:300px;
+	height:70px;
+}
+
+.Blue_White_Table_N1
+{
+	border-left-color:#3ea5cc;
+	border-top-color:#3ea5cc;
+	border-left-style:solid;
+	border-top-style:solid;
+	border-width:1px;
+	width:300px;
+	height:70px;
+}
+
+.Blue_White_Table_N2
+{
+	border-left-color:#4bacc6;
+	border-top-color:#4bacc6;
+	border-left-style:solid;
+	border-top-style:solid;
+	border-width:1px;
+	width:300px;
+	height:70px;
+}
+
+/**************** 红白间隔表格样式 ***************/
+.Pink_White_Table
+{
+	border-bottom-color:#c0504d;
+	border-top-color:#c0504d;
+	border-bottom-style:solid;
+	border-top-style:solid;
+	border-width:1px;
+	width:300px;
+	height:70px;
+}
+
+.Pink_White_Table_N1
+{
+	border-left-color:#c0504d;
+	border-top-color:#c0504d;
+	border-top-style:solid;
+	border-left-style:solid;
+	border-width:1px;
+	width:300px;
+	height:70px;
+	
+}
+
+/**************** 灰白间隔表格样式 ***************/
+.Gray_White_Table
+{
+	border-bottom-color:#000000;
+	border-top-color:#000000;
+	border-bottom-style:solid;
+	border-top-style:solid;
+	border-width:1px;
+	width:300px;
+	height:70px;
+}
+
+/**************** 紫白间隔表格样式 ***************/
+.Lilac_White_Table
+{
+	border-bottom-color:#8064a2;
+	border-top-color:#8064a2;
+	border-bottom-style:solid;
+	border-top-style:solid;
+	border-width:1px;
+	width:300px;
+	height:70px;
+}
+
+/**************** 绿白间隔表格样式 ***************/
+.Celadon_White_Table
+{
+	border-bottom-color:#9bbb59;
+	border-top-color:#9bbb59;
+	border-bottom-style:solid;
+	border-top-style:solid;
+	border-width:1px;
+	width:300px;
+	height:70px;
+}
+
+/**************** 红色边框表格样式 ***************/
+.RedBorder_Table
+{
+    border-left-color:Red;
+	border-top-color:Red;
+	border-left-style:solid;
+	border-top-style:solid;
+	border-width:1px;
+	width:300px;
+	height:70px;
+}
+
+/************** 默认TD样式 ****************/
+.Default_Td
+{
+	border-width:1px;
+	border-style:solid;
+	border-color:Gray;
+}
+
+/************** 纯净 ****************/
+.Purity_Td
+{
+	border-width:0px;
+	border-style:solid;
+}
+
+/*************** 天蓝色TD样式 **************/
+.Azure_Td_N1
+{
+	background-color:#d2eaf1;
+	border-style:solid;
+	border-width:0px;
+}
+
+.Azure_Td_N2
+{
+	background-color:#d3dfee;
+	border-bottom-style:solid;
+	border-bottom-color:#4f81bd;
+	border-right-style:solid;
+	border-right-color:#4f81bd;	
+	border-width:1px;
+}
+
+.Azure_Td_N3
+{
+	background-color:#dbe5f1;
+	border-bottom-style:solid;
+	border-bottom-color:#FFFFFF;
+	border-bottom-width:1px;
+}
+
+.Azure_Td_N4
+{
+	background-color:#a7bfde;
+	border-bottom-style:solid;
+	border-bottom-color:#FFFFFF;
+	border-bottom-width:1px;
+}
+
+.Azure_Td_N5
+{
+	background-color:#a5d5e2;
+	border-bottom-style:solid;
+	border-bottom-color:#4bacc6;
+	border-right-style:solid;
+	border-right-color:#4bacc6;
+	border-right-width:1px;
+	border-bottom-width:1px;
+}
+
+.Azure_Td_N6
+{
+	background-color:#ddf3fa;
+	border-bottom-style:solid;
+	border-bottom-color:#4bacc6;
+	border-right-style:solid;
+	border-right-color:#4bacc6;
+	border-right-width:1px;
+	border-bottom-width:1px;
+}
+
+/*************** 粉红色TD样式 **************/
+.Pink_Td_N1
+{
+	background-color:#efd3d2;
+	border-style:solid;
+	border-width:0px;
+}
+
+.Pink_Td_N2
+{
+	background-color:#efd3d2;
+	border-bottom-style:solid;
+	border-bottom-color:#c0504d;
+	border-right-style:solid;
+	border-right-color:#c0504d;	
+	border-width:1px;
+}
+
+/*************** 灰色TD样式 **************/
+.Gray_Td_N1
+{
+	background-color:#c0c0c0;
+	border-style:solid;
+	border-width:0px;
+}
+
+/*************** 淡紫色TD样式 **************/
+.Lilac_Td_N1
+{
+	background-color:#dfd8e8;
+	border-style:solid;
+	border-width:0px;
+}
+
+/**************** 白色TD样式 *****************/
+.White_Td_N1
+{
+	background-color:White;
+	border-style:solid;
+	border-width:0px;
+}
+
+.White_Td_N2
+{
+	background-color:White;
+	border-bottom-style:solid;
+	border-bottom-color:#c0504d;
+	border-right-style:solid;
+	border-right-color:#c0504d;
+	border-width:1px;
+}
+
+.White_Td_N3
+{
+	background-color:White;
+	border-bottom-style:solid;
+	border-bottom-color:#4f81bd;
+	border-right-style:solid;
+	border-right-color:#4f81bd;
+	border-width:1px;
+}
+
+.White_Td_N4
+{
+	background-color:White;
+	border-bottom-style:solid;
+	border-bottom-color:#3ea5cc;
+	border-right-style:solid;
+	border-right-color:#3ea5cc;
+	border-width:1px;
+}
+
+/***************** 红色边框TD ******************/
+.RedBorder_Td_N1
+{
+	background-color:White;
+	border-bottom-style:solid;
+	border-bottom-color:Red;
+	border-right-style:solid;
+	border-right-color:Red;
+	border-width:1px;
+}
+
+/**************** 灰绿色TD样式 *****************/
+.Celadon_Td_N1
+{
+	background-color:#e6eed5;
+	border-style:solid;
+	border-width:0px;
+}
+
+
+.Pink_Top_Th_N1
+{
+	background-color:White;
+	border-bottom-style:solid;
+	border-bottom-color:#c0504d;
+	border-right-style:solid;
+	border-right-color:#c0504d;
+	border-bottom-width:3px;
+	border-right-width:1px;
+	font-weight:bold;
+}
+
+.Azure_Top_Th_N1
+{
+	background-color:White;
+	border-bottom-style:solid;
+	border-bottom-color:#4f81bd;
+	border-right-style:solid;
+	border-right-color:#4f81bd;
+	border-bottom-width:3px;
+	border-right-width:1px;
+	font-weight:bold;
+}
+
+.Blue_Left_Th_N1
+{
+	background-color:#365f91;
+	border-bottom-style:solid;
+	border-bottom-color:#FFFFFF;
+	border-bottom-width:1px;
+	font-weight:bold;
+}
+
+.Blue_Left_Th_N2
+{
+	background-color:#3ea5cc;
+	padding:1px;
+	font-weight:bold;
+}
+
+.Blue_Left_Th_N3
+{
+	background-color:#60c7e3;
+	border-bottom-style:solid;
+	border-bottom-color:#4bacc6;
+	border-right-style:solid;
+	border-right-color:#4bacc6;
+	border-bottom-width:1px;
+	border-right-width:1px;
+	font-weight:bold;
+}
+
+.CustomTab
+{
+    border-left:1px solid #cde0e6;
+    border-top:1px solid #cde0e6;
+}
+
+/* -----------页面主标题样式----------------------- */
+.MainTitle{
+	padding-left:20px;
+	padding-top:5px;
+	font-size:18px; 
+	font-weight:bold; 
+	color:#01118a; 
+	line-height:20px; 
+	border-bottom:2px solid #CC0033;
+}
+
+/* -----------表单样式----------------------- */
+.ListTb{ margin-top:5px; border:1px solid #d1dfea;}
+
+/* -----------表单标题样式----------------------- */
+.ListTitle{
+	background:url(../Images/Pic_titleBg.jpg) repeat-x; 
+	height:22px;
+	padding-left:20px;
+	padding-top:4px;
+	font-size:14px;
+	color:#333;
+	border-bottom:1px solid #d1dfea;
+}
+.ListTitleB{
+	background:url(../Images/Pic_titleBg2.jpg) repeat-x; 
+	border-bottom:1px solid #cde0e6;
+	border-right:1px solid #cde0e6;
+	font-size:12px;
+	color:#2772a9;
+	line-height:29px;
+}
+/* -----------表格样式----------------------- */
+.tdA{
+	background-color:#f1f8fe;
+	border-bottom:1px solid #cde0e6;
+	border-right:1px solid #cde0e6;
+	font-size:12px;
+	color:#333;
+	line-height:25px;
+}
+
+.tdB{
+	background-color:#fbfcff;
+	border-bottom:1px solid #cde0e6;
+	border-right:1px solid #cde0e6;
+	font-size:12px;
+	color:#333;
+	line-height:25px;
+}
+
+.tdC{
+	background-color:#78b7e3;
+	border-bottom:1px solid #cde0e6;
+	border-right:1px solid #cde0e6;
+	font-size:12px;
+	color:#333;
+	line-height:25px;
+}

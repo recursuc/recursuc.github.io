@@ -1,0 +1,542 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <style type="text/css">
+        body
+        {
+            background-color: #213352;
+            margin: 0px;
+        }
+        table
+        {
+            font-size: 12px;
+            text-align: center;
+            width: 100%;
+        }
+        #selected
+        {
+            color: red;
+        }
+        
+        #dsList tr
+        {
+            text-align: left;
+        }
+        .buttoncss
+        {
+            color: #000000 !important;
+            box-shadow: inset 0px 0.3em 0.3em rgba(255,254,255,0.6), inset 0px -0.1em 0.3em rgba(0,0,0,0.15), 0px 0.1em 3px hsl(208,50%,55%), 0px 0.2em 1px hsl(208,50%,40%), 0px 0.5em 5px rgba(0,0,0,0.2);
+            background-color: hsl(200, 90%, 85%);
+            border-top-left-radius: 0.5em 1em;
+            border-top-right-radius: 0.5em 1em;
+            border-bottom-left-radius: 0.5em 1em;
+            border-bottom-right-radius: 0.5em 1em;
+            cursor: pointer;
+        }
+        .buttoncss:hover
+        {
+            background-color: #73B0E5;
+            cursor: pointer;
+        }
+        .oddtr
+        {
+            background-color: #FCFCFC;
+        }
+        #dsList Td
+        {
+            border-right: #E7E7E7 1px solid;
+            border-bottom: #E7E7E7 1px solid;
+        }
+        .evendivunselect
+        {
+            background: url("../images/datasetarrow1.png") no-repeat;
+            background-color: #EBF5FE;
+            margin-bottom: 1px;
+            display: block;
+            border: #BEE0F9 1px solid;
+            text-align: left;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .evendivselect
+        {
+            background: url("../images/datasetarrow.png") no-repeat;
+            margin-bottom: 1px;
+            display: block;
+            border: #E5C365 1px solid;
+            text-align: left;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            background-color: #FFE8A6;
+        }
+    </style>
+</head>
+<body>
+    <div id="dsList" style="width: 196px; height: 543px; background-color: White; margin: 0;">
+        <!--表单数据集-->
+        <div id="FormSelect" class="evendivselect" onclick="showDsList(event)">
+            <span style="padding-left: 1em;"></span>表单数据集
+        </div>
+        <div id="FormDsDiv" style="display: ''; overflow-y: auto; height: 455px;">
+            <table id="FormDsTb" onmouseover="mouseoverEvent(event)" onmouseout="mouseoutEvent(event)"
+                onclick="viewDsInfo(event)">
+            </table>
+        </div>
+        <!--Sql数据集-->
+        <div id="SqlSelect" class="evendivunselect" onclick="showDsList(event)">
+            <span style="padding-left: 1em;"></span>Sql数据集
+        </div>
+        <div id="SqlDsDiv" style="display: none; overflow-y: auto; height: 455px;">
+            <table id="SqlDsTb" onmouseover="mouseoverEvent(event)" onmouseout="mouseoutEvent(event)"
+                onclick="viewDsInfo(event)">
+            </table>
+        </div>
+        <!--自定义数据集-->
+        <div id="CustomSelect" class="evendivunselect" onclick="showDsList(event)">
+            <span style="padding-left: 1em;"></span>自定义数据集
+        </div>
+        <div id="CustomDsDiv" style="display: none; overflow-y: auto; height: 455px;">
+            <table id="CustomDsTb" onmouseover="mouseoverEvent(event)" onmouseout="mouseoutEvent(event)"
+                onclick="viewDsInfo(event)">
+            </table>
+        </div>
+        <!--内建数据集-->
+        <div id="BuildInSelect" class="evendivunselect" onclick="showDsList(event)">
+            <span style="padding-left: 1em;"></span>内建数据集
+        </div>
+        <div id="BuildInDsDiv" style="display: none; overflow-y: auto; height: 455px; font-weight: bold;">
+            <table id="BuildInDsTb" onmouseover="mouseoverEvent(event)" onmouseout="mouseoutEvent(event)"
+                onclick="viewDsInfo(event)">
+            </table>
+        </div>
+        <!--XML数据集-->
+        <div id="XmlSelect" class="evendivunselect" onclick="showDsList(event)">
+            <span style="padding-left: 1em;"></span>XML数据集
+        </div>
+        <div id="XmlDsDiv" style="display: none; overflow-y: auto; height: 455px;">
+            <table id="XmlDsTb" onmouseover="mouseoverEvent(event)" onmouseout="mouseoutEvent(event)"
+                onclick="viewDsInfo(event)">
+            </table>
+        </div>
+    </div>
+    <input type="button" value="引用" onclick="SubmitDataset()" class="buttoncss" style="margin-left: 18px;
+        margin-top: 8px;" />
+    <input type="button" value="添加" onclick="AddDataSet()" class="buttoncss" />
+    <input type="button" value="取消" onclick="javascript: parent.window.close()" class="buttoncss" />
+    <script src="../../../sfk/sfk.js" type="text/javascript"></script>
+    <script src="../datasource.js" type="text/javascript"></script>
+    <script src="../../../../publicJS/jquery/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="../../../../publicJS/customDialog/lhgdialog.js" type="text/javascript"></script>
+    <script src="../../../../publicJS/customDialog/showModalDialog.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var oSelecteId = "";
+        var arrSelectedDataset = [];
+        window.onload = function () {
+            var dsId = $U.params["dsid"];
+            if (dsId != undefined && dsId != "") {
+                oSelecteId = dsId;
+            }
+            if ($(window)[0].parent.oDataSource != null) {
+                for (var i = 0, len = $(window)[0].parent.oDataSource.DataSets.length; i < len; i++) {
+                    arrSelectedDataset.push($(window)[0].parent.oDataSource.DataSets[i].Name);
+                }
+            }
+
+            var xmlDoc = $X.createBase('<Operation ParamType="GetAllDataSet" value=""/>');
+            $R({
+                type: "post",
+                url: "datasourceAction!getAllDataSet",
+                async: false,
+                success: function (xhr) {
+                    var returnAjaxValue = xhr.responseXML.selectSingleNode("RAD/Doc/Data/Message").attributes.getNamedItem("value").value;
+                    if (returnAjaxValue != "操作成功") {
+                        alert(returnAjaxValue);
+                    } else {
+                        var oDsTb = xhr.responseXML.selectSingleNode("RAD/Doc/Data/Table");
+                        //处理返回的数据
+                        for (var i = 0; i < oDsTb.childNodes.length; i++) {
+                            if (oDsTb.childNodes[i].nodeType == "1") {
+                                for (var j = 0, len = oDsTb.childNodes[i].childNodes.length; j < len; j++) {
+                                    if (oDsTb.childNodes[i].childNodes[j].nodeType == "1") {
+                                        addDsToInclude(oDsTb.childNodes[i].childNodes[j]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                error: function (xhr) {
+                    alert('Failure: ' + xhr.status);
+                },
+                data: xmlDoc
+            });
+            $("#dsList Div:odd Tr:odd").addClass("oddtr");
+
+        };
+        $(document).ready(function () {
+            $("#SqlSelect,#CustomSelect,#BuildInSelect,#XmlSelect").bind("click", function () { $(this).toggleClass("evendivselect").siblings().removeClass("evendivselect"); $("#FormSelect").addClass("evendivunselect"); });
+            $("#FormSelect").bind("click", function () { $(this).toggleClass("evendivselect").addClass("evendivunselect").siblings().removeClass("evendivselect"); });
+        });
+
+        //查看数据集
+        function viewDsInfo(e) {
+            var evt = e || window.event;
+            var oSrc = evt.target || evt.srcElement;
+            if (oSrc.nodeName.toLocaleLowerCase() == "td") {
+                var selectTd = document.getElementById("selected");
+                if (selectTd != null) selectTd.setAttribute("id", "");
+                oSrc.setAttribute("id", "selected");
+                //                if (oSrc.attributes["ConnString"].value) {
+                //                    //var aConnstring = oSrc.attributes["ConnString"].value.match(/(=\w*\;)|(=(\d*.*);)/g);
+                //                    if (oSrc.attributes["ConnString"].value.search("Data Source") != -1) {
+                //                        oSrc.attributes["ConnString"].value = "Data Source" + aConnstring[0] + ";User Id" + aConnstring[1] + ";password" + aConnstring[2];  //a=password; b=Data Source; c=User Id
+                //                    }
+                //                    else
+                //                        oSrc.attributes["ConnString"].value = "server" + aConnstring[3] + ";database" + aConnstring[0] + ";uid" + aConnstring[1] + ";pwd" + aConnstring[2]  ;  //d=pwd; b=database;c=uid;e=server
+                //                }
+                //                else {
+                //                    oSrc.ConnString = "";
+                //                }
+                switch (oSrc.attributes["Type"].value) {
+                    case '0':
+                        {
+                            parent.dsSet.location = "datasetSet.htm?DsId=" + oSrc.attributes["dsId"].value + "&DataTablePrefix=" + oSrc.attributes["DataTablePrefix"].value + "&CurDC=" + oSrc.attributes["ConnString"].value;
+                            break;
+                        }
+                    case '1':
+                        {
+                            parent.dsSet.location = "customDsSet.htm?DsId=" + oSrc.attributes["dsId"].value;
+                            break;
+                        }
+                    case '2':
+                        {
+                            parent.dsSet.location = "buildInDsSet.htm?DsId=" + oSrc.attributes["dsId"].value;
+                            break;
+                        }
+                    case '3':
+                        {
+                            parent.dsSet.location = "xmlDsSet.htm?DsId=" + oSrc.attributes["dsId"].value;
+                            break;
+                        }
+                    case '4':
+                        {
+                            parent.dsSet.location = "formDataset.htm?DsId=" + oSrc.attributes["dsId"].value + "&DataTablePrefix=" + oSrc.attributes["DataTablePrefix"].value + "&CurDC=" + oSrc.attributes["ConnString"].value;
+                            break;
+                        }
+                }
+            }
+
+        }
+
+        function SubmitDataset() {
+            var oDsList = document.getElementById("selected");
+            var oDataSource = parent.window.oDataSource;
+            if (oDsList) {
+                var bIsExist = false;
+                for (var j = 0; j < oDataSource.DataSets.length; j++) {
+                    if (oDsList.innerText == oDataSource.DataSets[j].Name) {
+//                        oDataSource.DataSets[j].DbId = oDsList.dsId;
+//                        oDataSource.DataSets[j].Name = oDsList.innerText;
+//                        oDataSource.DataSets[j].Type = oDsList.Type;
+//                        oDataSource.DataSets[j].State = oDsList.State;
+//                        oDataSource.DataSets[j].ConnString = oDsList.ConnString;
+//                        oDataSource.DataSets[j].DataTablePrefix = oDsList.DataTablePrefix;
+                        bIsExist = true;
+                        alert("此数据集已经引用!");
+                        return;
+                    }
+                }
+                if (!bIsExist) {
+                    //                    var ds = new DataSet();
+                    //                    ds.DbId = oDsList.getAttribute("dsId");
+                    //                    ds.Name = oDsList.innerText;
+                    //                    ds.Type = oDsList.getAttribute("Type");
+                    //                    ds.State = oDsList.getAttribute("State");
+                    //                    ds.ConnString = oDsList.getAttribute("ConnString");
+                    //                    ds.DataTablePrefix = oDsList.getAttribute("DataTablePrefix");
+                    //                    oDataSource.DataSets.push(ds);
+
+                    parent.window.oDataSet.Type = oDsList.getAttribute("Type");
+                    oDataSource.DataSets.push(parent.window.oDataSet);
+
+                    alert("引用添加成功！");
+                    parent.window.close();
+                }
+            } else {
+                alert("请先选择数据集！");
+            }
+        }
+
+        function AddDataSet() {
+            var doc = document;
+            var SqlDsDiv = doc.getElementById("SqlDsDiv");
+            var CustomDsDiv = doc.getElementById("CustomDsDiv");
+            var BuildInDsDiv = doc.getElementById("BuildInDsDiv");
+            var XmlDsDiv = doc.getElementById("XmlDsDiv");
+            var FormDsDiv = doc.getElementById("FormDsDiv");
+            if (FormDsDiv.style.display == "") {
+                if (parent.document.getElementById("dsSet").name != "dsSet") {
+                    if (confirm("您当前的数据集还没保存，确定重新添加吗？")) {
+                        /* window.showCustomDialog("DataSource/attribute/dataSourceChange.htm", null, "dialogWidth:335px;dialogHeight:312px;overparent=yes;resizable:no;cover:yes;id=addDs;title:新增数据源", null, function (conn) {
+                            if (conn) {
+                                if (window.confirm("您配置数据库连接是" + conn.split(';').splice(0, 2).join(';') + ";")) {
+                                    parent.dsSet.location = "formDataset.htm?DsId=&CurDC=" + $U.encode(conn);
+                                }
+                            } else {
+                                alert("您还没有配置数据库连接");
+                            }
+                        }); */
+                        var selectTd = document.getElementById("selected");
+                        selectTd && selectTd.setAttribute("id", "");
+                    	parent.dsSet.location = "formDataset.htm?DsId=";
+                    }
+                }
+                else {
+                    /* window.showCustomDialog("DataSource/attribute/dataSourceChange.htm", null, "dialogWidth:335px;dialogHeight:300px;overparent=yes;resizable:no;cover:yes;id=addDs;title:新增数据源", null, function (conn) {
+                        if (conn) {
+                            if (window.confirm("您配置的数据库连接是" + conn.split(';').splice(0, 2).join(';') + ";")) {
+                                //parent.document.getElementById("dsSet").name = "dsSet_second";
+                                parent.dsSet.location = "formDataset.htm?DsId=&CurDC=" + $U.encode(conn);
+                            }
+                        }
+                    }); */
+                    var selectTd = document.getElementById("selected");
+                    selectTd && selectTd.setAttribute("id", "");
+                	parent.dsSet.location = "formDataset.htm?DsId=";
+                }
+            } else if (SqlDsDiv.style.display == "") {
+                if (parent.document.getElementById("dsSet").name != "dsSet") {
+                    if (confirm("您当前的数据集还没保存，确定重新添加吗？")) {
+                        /* window.showCustomDialog("DataSource/attribute/dataSourceChange.htm", null, "dialogWidth:335px;dialogHeight:300px;overparent=yes;resizable:no;cover:yes;id=addDs;title:新增数据源", null, function (conn) {
+                            if (conn) {
+                                if (window.confirm("您配置数据库连接是" + conn.split(';').splice(0, 2).join(';') + ";")) {
+                                    parent.dsSet.location = "datasetSet.htm?DsId=&CurDC=" + $U.encode(conn);
+                                }
+                            } else {
+                                alert("您还没有配置数据库连接");
+                            }
+                        }); */
+                        var selectTd = document.getElementById("selected");
+                        selectTd && selectTd.setAttribute("id", "");
+                        parent.dsSet.location = "datasetSet.htm?DsId=";
+                    }
+                }
+                else {
+                    /* window.showCustomDialog("DataSource/attribute/dataSourceChange.htm", null, "dialogWidth:335px;dialogHeight:312px;overparent=yes;resizable:no;cover:yes;id=addDs;title:新增数据源", null, function (conn) {
+                        if (conn) {
+                            if (window.confirm("您配置的数据库连接是" + conn.split(';').splice(0, 2).join(';') + ";")) {
+                                //parent.document.getElementById("dsSet").name = "dsSet_second";
+                                parent.dsSet.location = "datasetSet.htm?DsId=&CurDC=" + $U.encode(conn);
+                            }
+                        }
+                    }); */
+                    var selectTd = document.getElementById("selected");
+                    selectTd && selectTd.setAttribute("id", "");
+                	parent.dsSet.location = "datasetSet.htm?DsId=";
+                }
+            } else if (CustomDsDiv.style.display == "") {
+                parent.dsSet.location = "customDsSet.htm?DsId=";
+            } else if (BuildInDsDiv.style.display == "") {
+                parent.dsSet.location = "buildInDsSet.htm?DsId=";
+            } else if (XmlDsDiv.style.display == "") {
+                parent.dsSet.location = "xmlDsSet.htm?DsId=";
+            } else {
+                parent.dsSet.location = "datasetSet.htm?DsId=";
+            }
+        }
+
+        function addDsToInclude(oSrc) {
+            var oTr = null;
+            var showKey = false;
+            if (oSrc.getAttribute("Id") != "" && oSrc.getAttribute("Id") == oSelecteId) {
+                showKey = true;
+            }
+            var dsType = oSrc.getAttribute("Type");
+            switch (dsType) {
+                case "0": //SQL数据集类型
+                    {
+                        oTr = SqlDsTb.insertRow(SqlDsTb.rows.length);
+                        if (showKey) {
+                            SqlDsDiv.style.display = "";
+                            FormDsDiv.style.display = "none";
+                        }
+                        break;
+                    }
+                case "1": //自定义数据集类型
+                    {
+                        oTr = CustomDsTb.insertRow(CustomDsTb.rows.length);
+                        if (showKey) {
+                            CustomDsDiv.style.display = "";
+                            SqlDsDiv.style.display = "none";
+                        }
+                        break;
+                    }
+                case "2": //内建数据集类型
+                    {
+                        oTr = BuildInDsTb.insertRow(BuildInDsTb.rows.length);
+                        if (showKey) {
+                            BuildInDsDiv.style.display = "";
+                            SqlDsDiv.style.display = "none";
+                        }
+                        break;
+                    }
+                case "3": //XML数据集类型
+                    {
+                        oTr = XmlDsTb.insertRow(XmlDsTb.rows.length);
+                        if (showKey) {
+                            XmlDsDiv.style.display = "";
+                            SqlDsDiv.style.display = "none";
+                        }
+                        break;
+                    }
+                case "4": //Form数据集类型
+                    {
+                        oTr = FormDsTb.insertRow(FormDsTb.rows.length);
+                        if (showKey) {
+                            FormDsDiv.style.display = "";
+                            FormDsDiv.style.display = "none";
+                        }
+                        break;
+                    }
+            }
+            var oTd1 = oTr.insertCell(oTr.cells.length);
+            oTd1.setAttribute("style", "background:url(../images/dataset.png) no-repeat;width:20px;");
+            var oTd = oTr.insertCell(oTr.cells.length);
+            for (var i = 0; i < arrSelectedDataset.length; i++) {
+                if (oSrc.text == arrSelectedDataset[i])
+                    oTd.setAttribute("style", "color:#CC0099;font-weight: 700;");
+            }
+            oTd.setAttribute("Type", oSrc.getAttribute("Type"));
+            oTd.setAttribute("dsId", oSrc.getAttribute("Id"));
+            oTd.setAttribute("Value", oSrc.getAttribute("Value"));
+            oTd.setAttribute("State", oSrc.getAttribute("State"));
+            oTd.setAttribute("DataTablePrefix", oSrc.getAttribute("DataTablePrefix"));
+            oTd.setAttribute("Memo", oSrc.getAttribute("Memo"));
+            oTd.setAttribute("ClassFullName", oSrc.getAttribute("ClassFullName"));
+            oTd.setAttribute("ConnString", oSrc.getAttribute("ConnString"));
+            oTd.innerHTML = oSrc.text;
+            if (showKey) {
+                oTd.setAttribute("id", "selected");
+            }
+        }
+
+        function showDsList(e) {//isShowDSSet
+            var evt = e || window.event;
+            var eSrc = evt.target || evt.srcElement;
+            var divId = eSrc.id;
+            var doc = document;
+            var SqlDsDiv = doc.getElementById("SqlDsDiv");
+            var CustomDsDiv = doc.getElementById("CustomDsDiv");
+            var BuildInDsDiv = doc.getElementById("BuildInDsDiv");
+            var XmlDsDiv = doc.getElementById("XmlDsDiv");
+            var FormDsDiv = doc.getElementById("FormDsDiv");
+
+            switch (divId) {
+                case "SqlSelect":
+                    {
+                        if (SqlDsDiv.style.display == "") {
+                            SqlDsDiv.style.display = "none";
+                        } else {
+                            SqlDsDiv.style.display = "";
+                        }
+                        CustomDsDiv.style.display = "none";
+                        BuildInDsDiv.style.display = "none";
+                        XmlDsDiv.style.display = "none";
+                        FormDsDiv.style.display = "none";
+                        //                        if (isShowDSSet) {
+
+                        //                            parent.dsSet.location = "datasetSet.htm?DsId=&DataTablePrefix=";
+                        //                        }
+                        break;
+                    }
+                case "CustomSelect":
+                    {
+                        if (CustomDsDiv.style.display == "") {
+                            CustomDsDiv.style.display = "none";
+                        } else {
+                            CustomDsDiv.style.display = "";
+                        }
+                        SqlDsDiv.style.display = "none";
+                        BuildInDsDiv.style.display = "none";
+                        XmlDsDiv.style.display = "none";
+                        FormDsDiv.style.display = "none";
+                        //                        if (isShowDSSet) {
+                        //                            parent.dsSet.location = "customDsSet.htm";
+                        //                        }
+                        break;
+                    }
+                case "BuildInSelect":
+                    {
+                        if (BuildInDsDiv.style.display == "") {
+                            BuildInDsDiv.style.display = "none";
+                        } else {
+                            BuildInDsDiv.style.display = "";
+                        }
+                        SqlDsDiv.style.display = "none";
+                        CustomDsDiv.style.display = "none";
+                        XmlDsDiv.style.display = "none";
+                        FormDsDiv.style.display = "none";
+                        //                        if (isShowDSSet) {
+                        //                            parent.dsSet.location = "buildInDsSet.htm";
+                        //                        }
+                        break;
+                    }
+                case "XmlSelect":
+                    {
+                        if (XmlDsDiv.style.display == "") {
+                            XmlDsDiv.style.display = "none";
+                        } else {
+                            XmlDsDiv.style.display = "";
+                        }
+                        SqlDsDiv.style.display = "none";
+                        CustomDsDiv.style.display = "none";
+                        BuildInDsDiv.style.display = "none";
+                        FormDsDiv.style.display = "none";
+                        //                        if (isShowDSSet) {
+                        //                            parent.dsSet.location = "xmlDsSet.htm";
+                        //                        }
+                        break;
+                    }
+                case "FormSelect":
+                    {
+                        if (FormDsDiv.style.display == "") {
+                            FormDsDiv.style.display = "none";
+                        } else {
+                            FormDsDiv.style.display = "";
+                        }
+                        SqlDsDiv.style.display = "none";
+                        CustomDsDiv.style.display = "none";
+                        BuildInDsDiv.style.display = "none";
+                        XmlDsDiv.style.display = "none";
+                        //                        if (isShowDSSet) {
+                        //                            parent.dsSet.location = "xmlDsSet.htm";
+                        //                        }
+                        break;
+                    }
+            }
+        }
+
+        function mouseoverEvent(e) {
+            var evt = e || window.event;
+            var oSrc = evt.target || evt.srcElement;
+            if (oSrc.nodeName.toLocaleLowerCase() == "td") {
+                oSrc.style.cursor = "pointer";
+                oSrc.style.backgroundColor = "#FFF2CB";
+            }
+        }
+
+        function mouseoutEvent(e) {
+            var evt = e || window.event;
+            var oSrc = evt.target || evt.srcElement;
+            if (oSrc.nodeName.toLocaleLowerCase() == "td") {
+                oSrc.style.backgroundColor = "";
+            }
+        }
+
+    </script>
+</body>
+</html>

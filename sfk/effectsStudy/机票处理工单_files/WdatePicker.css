@@ -1,0 +1,27 @@
+.Wdate{
+	border:#7f9db9 1px solid;
+	height:20px;width:100px;
+	background:#fff url(datePicker.gif) no-repeat right;
+}
+.WdateTime{
+	border:#7f9db9 1px solid;
+	height:20px;width:150px;
+	background:#fff url(datePicker.gif) no-repeat right;
+}
+
+.WdateMust{
+	border:#fecf07 1px solid;
+	height:20px;width:100px;
+	background:#fff url(datePicker.gif) no-repeat right;
+}
+
+.WdateTimeMust{
+	border:#fecf07 1px solid;
+	height:20px;width:150px;
+	background:#fff url(datePicker.gif) no-repeat right;
+}
+
+.WdateFmtErr{
+	font-weight:bold;
+	color:red;
+}

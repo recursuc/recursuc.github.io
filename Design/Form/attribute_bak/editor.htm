@@ -1,0 +1,502 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+    <style type="text/css">
+        .x-tab-panel-body .x-panel-body 
+        {
+            padding:10px;
+        }
+    </style>
+    <link rel="Stylesheet" type="text/css" href="../skins/blue/css/form.css" />
+    <link rel="Stylesheet" type="text/css" href="../../ext/resources/css/ext-all.css" />
+    <link rel="Stylesheet" type="text/css" href="../../ext/resources/css/xtheme-gray.css" />
+    <link rel="Stylesheet" type="text/css" href="../../ext/resources/css/tabs.css" />
+</head>
+<body  onload="uf_open();" style="overflow:hidden; margin:3px;font-size:13px;padding:0px;">
+    <div id="SKbillsheet">
+        <div id="tabs">
+            <!-- 基本信息Tab页 -->
+            <div id="ab" class="x-hide-display">
+                <table style="font-size: 12px; width:100%;">
+                    <tr>
+                        <td>
+                            <table style="font-size: 12px;">
+                                <tr>
+                                    <td colspan= "2" style="font-weight:bold; color:#15428b;">基本控件信息</td>
+                                    <td><a href="../../../WebHelp/表单帮助文档/scr/表单帮助文档/表单控件详解/数据控件/富文本编辑器.htm"target="_blank"><p align="right"><img src="../skins/blue/images/menu/gif16/design_help.gif" alt="帮助"/></p></a></td>
+                                </tr>
+                                <tr>
+                                    <td colspan= "3"><hr style="color:#8db2e3; width:100%; height:1px;" /></td>
+                                </tr>
+                                <tr>
+                                    <td style="width:20%">控件ID：</td>
+                                    <td style="width:60%"><input id="controlPrefixLabel" disabled style="width:60px;" /><input id="txtId" style="text-align: left; width:120px;" type="text" /></td>
+                                    <td style="width:20%"><font color="red">*</font></td>
+                                </tr>
+                                <tr>
+                                    <td>中文名：</td>
+                                    <td><input id="txtFieldChn" style="text-align: left" size="24" type="text" /></td>
+                                    <td style="width: 9px"><font color="red">*</font></td>
+                                </tr>
+                                <tr>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table style="font-size: 12px;" width="100%">
+                                <tr>
+                                    <td colspan= "4" style="font-weight:bold; color:#15428b;">数据绑定信息</td>
+                                </tr>
+                                <tr>
+                                    <td colspan= "4"><hr style=" color:#8db2e3; width:100%; height:1px;" /></td>
+                                </tr>
+                                <tr>
+                                    <td style="width:25%">数据表：</td>
+                                    <td style="width:25%; text-align:left"><input id="txtDataTable" style="font-size: 12px;text-align: left; width:85px;"size="11" type="text" disabled/></td>         
+                                    <td style="width:20%">字段名：</td>
+                                    <td style="width:30%; text-align:left"><input id="txtField" style="font-size: 12px;text-align: left; width:85px;"size="16" type="text" disabled/></td>
+                                </tr>
+                                <tr>
+                                    <td style="width:25%">字段描述：</td>
+                                    <td colspan= "3" style="width:75%">
+                                        <table style="font-size: 12px;  border:0px;" width="100%" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                                <td style=" text-align:left;"><input id="txtDescript" style="text-align: left; width:100px;"size="11" type="text" disabled/></td>
+                                                <td><input id="cmdSelectFiled" style="display: block; font-size: 12px; width: 78px;height: 21px; background-color: #ffffff; border-style:none; border:0px;" 
+                                                    onclick="PropWinSelField()" /></td>
+                                                <td><input id="cmdClear" style="display: block; font-size: 12px; width: 39px;height: 21px; background-color: #ffffff; border-style:none; border:0px;"  
+                                                    onclick="ClearField()" type="button" /></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:25%">是否保留痕迹：</td>
+                                    <td style="width:75%" colspan="3"><input id="isTrace" style="text-align: left; width:85px;"size="11" type="checkbox" /></td>
+                                </tr>
+                                <tr>
+                                    <td style="width:25%">默认值：</td>
+                                    <td style="width:75%" colspan="3"><input id="txtDefaultValue" style="font-size: 12px;text-align: left; width:120px;"size="11" type="text"/></td>
+                                </tr>     
+                                <tr><td>&nbsp;</td></tr>
+                                <tr><td colspan="4"><font size="2" color="#b2b2b2">本控件可支持Clob、NClob等大字段数据类型</font></td></tr>                          
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <!-- 样式编辑Tab页 -->
+            <div id="st" class="x-hide-display">
+                <table style="font-size: 12px;">
+                    <tr>
+                        <td>
+                             <table style="font-size: 12px;width:100%">
+                            <tr>
+                                <td colspan= "4" style="font-weight:bold; color:#15428b;">位置信息</td>
+                            </tr>
+                            <tr>
+                                <td colspan= "4"><hr style=" color:#8db2e3; width:100%; height:1px;" /></td>
+                            </tr>
+                            <tr>
+                                <td style=" width:25%">
+                                    定位类型：
+                                </td>
+                                <td style="width:25%">
+                                    <select id="cboPosition" style="display: block; font-size: 12px;width: 65px; height: 25px; background-color: #ffffff" onchange="PropWinChangePosition()" >
+                                         <option value="static" selected>静态</option>
+                                         <option value="absolute">绝对</option>
+                                    </select>
+                                </td>
+                               <td style=" width:25%">
+                                    显示类型：
+                                </td>
+                                <td style="width:25%">
+                                    <select id="selDisplay" style="display: block; font-size: 12px;width: 65px; height: 25px; background-color: #ffffff" onchange="PropWinChangeDisplay()" >
+                                         <option value="block" selected="selected">块级</option>
+                                         <option value="inline">内联</option>
+                                         <option value="none">隐藏</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table style="font-size: 12px;">
+                                <tr>
+                                    <td style="width:10%">
+                                        左：
+                                    </td>
+                                    <td style="width:15%">
+                                        <input id="txtLeft" style="font-size: 12px; left: 64px; width: 45px; height: 18px;text-align: left"
+                                        onchange="SetPosOnChange(publicform.obj[0],txtLeft)" />
+                                    </td>
+                                    <td style="width:10%">
+                                        上：
+                                    </td>
+                                    <td style="width:15%">
+                                        <input id="txtTop" style="font-size: 12px; left: 133px; width: 45px; height: 18px; text-align: left"
+                                        onchange="SetPosOnChange(publicform.obj[0],txtTop)" />
+                                    </td>
+                                    <td style="width:10%">
+                                        宽：
+                                    </td>
+                                    <td style="width:15%">
+                                        <input id="txtWidth" style="font-size: 12px; left: 202px; width: 45px;height: 18px;text-align: left"
+                                        onchange="checkWH(publicform.obj[0],'width');"/>
+                                    </td>
+                                    <td style="width: 10px">
+                                        高：
+                                    </td>
+                                    <td style="width:15%">
+                                        <input id="txtHeight" style="font-size: 12px; left: 269px; width: 45px;height: 18px;text-align: left"
+                                        onchange="checkWH(publicform.obj[0],'height');"/>
+                                    </td>
+                                </tr>
+                                <tr><td colspan="8" align="right"><font color="#b2b2b2">本控件的最小宽度为470px,最小高度为180px</font></td></tr>
+                            </table>
+                        </td>  
+                      </tr>
+                      <tr style="height:25px; vertical-align:bottom;">
+                          <td style="font-weight:bold; color:#15428b;">选择项</td>
+                      </tr>
+                      <tr>
+                          <td><hr style=" color:#8db2e3; width:100%; height:1px;" /></td>
+                      </tr>
+                      <tr>
+                        <td>
+                            <table style="font-size: 12px;">
+                                <!--<tr>
+                                    <td>
+                                        <div style="display: block; font-size: 12px;width: 80px; height: 20px; text-align: left;float:left;">
+                                            <input type="checkbox" id="chkNotBg"/><span>透明</span>
+                                        </div>
+                                        <div style="display: block; font-size: 12px;width: 80px;height: 20px;float:left;">
+                                            <input type="checkbox" id="chkDisplay"/><span>可见</span>
+                                        </div>
+                                    </td>
+                                </tr>-->
+                                <tr>
+                                    <td>
+                                        <table style="font-size: 12px;">
+                                            <tr>
+                                                <td style="height: 40px">
+                                                    对齐方式：
+                                                </td>
+                                                <td style="height: 40px">
+                                                    <select id="cboAlign" style="display: block; font-size: 12px; left: 85px; width: 79px;height: 20px; background-color: #ffffff" controltype="combobox"
+                                                        onkeydown='bill_onkeydown("")' check="1">
+                                                        <option value="left" selected>左对齐</option>
+                                                        <option value="right">右对齐</option>
+                                                        <option value="center">居中</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                      </tr>
+                    </table>
+            </div>
+            <!-- 事件选择Tab页 -->
+            <div id="ev" class="x-hide-display">
+                <table style="font-size: 12px; width:100%;">
+                    <tr>
+                        <td colspan="3" style="font-weight: bold; color: #15428b;">
+                            控件事件配置
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" style="text-align: center;">
+                            <hr style="color: #8db2e3; width: 100%; height: 1px;" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:15%; text-align:right;">单击：</td>
+                        <td style="width:65%;"><input id="txtEclick" style="font-size: 12px;text-align: left; width:200px;" type="text" /></td>
+                        <td style="width:20%; text-align:left;">
+                            <img id="cmdEclick" src="../skins/blue/images/design_selectScript.gif" onmovestart="moveStart()" onclick="SelFunction(txtEclick)" alt="选择事件"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:15%; text-align:right;">双击：</td>
+                        <td style="width:65%;"><input id="txtEdblclick" style="font-size: 12px;text-align: left; width:200px;" type="text" /></td>
+                        <td style="width:20%; text-align:left;">
+                            <img id="cmdEdblclick" src="../skins/blue/images/design_selectScript.gif" onmovestart="moveStart()" onclick="SelFunction(txtEdblclick)" alt="选择事件"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:15%; text-align:right;">进入：</td>
+                        <td style="width:65%;"><input id="txtEfocus" style="font-size: 12px;text-align: left; width:200px;" type="text" /></td>
+                        <td style="width:20%; text-align:left;">
+                            <img id="cmdEfocus" src="../skins/blue/images/design_selectScript.gif" onmovestart="moveStart()" onclick='SelFunction(txtEfocus)' alt="选择事件"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:15%; text-align:right;">退出：</td>
+                        <td style="width:65%;"><input id="txtEblur" style="font-size: 12px;text-align: left; width:200px;" type="text" /></td>
+                        <td style="width:20%; text-align:left;">
+                            <img id="cmdEblur" src="../skins/blue/images/design_selectScript.gif" onmovestart="moveStart()" onclick='SelFunction(txtEblur)' alt="选择事件"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:15%; text-align:right;">按键：</td>
+                        <td style="width:65%;"><input id="txtEkey" style="font-size: 12px;text-align: left;width:200px;" type="text" /></td>
+                        <td style="width:20%; text-align:left;">
+                            <img id="cmdEkey" src="../skins/blue/images/design_selectScript.gif" onmovestart="moveStart()" onclick='SelFunction(txtEkey)' alt="选择事件"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:15%; text-align:right;">松键：</td>
+                        <td style="width:65%;"><input id="txtEkeyup" style="font-size: 12px;text-align: left;width:200px;" type="text" /></td>
+                        <td style="width:20%; text-align:left;">
+                            <img id="cmdEkeyup" src="../skins/blue/images/design_selectScript.gif" onmovestart="moveStart()" onclick='SelFunction(txtEkeyup)' alt="选择事件"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:15%; text-align:right;">改变：</td>
+                        <td style="width:65%;"><input id="txtEchange" style="font-size: 12px;text-align: left; width:200px;" type="text" /></td>
+                        <td style="width:20%; text-align:left;">
+                            <img id="cmdEchange" src="../skins/blue/images/design_selectScript.gif" onmovestart="moveStart()" onclick="SelFunction(txtEchange)" alt="选择事件"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+              <!-- 基本校验Tab页 -->
+            <!--<div id="evtVal" class="x-hide-display">
+                <table style="font-size: 12px; width: 100%;">
+                    <tr>
+                        <td  style="font-weight: bold; color: #15428b;">
+                            基本验证
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <hr style="color: #8db2e3; width: 100%; height: 1px;" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                             非空验证：<input id="chkIsRequired" onclick="disableOrEnableContrsByFlag(this.checked,txtNoEmptyAlertMsg);" style="width: 13px; height: 20px" type="checkbox" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100%">
+                            错误提示消息：<input type="text" disabled id="txtNoEmptyAlertMsg" style="font-size: 12px; text-align: left;width: 170px;" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <hr style="color: Silver; width: 100%; height: 1px;" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                             长度验证：<input id="chkLengthValid" onclick="disableOrEnableContrsByFlag(this.checked,txtValidLengthMin,txtValidLengthMax,txtlengthValidAlertMsg);" style="width: 13px; height: 20px" type="checkbox" />
+                        </td>
+                    </tr>
+                    <tr>
+                         <td>
+                            验证长度范围：起始值：<input type="text" disabled id="txtValidLengthMin" style="font-size: 12px; text-align: left;width: 50px;" size="10" value="1" onblur="validMin(this);"  /> 至：<input type="text" onblur="validMax(this, txtValidLengthMin);"  disabled id="txtValidLengthMax" style="font-size: 12px; text-align: left;width: 50px;" size="10" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            长度错误提示消息：<input type="text" id="txtlengthValidAlertMsg" disabled style="font-size: 12px; text-align: left;width: 155px;" />
+                        </td>
+                    </tr> 
+                    <tr>
+                        <td>
+                            <hr style="color: Silver; width: 100%; height: 1px;" />
+                        </td>
+                    </tr>
+                     <tr>
+                        <td > 非法字符校验：<input id="chkIsXMLSpecialChar" onclick="disableOrEnableContrsByFlag(this.checked,txtSpecialCharAlertMsg);" style=" width: 13px; height: 20px" type="checkbox" /></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            非法字符提示消息：<input type="text" id="txtSpecialCharAlertMsg" disabled style="font-size: 12px; text-align: left;width: 155px;" />
+                        </td>
+                    </tr> 
+                    <tr>
+                        <td>
+                            <hr style="color: Silver; width: 100%; height: 1px;" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            提交时验证序号：<input type="text" id="txtValidSeq" onkeyup="if(!SysF_IsPositiveInt(this.value)){alert('输入值必须为正整数!')}" style="font-size: 12px; text-align: left;width: 155px;" />
+                        </td>
+                    </tr> 
+                    <tr>
+                        <td>
+                            提交验证函数名：<input type="text" id="txtCommitValidFucNames" style="font-size: 12px; text-align: left;width: 200px;" />
+                        </td>
+                    </tr> 
+                </table>
+            </div>-->
+              <!-- 打印页 -->
+            <div id="pr" class="x-hide-display">
+                <table style="font-size: 12px; width:100%;">
+                    <tr>
+                        <td>是否打印：</td>
+                        <td>
+                            <select name="isPrint" style=" width:150px;">
+                                <option value="1" selected="selected">打印</option>
+                                <option value="0">不打印</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- 按钮区域 -->
+    <div id="buttons" style="text-align:right;">
+        <table>
+            <tr>
+                <td style="padding-right:20px;">
+                    <!-- 确定按钮 -->
+                    <button id="cmdOk" style="display: block; font-size: 12px; width: 65px;height: 21px; background-color: #ffffff; border-style:none; border:0px;" onclick="uf_ok()">
+                    </button>
+                </td>
+                <td style="padding-right:20px;">
+                    <!-- 取消按钮 -->
+                    <button id="cmdClose" style="display: block; font-size: 12px; width: 65px;height: 21px; background-color: #ffffff; border-style:none; border:0px;" onclick="CloseBill()">
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    
+    <script type="text/javascript" src="../../ext/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="../../ext/ext-all.js"></script>
+    <script type="text/javascript" src="../../commonjs/public_api.js"></script>   
+    <script type="text/javascript" src="../js/f_core.js"></script>  
+    <script type="text/javascript" src="../../commonjs/design_operation.js"></script> 
+    <script type="text/javascript" src="../../commonjs/property.js"></script>    
+    <script type="text/javascript" src="../../commonjs/opencommonform.js"></script>
+    <script  type="text/javascript" src="../../commonjs/browser_version.js"></script>
+    <script type="text/javascript" src="../../commonjs/sys_common_valid_library.js"></script>      
+
+    <script type="text/javascript" language="javascript">
+        Ext.onReady(function () {
+            var tabs = new Ext.TabPanel({
+                id: 'attTabs',
+                renderTo: 'tabs',
+                width: "100%",
+                height: ChangeTabsSize(),
+                activeTab: 0,
+                frame: true,
+                defaults: { autoHeight: true },
+                items: [
+                    { itemId: 'ab', contentEl: 'ab', title: '  属性  ' },
+                    { itemId: 'st', contentEl: 'st', title: '  样式  ' },
+                    { itemId: 'ev', contentEl: 'ev', title: '  事件  ' },
+                    //{ contentEl: 'evtVal', title: '  校验  ' },
+                    {itemId: 'pr', contentEl: 'pr', title: '  打印  ' }
+                ]
+            });
+        });
+
+        //改变TAB的样式
+        function ChangeTabsSize() {
+            var PageWidth = document.body.clientWidth;
+            var PageHeight = document.body.clientHeight;
+            var ButtonsHeight = document.getElementById("buttons").offsetHeight;
+            var TabsHeight = PageHeight - ButtonsHeight - 10;
+            return TabsHeight;
+        }
+
+        public_Form();
+
+        function uf_open() {
+            PropWinOnload.loadBaseAttr();
+            PropWinOnload.loadStyleAttr()
+            PropWinOnload.loadEvent();
+            PropWinOnload.loadButtonImg();
+            PropWinOnload.loadBaseValid();
+            PropWinOnload.loadDataSource();
+            var obj = publicform.obj[0];
+
+            //if (obj.SpecialFunc && obj.SpecialFunc != "") {
+                //document.getElementById("txtSpecialFunc").value = obj.SpecialFunc;
+            //}
+        }
+
+        function uf_ok() {
+//            PropWinClickOk.synchronBaseAttr();
+//            PropWinClickOk.synchronStyleAttr();
+//            PropWinClickOk.synchronEvent();
+//            PropWinClickOk.synchronBaseValid();
+//            PropWinClickOk.synchronDataSource();
+            var bSyn = PropWinClickOk.synchronAttr(["Base", "Style", "Event", "DataSource", "Valid"]);
+            if (!bSyn) {
+                return;
+            }
+
+            var obj = publicform.obj[0];
+
+            //obj.SpecialFunc = document.getElementById("txtSpecialFunc").value;
+
+            if (!PropWinClickOk.isPassValid) {
+                PropWinClickOk.isHaveValid = false;
+                return;
+            }
+            //编辑成功返回true,修改编辑状态
+            window.returnValue = true;
+            window.close();
+        }
+
+        function getFocusExcept() {
+            var arr = [], bFocus = true;
+            arr = Array.apply(arr, arguments).slice(1);
+            for (var i = 0; i < arr.length; i++) {
+                if (document.activeElement == arr[i]) {
+                    bFocus = false;
+                }
+            }
+            if (bFocus) {
+                arr[0].focus();
+            }
+        }
+
+        function checkWH(obj,str) {
+            if (str == "width") {
+                var width = document.getElementById("txtWidth").value;
+                if (!width.match(/^\s*(\d+\s*(px)?)\s*$/)) {
+                    alert("属性值必须为数字");
+                    return;
+                }
+                if (width < 470) {
+                    width = 470;
+                    obj.style.width = 470;
+                } else {
+                    obj.style.width = width;
+                }
+            }
+            if (str == "height") {
+                var height = document.getElementById("txtHeight").value;
+                if (!height.match(/^\s*(\d+\s*(px)?)\s*$/)) {
+                    alert("属性值必须为数字");
+                    return;
+                }
+                if (height < 180) {
+                    height = 180;
+                    obj.style.height = 180;
+                } else {
+                    obj.style.height = height;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
+

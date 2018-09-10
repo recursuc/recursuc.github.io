@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+    <title>自定义样式</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <link rel="Stylesheet" type="text/css" href="../ext/resources/css/ext-all.css" />
+    <link rel="Stylesheet" type="text/css" href="../ext/resources/css/xtheme-gray.css" />
+    <link rel="Stylesheet" type="text/css" href="../ext/resources/css/tabs.css" />
+</head>
+<body>
+    <div id="tabs">
+        <div id="editDiv" class="x-hide-display">
+            <table style="word-break:break-all;word-wrap:break-word;">
+                <tr>
+                <td>
+               <span style="color:Gray; font-size:12px;">用户自定义样式表,此样式为全局样式.<span style="color:Red;">请以CSS样式规则定义</span></span>
+                </td>
+                </tr>
+                <tr>
+                    <td>
+                        <textarea id="cssEditArea" style="width: 390; height: 400px"></textarea>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <!-- 按钮区域 -->
+    <div id="buttons" style="text-align: right;">
+        <table>
+            <tr>
+                <td style="padding-right: 20px;">
+                    <!-- 确定按钮 -->
+                    <button id="cmdOk" style="display: block; font-size: 12px; width: 65px; height: 21px;
+                        background-color: #ffffff; border-style: none; border: 0px; background-image: url(../skins/blue/img/button_ok.gif);"
+                        onclick="ok()">
+                    </button>
+                </td>
+                <td style="padding-right: 20px;">
+                    <!-- 取消按钮 -->
+                    <button id="cmdClose" style="display: block; font-size: 12px; width: 65px; height: 21px;
+                        background-color: #ffffff; border-style: none; border: 0px; background-image: url(../skins/blue/img/button_close.gif);"
+                        onclick="closeWin()">
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script type="text/javascript" src="../ext/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="../ext/ext-all.js"></script>
+    <script type="text/javascript" language="javascript">
+        Ext.onReady(function () {
+            var tabs = new Ext.TabPanel({
+                renderTo: 'tabs',
+                width: "400px",
+                height: "300px",
+                activeTab: 0,
+                frame: true,
+                defaults: { autoHeight: true },
+                items: [
+                    { contentEl: 'editDiv', title: '样式编辑' }
+                ]
+            });
+        });
+
+        window.onload = function () {
+            var oCssEditArea = document.getElementById("cssEditArea");
+            if (window.dialogArguments != null && window.dialogArguments != "") {
+                oCssEditArea.value = window.dialogArguments;
+            }
+        }
+
+        function ok() {
+            var oCssEditArea = document.getElementById("cssEditArea");
+            window.returnValue = oCssEditArea.value;
+            window.close();
+        }
+        function closeWin() {
+            window.close();
+        }
+    </script>
+</body>
+</html>

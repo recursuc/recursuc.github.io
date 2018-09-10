@@ -1,0 +1,595 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+    <title>内建数据集</title>
+     <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <link rel="Stylesheet" type="text/css" href="../ext/resources/css/ext-all.css" />
+    <link rel="Stylesheet" type="text/css" href="../ext/resources/css/xtheme-gray.css" />
+    <link rel="Stylesheet" type="text/css" href="../ext/resources/css/tabs.css" />
+    <style type="text/css">
+        #aDHead th
+        {
+            width: 80px;
+            text-align: center;
+            border: solid 1px gray;
+        }
+        #tbADData td
+        {
+            width: 80px;
+            text-align: center;
+            font-size: 12px;
+            border: solid 1px gray;
+        }
+        #tbADData th
+        {
+            width: 80px;
+            text-align: center;
+            border: solid 1px gray;
+        }
+        #tbADData tr
+        {
+            height: 19px;
+        }
+        #aFHead th
+        {
+            text-align: center;
+            border: solid 1px gray;
+        }
+        #tbAFData td
+        {
+            text-align: center;
+            font-size: 12px;
+            border: solid 1px gray;
+        }
+        table
+        {
+             border-collapse: collapse; /*默认为 separate*/
+            empty-cell: show; /*默认为 hide*/
+        }
+         body
+        {
+            background-color: #BDC7D7;
+        }
+    </style>
+    <script type="text/javascript" src="../ext/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="../ext/ext-all.js"></script>
+    <script type="text/javascript" src="../js/public_function.js"></script>
+    <script type="text/javascript" src="../js/table_operate.min.js"></script>
+</head>
+<body>
+    <div id="tabs">
+        <!--添加字段-->
+        <div id="filds" class="x-hide-display">
+            <div id="addFilds" style="width: 90%">
+                <table>
+                    <tr>
+                        <td width="80%" style="font-size: 12;">
+                            <div style="background-image: url(../skins/blue/images/toolbarbg.gif)" id="dsNameDiv">
+                                &nbsp; &nbsp; &nbsp; &nbsp; 数据集名：<input type="text" id="dataSetName" onblur="checkDsName()" />
+                                <span id="dsNameMessage" style="color: Red"></span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="80%">
+                            <div id="aFHead" style="width: 100%">
+                                <table style="border-collapse: collapse; font-size: 13px; width: 100%">
+                                    <tr height="19px" style="background-color: #B6CFEE">
+                                        <th width="50%">
+                                            字段名
+                                        </th>
+                                        <th width="50%">
+                                            字段类型
+                                        </th>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div id="aFData" style="width: 100%; overflow-y: scroll; height: 270px; background-color: White"
+                                onclick="selecteFild()">
+                                <table id="tbAFData" cellpadding="0" cellspacing="0" style="border: 1px; border-collapse: collapse;
+                                    width: 100%; table-layout: fixed; text-align: center;">
+                                    <thead>
+                                        <tr style="display: none; height: 19px;">
+                                            <th width="50%">
+                                            </th>
+                                            <th width="50%">
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                        <td align="left" valign="top">
+                            <input type="button" style="display: block; visibility: hidden" />
+                            <input type="button" value="添加字段" style="display: block" onclick="insertFiles()" />
+                            <input type="button" value="删除字段" style="display: block" onclick="deleteFiles()" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <!--添加数据-->
+        <div id="datas" class="x-hide-display">
+            <div id="addDatas">
+                <table width="100%">
+                    <tr>
+                        <td align="right">
+                            <input type="button" value="添加数据" onclick="insertData()" />
+                            <input type="button" value="删除数据" onclick="deleteData()" />
+                            <hr width="100%" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div id="aDHead" style="width: 723px; overflow: hidden">
+                                <table style="border-collapse: collapse; font-size: 13px; table-layout: fixed;" id="tbADHead">
+                                    <tr height="19px" style="background-color: #B6CFEE">
+                                    </tr>
+                                </table>
+                            </div>
+                            <div id="aDData" style="width: 740px; overflow-x: scroll; overflow-y: scroll; height: 258px;
+                                background-color: White" onclick="selecteData()" onscroll="adjustWidth()">
+                                <table id="tbADData" cellpadding="0" cellspacing="0" style="border: 1px; border-collapse: collapse;
+                                    table-layout: fixed; text-align: center;">
+                                    <thead>
+                                        <tr style="display: none; height: 19px;">
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div style= "position:absolute;left:360px;top:350px" >
+        <input type="button" value="确定" onclick="submitDs()" />
+        <input type="button" value="取消" onclick="closeDsSet()" />
+    </div>
+    <!--下拉列表参数类型Div-->
+    <div id="selectDiv" style="position: absolute; left: -100px">
+        <select id="selectType">
+            <option value="">类型选择</option>
+            <option value="整型">整型</option>
+            <option value="实数">实数</option>
+            <option value="字符串">字符串</option>
+            <option value="日期">日期</option>
+            <option value="时间">时间</option>
+            <option value="日期时间">日期时间</option>
+            <option value="整数组">整数组</option>
+            <option value="实数组">实数组</option>
+            <option value="字符串组">字符串组</option>
+            <option value="默认">默认</option>
+        </select>
+    </div>
+    <!--文本框Div-->
+    <div id="textDiv" style="position: absolute; left: -100px">
+        <input type="text" style="width: 60px; height: 20px; margin: 0px; padding: 0px; border: solid 1px black;
+            background-color: Cornsilk;" id="text" />
+    </div>
+    <input type="hidden" id="OperationSign" value="" />
+    <script type="text/javascript">
+        Ext.onReady(function () {
+            var tabs = new Ext.TabPanel({
+                renderTo: 'tabs',
+                width: "100%",
+                height: "100%",
+                activeTab: 0,
+                frame: true,
+                defaults: { autoHeight: true },
+                items: [
+                { contentEl: 'filds', title: '字段' },
+                { contentEl: 'datas', title: '数据' }
+                ]
+            });
+        });
+
+        //初始化
+        var dsId = ""; //数据集ID
+        window.onload = function () {
+            aFHead.style.width = aFHead.offsetWidth - aFData.offsetWidth + aFData.clientWidth;
+            dsNameDiv.style.width = dsNameDiv.offsetWidth - aFData.offsetWidth + aFData.clientWidth;
+            if (Request["DsId".toLowerCase()] != undefined && Request["DsId".toLowerCase()].toString() != "") {
+                dsId = Request["DsId".toLowerCase()].toString();
+            }
+            if (dsId != "") {
+                OperationSign.value = "edit"
+                var xmlDoc = CreateBaseXmlDoc('<Operation ParamType="GetDsInfo" value="' + dsId + '"/>');
+                var Ajax = new AjaxHandler();
+                var callback = {
+                    success: function (xhr) {
+                        var returnAjaxValue = xhr.responseXML.selectSingleNode("RAD/Doc/Data/Message").attributes.getNamedItem("value").value;
+                        if (returnAjaxValue == "操作成功") {
+                            var xmlDs = xhr.responseXML.selectSingleNode("RAD/Doc/Data").childNodes[1];
+                            dataSetName.value = xmlDs.getAttribute("Name");
+                            var xmlFildInfo = xmlDs.childNodes[0];
+                            var xmlDataInfo = xmlDs.childNodes[1];
+                            if (xmlFildInfo == null) {
+                                return;
+                            }
+                            for (var i = 0, xmlRows = xmlFildInfo.childNodes; i < xmlRows.length; i++) {
+
+                                var oADHeadTh = tbADHead.rows[0].appendChild(document.createElement("th"));
+                                oADHeadTh.innerText = xmlRows[i].firstChild.getAttribute("ColName");
+                                tbADData.rows[0].appendChild(document.createElement("th"));
+                                var oTr = tbAFData.insertRow();
+                                var oTdName = oTr.insertCell();
+                                oTdName.innerText = xmlRows[i].firstChild.getAttribute("ColName");
+                                var oTdType = oTr.insertCell();
+                                oTdType.innerText = enumTosArgs(xmlRows[i].firstChild.getAttribute("ColType"));
+
+                            }
+                            for (var i = 0, xmlDatas = xmlDataInfo.childNodes; i < xmlDatas.length; i++) {
+                                var oTr = tbADData.insertRow();
+                                for (var j = 0; j < xmlDatas[i].childNodes.length; j++) {
+                                    var oTdValue = oTr.insertCell();
+                                    oTdValue.innerText = xmlDatas[i].childNodes[j].getAttribute("Value");
+                                }
+                            }
+                        }
+                    },
+                    failure: function (xhr) {
+                        alert('Failure: ' + xhr.status);
+
+                    }
+                };
+                Ajax.request("post", "../common/RptDSAjax.aspx", false, callback, xmlDoc);
+            } else {
+                OperationSign.value = "add";
+            }
+
+        };
+        var filedsNum = 0; //字段数
+        //添加字段
+        function insertFiles() {
+            //操作字段
+            var selectedTr = document.getElementById("fildSelected");
+            if (selectedTr != null) {
+                selectedTr.setAttribute("id", "");
+                selectedTr.bgColor = "";
+                if (selectedTr.nodeName.toLocaleLowerCase() == "tr") {
+                    for (var i = 0; i < 2; i++) {
+                        selectedTr.children[i].bgColor = "";
+                    }
+                }
+            }
+            var oTr = tbAFData.insertRow();
+            oTr.bgColor = "#c8d9f0";
+            oTr.setAttribute("id", "fildSelected");
+
+            var oTdName = oTr.insertCell();
+            oTdName.innerText = "字段" + filedsNum;
+            oTdName.bgColor = "#3399ff";
+
+            var oTdType = oTr.insertCell();
+            oTdType.innerText = "字符串";
+
+
+            //操作数据
+            var oTdDataFile = tbADHead.rows[0].appendChild(document.createElement("th"));
+            oTdDataFile.innerText = "字段" + filedsNum;
+            var dataRows = tbADData.rows;
+            for (var i = 0; i < dataRows.length; i++) {
+                if (i == 0) {
+                    var oTh = dataRows[i].appendChild(document.createElement("th"));
+                    oTh.innerText = "1";
+                } else {
+                    dataRows[i].insertCell();
+                }
+            }
+            filedsNum++;
+        }
+        //删除字段
+        function deleteFiles() {
+            try {
+                var oTr = document.getElementById("fildSelected");
+                var oTb = oTr.parentNode.parentNode;
+                var i = oTr.rowIndex;
+                oTb.deleteRow(i);
+                var nowSelectedTr;
+                if (i > 1) {
+                    nowSelectedTr = oTb.rows[i - 1];
+                } else if (i == 1) {
+                    nowSelectedTr = oTb.rows[i];
+                }
+                if (nowSelectedTr != null) {
+                    nowSelectedTr.bgColor = "#c8d9f0";
+                    nowSelectedTr.childNodes[0].bgColor = "#3399ff";
+                    nowSelectedTr.setAttribute("id", "fildSelected");
+                }
+                //操作数据
+                tbADHead.rows[0].removeChild(tbADHead.rows[0].childNodes.item(i - 1));
+                var dataRows = tbADData.rows;
+                for (var j = 0; j < dataRows.length; j++) {
+                    if (j == 0) {
+                        dataRows[j].removeNode(dataRows[j].childNodes.item(i - 1));
+                    } else {
+                        dataRows[j].deleteCell(i);
+                    }
+                }
+            } catch (e) {
+                alert("请选择要删除的行！");
+            }
+        }
+
+        //添加数据
+        function insertData() {
+            var tdNum = tbADHead.rows[0].childNodes.length;
+            if (tdNum == 0) {
+                alert("请先添加字段！");
+                return;
+            }
+            var selectedTr = document.getElementById("dataSelected");
+            if (selectedTr != null) {
+                selectedTr.setAttribute("id", "");
+                selectedTr.bgColor = "";
+                if (selectedTr.nodeName.toLocaleLowerCase() == "tr") {
+                    for (var i = 0; i < tdNum; i++) {
+                        selectedTr.children[i].bgColor = "";
+                    }
+                }
+            }
+            var oTr = tbADData.insertRow();
+            oTr.setAttribute("id", "dataSelected");
+            oTr.bgColor = "#c8d9f0";
+            for (var i = 0; i < tdNum; i++) {
+                var oTd = oTr.insertCell();
+                if (i == 0) {
+                    oTd.bgColor = "#3399ff";
+                }
+            }
+
+
+        }
+        //删除数据
+        function deleteData() {
+            try {
+                var oTr = document.getElementById("dataSelected");
+                var oTb = oTr.parentNode.parentNode;
+                var i = oTr.rowIndex;
+                oTb.deleteRow(i);
+                var nowSelectedTr;
+                if (i > 1) {
+                    nowSelectedTr = oTb.rows[i - 1];
+                } else if (i == 1) {
+                    nowSelectedTr = oTb.rows[i];
+                }
+                if (nowSelectedTr != null) {
+                    nowSelectedTr.bgColor = "#c8d9f0";
+                    nowSelectedTr.childNodes[0].bgColor = "#3399ff";
+                    nowSelectedTr.setAttribute("id", "dataSelected");
+                }
+            } catch (e) {
+                alert("请选择要删除的行！");
+            }
+        }
+
+        //字段选择
+        var indexSelectedType;
+        function selecteFild() {
+            var oTr = document.getElementById("fildSelected");
+            var nowTr;
+            var srcCell = event.srcElement;
+            if (oTr != null) {
+                oTr.bgColor = "#ffffff";
+                oTr.setAttribute("id", "");
+                if (oTr.nodeName.toLocaleLowerCase() == "tr") {
+                    for (var i = 0; i < 2; i++) {
+                        oTr.children[i].bgColor = "";
+                    }
+                }
+            }
+
+            if (srcCell.nodeName.toLocaleLowerCase() == "td") {
+                nowTr = srcCell.parentNode;
+                srcCell.bgColor = "#3399ff";
+                var x = srcCell.offsetLeft + tbAFData.offsetLeft + aFData.offsetLeft + document.body.clientLeft - aFData.scrollLeft + 2;
+                var y = srcCell.offsetTop + tbAFData.offsetTop + aFData.offsetTop + document.body.clientTop - aFData.scrollTop + 24;
+                var width = parseInt(srcCell.offsetWidth); //单元格宽
+                var height = parseInt(srcCell.offsetHeight); //单元格高
+                srcCell.onkeydown = srcCell.ondblclick = function () {
+                    switch (srcCell.cellIndex) {
+                        case 1:
+                            {
+                                selectDiv.style.display = "";
+                                selectDiv.style.left = x;
+                                if (srcCell.parentNode.parentNode.parentNode.id = "tbAFData") {
+                                    selectDiv.style.top = y + 27;
+                                  
+                                } else {
+                                    selectDiv.style.top = y - 2;
+                                   
+                                }
+                                selectType.style.width = width - 2;
+                                selectType.style.height = height - 2;
+                                selectType.focus();
+                                selectType.onchange = function () {
+                                    indexSelectedType = selectType.selectedIndex;
+                                }
+                                selectType.onblur = function () {
+                                    if (indexSelectedType != undefined && indexSelectedType != 0) {
+                                        srcCell.innerHTML = selectType.options[indexSelectedType].text;
+                                        if (selectType.options[indexSelectedType].text == "默认") {
+                                            srcCell.innerHTML = "字符串";
+                                        }
+                                        indexSelectedType = undefined;
+                                    }
+                                    selectType.selectedIndex = 0;
+                                    selectDiv.style.display = "none";
+                                };
+                                break;
+                            }
+                        case 0:
+                            {
+                                textDiv.style.display = "";
+                                text.focus();
+                                textDiv.style.left = x;
+                                if (srcCell.parentNode.parentNode.parentNode.id = "tbAFData") {
+                                    textDiv.style.top = y + 27;
+                                } else {
+                                    textDiv.style.top = y-2;
+                                }
+                                text.style.width = width;
+                                text.style.height = height;
+                                text.value = srcCell.innerHTML;
+                                var filedNum = srcCell.parentNode.rowIndex;
+
+                                text.onblur = function () {
+                                    if (text.getAttribute('value') != null) {
+                                        srcCell.innerHTML = text.getAttribute('value');
+
+                                    } else {
+                                        alert("字段名不能为空！");
+                                    }
+                                    tbADHead.rows[0].childNodes[filedNum - 1].innerText = srcCell.innerHTML;
+                                    textDiv.style.display = "none";
+                                };
+                                break;
+                            }
+                    }
+                };
+            } else {
+                nowTr = srcCell;
+            }
+
+            if (nowTr.nodeName.toLocaleLowerCase() == "tr") {
+                nowTr.setAttribute("id", "fildSelected");
+                nowTr.bgColor = "#c8d9f0";
+            }
+
+        }
+
+        //数据选择
+        function selecteData() {
+            var oTr = document.getElementById("dataSelected");
+            var nowTr;
+            var srcCell = event.srcElement;
+            if (oTr != null) {
+                oTr.bgColor = "#ffffff";
+                oTr.setAttribute("id", "");
+                if (oTr.nodeName.toLocaleLowerCase() == "tr") {
+                    for (var i = 0; i < oTr.childNodes.length; i++) {
+                        oTr.children[i].bgColor = "";
+                    }
+                }
+            }
+
+            if (srcCell.nodeName.toLocaleLowerCase() == "td") {
+                nowTr = srcCell.parentNode;
+                srcCell.bgColor = "#3399ff";
+                var x = srcCell.offsetLeft + tbADData.offsetLeft + aDData.offsetLeft + document.body.clientLeft - aDData.scrollLeft+3;
+                var y = srcCell.offsetTop + tbADData.offsetTop + aDData.offsetTop + document.body.clientTop - aDData.scrollTop +72;
+                var width = parseInt(srcCell.offsetWidth); //单元格宽
+                var height = parseInt(srcCell.offsetHeight); //单元格高
+                srcCell.onkeydown = srcCell.ondblclick = function () {
+                    textDiv.style.display = "";
+                    text.focus();
+                    textDiv.style.left = x-2;
+                    textDiv.style.top = y-5;
+                    text.style.width = width;
+                    text.style.height = height;
+                    text.value = srcCell.innerHTML;
+                    var filedNum = srcCell.parentNode.rowIndex;
+
+                    text.onblur = function () {
+                        if (text.getAttribute('value') != null) {
+                            srcCell.innerHTML = text.getAttribute('value');
+
+                        } else {
+                            srcCell.innerHTML = "";
+                        }
+                        textDiv.style.display = "none";
+                    };
+                };
+            } else {
+                nowTr = srcCell;
+            }
+
+            if (nowTr.nodeName.toLocaleLowerCase() == "tr") {
+                nowTr.setAttribute("id", "dataSelected");
+                nowTr.bgColor = "#c8d9f0";
+            }
+
+        }
+
+        function adjustWidth() {
+            aDHead.scrollLeft = aDData.scrollLeft;
+        }
+
+        function closeDsSet() {
+            parent.window.close();
+        }
+
+        function checkDsName() {
+            if (dataSetName.value == "") {
+                dsNameMessage.innerText = "数据集名不能为空！"
+            } else {
+                dsNameMessage.innerText = ""
+            }
+        }
+        function submitDs() {
+            if (dataSetName.value == "") {
+                dsNameMessage.innerText = "数据集名不能为空！"
+                alert("数据集名不能为空!");
+                return;
+            }
+
+            if (OperationSign.value == "edit") {//更新
+                sSaveXml = new StringBuilder('<Operation ParamType="SaveDatabase" OperationSign="edit">');
+            } else {//保存
+                sSaveXml = new StringBuilder('<Operation ParamType="SaveDatabase" OperationSign="add">');
+            }
+            sSaveXml.append('<DataSet DsId="' + dsId + '" Name ="' + dataSetName.value + '" Type="2" >');
+            sSaveXml.append('<FieldInfo>');
+            for (var i = 1; i < tbAFData.rows.length; i++) {
+                sSaveXml.append('<Row>');
+                sSaveXml.append('<Col ColName ="' + tbAFData.rows[i].cells[0].innerText + '" ColType ="' + sArgsToEnum(tbAFData.rows[i].cells[1].innerText) + '"/>');
+                sSaveXml.append('</Row>');
+            }
+            sSaveXml.append('</FieldInfo>');
+            sSaveXml.append('<Data>');
+            for (var i = 1, dataRows = tbADData.rows; i < dataRows.length; i++) {
+                sSaveXml.append('<Row>');
+                for (var j = 0; j < dataRows[i].cells.length; j++) {
+                    sSaveXml.append('<Col Value="' + dataRows[i].cells[j].innerText + '"/>');
+                }
+                sSaveXml.append('</Row>');
+            }
+
+            sSaveXml.append('</Data>');
+            sSaveXml.append('</DataSet>');
+            sSaveXml.append('</Operation>');
+            var xmlDoc = CreateBaseXmlDoc(sSaveXml.toString()); //创建DOM
+
+            var Ajax = new AjaxHandler();
+            var callback = {
+                success: function (xhr) {
+                    var returnMessage = xhr.responseXML.selectSingleNode("RAD/Doc/Data/Message").attributes.getNamedItem("value").value;
+                    if (dsId == "") {
+                        dsId = xhr.responseXML.selectSingleNode("RAD/Doc/Data/Message").attributes.getNamedItem("DsId").value;
+                        OperationSign.value = "edit"
+                    }
+
+                    if (parent.dslist != null) {
+                        parent.dslist.location = encodeURI("datasetList.htm?DsId=" + dsId);
+                        alert(returnMessage);
+                    } else {
+                        alert(returnMessage);
+                        window.close();
+                    }
+
+                },
+                failure: function (xhr) {
+                    alert('Failure: ' + xhr.status);
+                }
+            };
+            Ajax.request("post", "../common/RptDSAjax.aspx", false, callback, xmlDoc);
+        }
+    </script>
+</body>
+</html>

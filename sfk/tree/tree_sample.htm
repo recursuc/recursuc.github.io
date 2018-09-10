@@ -1,0 +1,209 @@
+﻿<html>
+<head>
+    <title>tree_test</title>
+    <link href="sfk_Tree.css" rel="stylesheet" type="text/css" />
+    <link href="../contextmenu/sfk_contextmenu.css" rel="stylesheet" type="text/css" />
+    <script src="../sfk.js" type="text/javascript"></script>
+    <script src="sfk_Tree.js" type="text/javascript"></script>
+    <script src="../contextmenu/sfk_contextmenu.js" type="text/javascript"></script>
+    <script type="text/javascript" language="javascript">
+
+        $P.ready(function () {
+            var tree = new Tree({
+                imgBasePath: "images",
+                iconType: 1,
+                container: "treecontainer",
+                showLine: false,
+                showCheck: false,
+                roots: [{
+                    id: "0",
+                    text: "表单",
+                    childNodes: [
+                        {
+                            text: "aaa",
+                            tips: "我是第一个节点！",
+                            childNodes: [
+                             {
+                                 text: "eee",
+                                 childNodes: [
+                                     {
+                                         text: "fff"
+                                     },
+                                     {
+                                         id: "t6",
+                                         text: "ggg",
+                                         tips: "我是最后一个节点！"
+                                     }
+                                 ]
+                             },
+                             {
+                                 id: "t6",
+                                 text: "fff",
+                                 tips: "我是最后一个节点！",
+                                 childNodes: [
+                          {
+                              text: "eee",
+                              childNodes: [
+                                  {
+                                      text: "eee"
+                                  },
+                                  {
+                                      id: "t6",
+                                      text: "fff",
+                                      tips: "我是最后一个节点！"
+                                  }
+                              ]
+                          },
+                          {
+                              id: "t6",
+                              text: "fff",
+                              tips: "我是最后一个节点！"
+                          }
+                                 ]
+
+                             }
+                            ]
+                        },
+                        {
+                            text: "bbb"
+                        },
+                        {
+                            text: "ccc"
+                        },
+                        {
+                            text: "ddd",
+                            //imgSrc: "../../../skins/blue/img/ef_tab_row_prop.gif",
+                            childNodes: [
+                                {
+                                    text: "eee",
+                                    childNodes: [
+                                        {
+                                            text: "eee"
+                                        },
+                                        {
+                                            id: "t6",
+                                            text: "fff",
+                                            tips: "我是最后一个节点！"
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: "t6",
+                                    text: "fff",
+                                    tips: "我是最后一个节点！"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    id: "1",
+                    text: "报表",
+                    childNodes: [
+                        {
+                            id: "t9",
+                            text: "111",
+                            tips: "我是第一个节点！",
+                            childNodes: [
+                                {
+                                    id: "t8",
+                                    text: "eee"
+                                },
+                                {
+                                    id: "t7",
+                                    text: "222",
+                                    tips: "我是最后一个节点！"
+                                },
+                                {
+                                    id: "t10",
+                                    text: "333",
+                                    imgSrc: "../../../skins/blue/img/ef_tab_row_prop.gif"
+                                }
+                            ]
+                        }
+                    ]
+                }
+                ]
+            });
+
+            //document.body.oncontextmenu = function () {
+            //    return false;
+            //}
+
+            var cmObj = new ContextMenu({
+                target: tree.container,
+                name: "contextMenu",
+                items: [
+                        {
+                            id: "addChild", text: "新建", icon: "", action: function (evt) {
+                                alert(evt.target.nodeName);
+                            }
+                        },
+
+                                {
+                                    id: "df", text: "打开", icon: "", action: "", items: [
+
+                                    { id: "addChil331d", text: "1-1", icon: "", action: "" },
+                                      { id: "addChil331d", text: "1-2", icon: "", action: "" },
+                                  {
+                                      id: "addC222hild", text: "1-3", icon: "", action: "", items: [
+                                            { id: "addChil331d", text: "1-3-0", icon: "", action: "" },
+                                            { id: "addC222hild", text: "1-3-1", icon: "", action: "" }
+                                      ]
+                                  }
+                                    ]
+                                },
+                       { id: "addChil331d", text: "保存", icon: "", action: "" },
+                        { id: "add", text: "删除", icon: "", action: "" }
+
+                ]
+            });
+
+            //                document.body.oncontextmenu = function () {
+            //                    return false;
+            //                }
+        });
+    </script>
+</head>
+<body>
+    <input type="text" onchange="alert(11)" value="11111" />
+    <div class="content" style="height: 223px; padding: 3px;">
+        <div>
+            <div id="0" class="tree_title" style="height: 20px;" level="1">
+                <img src="images/collapse_root.gif" /><input type="checkbox" /><img src="images//folderopen.gif" class="tree_icon"><span id="0_span" title="表单" class="tree_text">表单</span>
+            </div>
+            <div style="margin-left: 20px;">
+                <div>
+                    <div id="undefined" class="tree_title" style="height: 20px;" level="2">
+                        <div style="position: absolute; margin-left: -20px; background-image: url(images/vertline.gif); width: 20px; height: 20px;"></div>
+                        <img src="images//collapse_last.gif"><input type="checkbox" src="images//expand_last.gif"><img src="images//folderopen.gif" class="tree_icon"><span id="undefined_span" title="eee" class="tree_text" style="">eee</span>
+                    </div>
+                    <div style="margin-left: 20px;">
+                        <div>
+                            <div id="Div1" class="tree_title" style="height: 20px;" level="3">
+                                <div style="position: absolute; margin-left: -40px; background-image: url(images/vertline.gif); width: 40px; height: 20px;"></div>
+                                <img src="images//line.gif"><input type="checkbox" src="images//line.gif"><img src="images//folder.gif" class="tree_icon"><span id="Span1" title="EEEE" class="tree_text" style="">EEEE</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div id="t6" class="tree_title" style="height: 20px;" level="3">
+                                <img src="images//vertline.gif" style="position: absolute; margin-left: -40px;">
+                                <img src="images//vertline.gif" style="position: absolute; margin-left: -20px;">
+                                <img src="images//line_last.gif"><input type="checkbox"><img src="images//folder.gif" class="tree_icon"><span id="t6_span" title="我是最后一个节点！" class="tree_text" style="">fff</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div id="Div2" class="tree_title" style="height: 20px;" level="2">
+                        <img src="images//vertline.gif" style="position: absolute; margin-left: -20px;">
+                        <img src="images//line_last.gif"><input type="checkbox"><img src="images//folder.gif" class="tree_icon"><span id="Span2" title="我是最后一个节点！" class="tree_text">fff</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="treecontainer" style="width: 350px; overflow: auto;">
+    </div>
+</body>
+</html>

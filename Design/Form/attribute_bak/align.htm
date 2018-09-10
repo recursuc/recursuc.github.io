@@ -1,0 +1,284 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+        <style type="text/css">
+        .x-tab-panel-body .x-panel-body {
+            padding:10px;
+        }
+        </style>
+    <link rel="Stylesheet" type="text/css" href="../skins/blue/css/form.css" />
+    <link rel="Stylesheet" type="text/css" href="../../ext/resources/css/ext-all.css" />
+    <link rel="Stylesheet" type="text/css" href="../../ext/resources/css/xtheme-gray.css" />
+    <link rel="Stylesheet" type="text/css" href="../../ext/resources/css/tabs.css" />
+</head>
+<body onload="uf_open()"  style="overflow:hidden; margin:3px;font-size:13px;;padding:0px;">
+    <div id="SKbillsheet">
+        <div id="tabs">
+            <!-- 基本信息Tab页 -->
+            <div id="ab" class="x-hide-display">
+                <table style="font-size: 12px; width:100%; height:100%">
+                    <tr>
+                        <td>
+                            <fieldset style='Height:116;Width:152;' id="RdoAlign"><legend>水平</legend>
+                                <input id=RdoAlign_1 onclick=RdoAlign.value=RdoAlign_1.value;RdoAlign.text=RdoAlign_1.text; type=radio value="nochange" name=RdoAlign text="无变化" checked/><SPAN>无变化</SPAN> <BR>
+                                <input id=RdoAlign_2 onclick=RdoAlign.value=RdoAlign_2.value;RdoAlign.text=RdoAlign_2.text; type=radio value="left" name=RdoAlign text="左对齐"/><SPAN>左对齐</SPAN> <BR>
+                                <input id=RdoAlign_3 onclick=RdoAlign.value=RdoAlign_3.value;RdoAlign.text=RdoAlign_3.text; type=radio value="right" name=RdoAlign text="右对齐"/><SPAN>右对齐</SPAN> <BR>
+                                <input id=RdoAlign_4 onclick=RdoAlign.value=RdoAlign_4.value;RdoAlign.text=RdoAlign_4.text; type=radio value="center" name=RdoAlign text="水平居中"/><SPAN>水平居中</SPAN> <BR>
+                            </fieldset>
+                        </td>
+                        <td>
+                            <fieldset style='Height:116;Width:152;' id="RdoValign"><legend>垂直</legend>
+                                <input id=RdoValign_1 onclick=RdoValign.value=RdoValign_1.value;RdoValign.text=RdoValign_1.text; type=radio value="nochange" name=RdoValign text="无变化" checked/><SPAN>无变化</SPAN> <BR>
+                                <input id=RdoValign_2 onclick=RdoValign.value=RdoValign_2.value;RdoValign.text=RdoValign_2.text; type=radio value="top" name=RdoValign text="上对齐"/><SPAN>上对齐</SPAN> <BR>
+                                <input id=RdoValign_3 onclick=RdoValign.value=RdoValign_3.value;RdoValign.text=RdoValign_3.text; type=radio value="bottom" name=RdoValign text="下对齐"/><SPAN>下对齐</SPAN> <BR>
+                                <input id=RdoValign_4 onclick=RdoValign.value=RdoValign_4.value;RdoValign.text=RdoValign_4.text; type=radio value="middle" name=RdoValign text="垂直居中"/><SPAN>垂直居中</SPAN> <BR>
+                            </fieldset>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div id="st" class="x-hide-display">
+                <table style="font-size: 12px;width:100%; height:100%">
+                    <tr>
+                        <td>
+                            <fieldset style='Height:116;Width:152;' id="RdoWidth"><legend>宽度</legend>
+                                <input id=RdoWidth_1 onclick=RdoWidth.value=RdoWidth_1.value;RdoWidth.text=RdoWidth_1.text; type=radio value="nochange" name=RdoWidth text="无变化" checked/><SPAN>无变化</SPAN> <BR>
+                                <input id=RdoWidth_2 onclick=RdoWidth.value=RdoWidth_2.value;RdoWidth.text=RdoWidth_2.text; type=radio value="wmin" name=RdoWidth text="压缩到最小"/><SPAN>压缩到最小</SPAN> <BR>
+                                <input id=RdoWidth_3 onclick=RdoWidth.value=RdoWidth_3.value;RdoWidth.text=RdoWidth_3.text; type=radio value="wmax" name=RdoWidth text="膨胀到最大"/><SPAN>膨胀到最大</SPAN> <BR>
+                            </fieldset>
+                        </td>
+                        <td>
+                            <fieldset style='Height:116;Width:152;' id="RdoHeight"><legend>高度</legend>
+                                <input id=RdoHeight_1 onclick=RdoHeight.value=RdoHeight_1.value;RdoHeight.text=RdoHeight_1.text; type=radio value="nochange" name=RdoHeight text="无变化" checked/><SPAN>无变化</SPAN> <BR>
+                                <input id=RdoHeight_2 onclick=RdoHeight.value=RdoHeight_2.value;RdoHeight.text=RdoHeight_2.text; type=radio value="hmin" name=RdoHeight text="压缩到最小"/><SPAN>压缩到最小</SPAN> <BR>
+                                <input id=RdoHeight_3 onclick=RdoHeight.value=RdoHeight_3.value;RdoHeight.text=RdoHeight_3.text; type=radio value="hmax" name=RdoHeight text="膨胀到最大"/><SPAN>膨胀到最大</SPAN> <BR>
+                            </fieldset>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div id="ev" class="x-hide-display">
+                <table style="font-size: 12px;width:100%; height:100%">
+                    <tr>
+                        <td>
+                            <fieldset style='Height:116;Width:152;' id="RdoSpacing"><legend>水平</legend>
+                                <input id=RdoSpacing_1 onclick=RdoSpacing.value=RdoSpacing_1.value;RdoSpacing.text=RdoSpacing_1.text; type=radio value="nochange" name=RdoSpacing text="无变化" checked/><SPAN>无变化</SPAN> <BR>
+                                <input id=RdoSpacing_2 onclick=RdoSpacing.value=RdoSpacing_2.value;RdoSpacing.text=RdoSpacing_2.text; type=radio value="min" name=RdoSpacing text="最小间距"/><SPAN>最小间距</SPAN> <BR>
+                                <input id=RdoSpacing_3 onclick=RdoSpacing.value=RdoSpacing_3.value;RdoSpacing.text=RdoSpacing_3.text; type=radio value="max" name=RdoSpacing text="最大间距"/><SPAN>最大间距</SPAN> <BR>
+                            </fieldset>
+                        </td>
+                        <td>
+                            <fieldset style='Height:116;Width:152;' id="RdoVspacing"><legend>垂直</legend>
+                                <input id=RdoVspacing_1 onclick=RdoVspacing.value=RdoVspacing_1.value;RdoVspacing.text=RdoVspacing_1.text; type=radio value="nochange" name=RdoVspacing text="无变化"  checked/><SPAN>无变化</SPAN> <BR>
+                                <input id=RdoVspacing_2 onclick=RdoVspacing.value=RdoVspacing_2.value;RdoVspacing.text=RdoVspacing_2.text; type=radio value="vmin" name=RdoVspacing text="最小间距"/><SPAN>最小间距</SPAN> <BR>
+                                <input id=RdoVspacing_3 onclick=RdoVspacing.value=RdoVspacing_3.value;RdoVspacing.text=RdoVspacing_3.text; type=radio value="vmax" name=RdoVspacing text="最大间距"/><SPAN>最大间距</SPAN> <BR>
+                            </fieldset>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- 按钮区域 -->
+    <div id="buttons" style="text-align:right;">
+        <table>
+            <tr>
+                <td style="padding-right:20px;">
+                    <!-- 确定按钮 -->
+                    <button id="cmdOk" style="display: block; font-size: 12px; width: 65px;height: 21px; background-color: #ffffff; border-style:none; border:0px;" onclick="uf_ok()">
+                    </button>
+                </td>
+                <td style="padding-right:20px;">
+                    <!-- 取消按钮 -->
+                    <button id="cmdClose" style="display: block; font-size: 12px; width: 65px;height: 21px; background-color: #ffffff; border-style:none; border:0px;" onclick="CloseBill()">
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    
+    <script type="text/javascript" src="../../ext/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="../../ext/ext-all.js"></script>
+     <script type="text/javascript" src="../../commonjs/public_api.js"></script> 
+    <script type="text/javascript" src="../js/f_core.js"></script>
+    <script type="text/javascript" src="../../commonjs/design_operation.js"></script> 
+    <script type="text/javascript" src="../../commonjs/property.js"></script>    
+    <script type="text/javascript" src="../../commonjs/opencommonform.js"></script>
+    <script  type="text/javascript" src="../../commonjs/browser_version.js"></script>
+    <script type="text/javascript" src="../../commonjs/sys_common_valid_library.js"></script>   
+    <script type="text/javascript" language="javascript">
+        Ext.onReady(function(){
+            var tabs = new Ext.TabPanel({
+                renderTo: 'tabs',
+                width: "100%",
+                height: ChangeTabsSize(),
+                activeTab: 0,
+                frame:true,
+                defaults:{autoHeight: true},
+                items:[
+                    { contentEl: 'ab', title: '  对齐面板  ' },
+                    { contentEl: 'st', title: '  大 小  ' },
+                    { contentEl: 'ev', title: '  间 距  ' }
+                ]
+            });
+        });
+        
+        //改变TAB的样式
+        function ChangeTabsSize()
+        {
+            var PageWidth = document.body.clientWidth;
+            var PageHeight = document.body.clientHeight;
+            var ButtonsHeight = document.getElementById("buttons").offsetHeight;
+            var TabsHeight = PageHeight - ButtonsHeight - 10;
+            return TabsHeight;
+        }
+
+        public_Form();
+
+        function uf_open() {
+            PropWinOnload.loadButtonImg();
+        }
+
+        function uf_ok() {
+            var obj = publicform.obj;
+            if (RdoAlign.value == "left") {
+                for (var i = 1; i < obj.length; i++) {
+                    obj[i].style.left = obj[0].style.pixelLeft;
+                }
+            }else if (RdoAlign.value == 'right') {
+                for (var i = 1; i < obj.length; i++) {
+                    obj[i].style.left = obj[0].style.pixelLeft + (obj[0].style.pixelWidth - obj[i].style.pixelWidth)
+                }
+            }else if (RdoAlign.value == 'center') {
+                for (var i = 1; i < obj.length; i++) {
+                    obj[i].style.left = obj[0].style.pixelLeft + (obj[0].style.pixelWidth - obj[i].style.pixelWidth) / 2
+                }
+            }
+            
+            if (RdoValign.value == 'top') {
+                for (var i = 1; i < obj.length; i++) {
+                    obj[i].style.top = obj[0].style.top
+                }
+            }else if (RdoValign.value == 'bottom') {
+                for (var i = 1; i < obj.length; i++) {
+                    obj[i].style.top = obj[0].style.pixelTop + obj[0].style.pixelHeight - obj[i].style.pixelHeight
+                }
+            }else if (RdoValign.value == 'middle') {
+                for (var i = 1; i < obj.length; i++) {
+                    obj[i].style.top = obj[0].style.pixelTop + (obj[0].style.pixelHeight - obj[i].style.pixelHeight) / 2
+                }
+            }
+
+            if (RdoWidth.value != 'nochange') {
+                var objsortwidth = obj.sort(cmpwidth);
+                if (RdoWidth.value == 'wmin') {
+                    for (var i = 1; i < objsortwidth.length; i++) {
+                        objsortwidth[i].style.width = objsortwidth[0].style.width
+                    }
+
+                } else if (RdoWidth.value == 'wmax') {
+                    for (var i = 0; i < objsortwidth.length - 1; i++) {
+                        objsortwidth[i].style.width = objsortwidth[objsortwidth.length - 1].style.width
+                    }
+                }
+            }
+            if (RdoHeight.value != 'nochange') {
+                var objsortheight = obj.sort(cmpheight);
+                if (RdoHeight.value == 'hmin') {
+                    for (var i = 1; i < objsortheight.length; i++) {
+                        objsortheight[i].style.height = objsortheight[0].style.height
+                    }
+
+                } else if (RdoHeight.value == 'hmax') {
+                    for (var i = 0; i < objsortheight.length - 1; i++) {
+                        objsortheight[i].style.height = objsortheight[objsortheight.length - 1].style.height
+                    }
+                }
+            }
+
+            uf_spacing();
+
+            //编辑成功返回true,修改编辑状态
+            window.returnValue = true;
+            window.close();
+            
+            function cmpwidth(a, b) {
+                return a.style.pixelWidth - b.style.pixelWidth;
+            }
+            function cmpheight(a, b) {
+                return a.style.pixelHeight - b.style.pixelHeight;
+            }
+        }
+
+        function uf_spacing() {
+            var obj = publicform.obj;
+            //垂直的最大间距和最小间距
+            if (RdoVspacing.value != 'nochange') {
+                var objTopSort = obj.sort(cmp)
+                if (RdoVspacing.value == "vmax") {
+                    var s = objTopSort[1].style.pixelTop - objTopSort[0].style.pixelTop - objTopSort[0].style.pixelHeight;
+                    for (var i = 0; i < objTopSort.length - 1; i++) {
+                        var slen = objTopSort[i + 1].style.pixelTop - objTopSort[i].style.pixelTop - objTopSort[i].style.pixelHeight;
+                        if (s < slen) s = slen;
+
+                    }
+                    for (var k = 0; k < objTopSort.length - 1; k++) {
+                        objTopSort[k + 1].style.pixelTop = objTopSort[k].style.pixelTop + objTopSort[k].style.pixelHeight + s;
+
+                    }
+                } else if (RdoVspacing.value == "vmin") {
+                    var s = objTopSort[1].style.pixelTop - objTopSort[0].style.pixelTop - objTopSort[0].style.pixelHeight;
+                    for (var i = 0; i < objTopSort.length - 1; i++) {
+                        var slen = objTopSort[i + 1].style.pixelTop - objTopSort[i].style.pixelTop - objTopSort[i].style.pixelHeight;
+                        if (s > slen) s = slen;
+                    }
+                    for (var k = 0; k < objTopSort.length - 1; k++) {
+                        objTopSort[k + 1].style.pixelTop = objTopSort[k].style.pixelTop + objTopSort[k].style.pixelHeight + s;
+
+                    }
+                }
+            }
+            if (RdoSpacing.value != 'nochange') {
+                var objLeftSort = obj.sort(par);
+
+                if (RdoSpacing.value == "max") {
+                    var j = 0
+                    for (var i = 0; i < objLeftSort.length - 1; i++) {
+                        var slen = objLeftSort[i + 1].style.pixelLeft - objLeftSort[i].style.pixelLeft - objLeftSort[i].style.pixelWidth;
+                        if (j < slen) j = slen
+                    }
+                    for (var k = 0; k < objLeftSort.length - 1; k++) {
+                        //var x = objLeftSort[k+1].style.pixelLeft ;
+                        objLeftSort[k + 1].style.pixelLeft = objLeftSort[k].style.pixelLeft + objLeftSort[k].style.pixelWidth + j;
+
+                    }
+                } else if (RdoSpacing.value == "min") {
+                    var j = objLeftSort[1].style.pixelLeft - objLeftSort[0].style.pixelLeft - objLeftSort[0].style.pixelWidth;
+                    for (var i = 1; i < objLeftSort.length - 1; i++) {
+                        var slen = objLeftSort[i + 1].style.pixelLeft - objLeftSort[i].style.pixelLeft - objLeftSort[i].style.pixelWidth;
+                        if (j > slen) {
+                            j = slen;
+                        } else {
+                            j = j;
+                        }
+
+                    }
+                    for (var k = 0; k < objLeftSort.length - 1; k++) {
+                        objLeftSort[k + 1].style.pixelLeft = objLeftSort[k].style.pixelLeft + objLeftSort[k].style.pixelWidth + j;
+                    }
+                }
+            }
+        }
+
+        function cmp(a, b) {
+            return a.style.pixelTop - b.style.pixelTop;
+        }
+
+        function par(a, b) {
+            return a.style.pixelLeft - b.style.pixelLeft;
+        }
+    </script>
+</body>
+</html>

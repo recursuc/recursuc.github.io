@@ -1,0 +1,1 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="RptToHTML.aspx.cs" Inherits="ReportSystem.Application.Run.Report.Handle.RptToHTML" %>

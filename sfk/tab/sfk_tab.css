@@ -1,0 +1,220 @@
+﻿
+.head, .nav, .panels
+{
+    margin: 0px;
+    padding: 0px;
+    font-size: 12px; /*line-height: 20px;*/
+    font-family: Arial;
+}
+
+.header
+{
+    position: absolute;
+    background-color: #213352;
+    overflow:hidden;
+}
+
+.tHeader
+{
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 20px; /*text-align:left;*/
+    vertical-align: middle;
+}
+
+.bHeader
+{
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    height: 20px; /*text-align:left;*/
+    vertical-align: middle;
+}
+
+.lHeader
+{
+    top: 0px;
+    left: 0px;
+    width: 20px;
+    height: 100%;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.rHeader
+{
+    right: 0px;
+    top: 0px;
+    width: 20px;
+    height: 100%;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.nav
+{
+    position: absolute;
+    list-style: none;
+    /* float: left;   width: 100%;  border: 1px solid #CCC;*/
+    border-style:solid;
+    border-width:0px;
+}
+
+.bHeader .nav > li, .tHeader .nav > li
+{
+	float: left;
+	margin: 0 5px 0 0;
+	max-width: 200px;
+	max-height: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	color:White;
+	white-space: nowrap;
+	position: relative;
+}
+
+.lHeader .nav > li, .rHeader .nav > li
+{
+    margin: 0 0px 5px 0;
+    max-width:  100%;
+	max-height: 200px;
+	overflow: hidden;
+	position: relative;
+	color:White;
+	/*
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	*/
+}
+
+.tab-PrevNav, .tab-NextNav {
+	display:none;
+	position: absolute;
+	background-color: red;
+	cursor: pointer;
+}
+
+
+.tHeader li.active a
+{
+    background-color: #E7C04D;
+    color:black;
+    border-radius: 4px 4px 0px 0px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    border: 1px solid transparent; /*background-color: #465C83; border: 3px solid transparent;  font-weight:bold;*/
+    padding-left: 2px;
+    padding-right: 2px;
+    cursor: pointer;
+}
+
+.tHeader li.active > a > .ti-close
+{
+	visibility: visible;
+}
+
+.bHeader li.active a
+{
+    background-color: #E7C04D;
+     color:black;
+    border-radius: 0px 0px 4px 4px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4); /*border: 3px solid transparent;  font-weight:bold;*/
+    border: 1px solid transparent; /*background-color: #465C83; border: 3px solid transparent;*/
+    padding-left: 2px;
+    padding-right: 2px;
+       cursor: pointer;
+}
+
+.bHeader li.active > a > .ti-close
+{
+	visibility: visible;
+}
+
+.lHeader li.active a
+{
+    /*background-color: #E7C04D;*/
+    color:white;
+    border-radius: 4px 0px 0px 4px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4); /*border: 3px solid transparent;  font-weight:bold;*/
+    border: 1px solid transparent; /*background-color: #465C83; border: 3px solid transparent;*/
+    padding-top: 2px;
+    padding-bottom: 2px;
+       cursor: pointer;
+}
+
+.rHeader li.active a
+{
+     /*background-color: #E7C04D;*/
+    color:white;
+    border-radius:0px 4px 4px  0px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    border: 1px solid transparent; /*background-color: #465C83; border: 3px solid transparent;  font-weight:bold;*/
+    padding-top: 2px;
+    padding-bottom: 2px;
+       cursor: pointer;
+}
+
+.ti-close {
+	visibility: hidden;
+	color: rgb(168, 245, 116);
+}
+
+.ti-close:hover{
+	/*width: 11px;
+	height: 11px;
+	overflow: hidden;
+	position: absolute;
+	top: 4px;
+	right: 2px;
+	z-index: 12;visibility: visible;background: url(close.jpg);*/
+	color: red;
+	cursor: pointer;
+}
+
+.tHeader .nav > li:hover .ti-close{
+	visibility: visible;
+}
+
+.panels
+{
+    position: absolute;
+    /*
+	    left: 0px;
+	    width: 100%;
+	    height: 100%;
+	    background-color:#213352;
+    */
+}
+
+.panel_float
+{
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    border: 3px solid transparent;
+}
+
+.title
+{
+    position: relative;
+    color: White;
+    background-color: #213352;
+}
+
+
+/*
+.oper
+{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+.oper a
+{
+    text-decoration: none;
+    float: left;
+    margin: 0px 1px;
+    color: White;
+    margin-left: 5px;
+    font-weight: normal;
+    text-align: right;  border-radius: 5px;             background-color:Blue; 
+}
+ */

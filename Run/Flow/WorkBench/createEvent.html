@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+    <base target="_self" />
+    <title>选择开始节点</title>
+    <link href="../../../SysAdmin/Style/Style_MainContent.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        A:hover
+        {
+            color: black;
+            text-decoration: none;
+        }
+        A:link
+        {
+            color: black;
+            text-decoration: none;
+        }
+        A:visited
+        {
+            color: black;
+            text-decoration: none;
+        }
+        body
+        {
+            font-size: 12px;
+            overflow:hidden;
+        }
+    </style>
+    <script language="javascript" type="text/javascript" src="../../../../Javascripts/jquery/jquery-1.7.1.js"></script>
+    <script language="javascript" type="text/javascript">
+    //lastest:
+    var queryStrings=function() {//get url querystring
+        var params=document.location.search,reg=/(?:^\?|&)(.*?)=(.*?)(?=&|$)/g,temp,args={};
+        while((temp=reg.exec(params))!=null) args[temp[1]]=decodeURIComponent(temp[2]);
+        return args;
+    };
+    var args = queryStrings();
+    $(window).load(function () {
+    	var nodes = args.StartNodes;
+    	var flowId = args.FlowId;
+    	
+    	var nodesHtml = "";
+        var nodeList = nodes.split(';');
+        for(var n = 0, l = nodeList.length; n < l ; n++){
+        	if(nodeList[n] != ""){
+        		var nodeInf = nodeList[n].split(',');
+        	    nodesHtml += "<input type='radio' name='rdoNode' value='" + nodeInf[1] + "'/>" + nodeInf[0];
+        	}
+        }
+        $("#nodesPanel").html(nodesHtml);
+    });
+    
+    function startFlow(){
+    	var val=$('input:radio[name="rdoNode"]:checked').val();
+    	if(val==null){
+            alert("请选择一个开始节点!");
+            return false;
+        }
+        else{
+        	var sXML = "<?xml version=\"1.0\" encoding=\"utf-8\"?><RAD><Doc><Data><Param ParamType=\"CreatEventReId\" StartNodeId=\""+ val +"\"></Param></Data><Result><ResCode></ResCode><ResDetail></ResDetail></Result></Doc></RAD>";
+        	$.ajax({
+                type: "post",
+                url: "workFlowRunAction!creatEventReId.action",
+                async: false,
+                contentType: 'xml',
+                data: $.parseXML(sXML),
+                processData: false,
+                success: function (xmlResult) {
+                	var flowData = $(xmlResult).find("Param");
+                	var eventStepId = flowData.attr("EventStepId");
+                	window.returnValue = eventStepId;
+                	frameElement.lhgDG.cancel();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+        	        alert('Failure: ' + textStatus);
+        	    }
+            });
+        }
+    }
+    </script>
+</head>
+<body>
+    <form runat="server">
+    <table width="100%" height="100%" border="0" cellspacing="0"  cellpadding="0">
+        <tr>
+            <td width="98%" valign="top">
+                <table align="center" cellpadding="0" cellspacing="0" class="table2" style="margin:1% 1% 0px 1%; width:98%;">
+                    <tr>
+                        <td class="title1">选择开始节点</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style=" height:100%">
+                <table width="98%" height="99%" style="vertical-align:top; margin:0px 1% 1% 1%;" align='center' border="0" cellpadding='8' cellspacing='0'>
+                    <tr>
+                        <td width="100%" class="table3">
+                            <table cellpadding="0" cellspacing="0" border="0" style="width:100%; height:100%">
+                                <tr>
+                                    <td id="nodesPanel">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="right">
+                                    	<input type="button" id="btnCreate" class="divButtons_Button" value="创建" onclick="startFlow()"/>
+                                    </td>
+                                </tr>
+                            </table>  
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    </form>
+</body>
+</html>

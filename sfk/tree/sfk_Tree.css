@@ -1,0 +1,42 @@
+﻿.tree_title
+{
+    border: 0px;
+    text-overflow: ellipsis;
+    white-space:nowrap;
+    overflow:hidden;
+}
+.tree_node
+{
+    margin-left: 20px;
+    overflow: hidden;
+}
+.tree_childnodes
+{
+    margin-left: 20px;
+    overflow: hidden;
+}
+.tree_icon
+{
+    display: inline;
+    margin-right: 5px;
+    cursor: pointer;
+    vertical-align: top;
+}
+.tree_text
+{
+    cursor: pointer;
+    font-size: 12px;
+    vertical-align: text-top;
+}
+.tree_img
+{
+    display: inline;
+    margin-right: 3px;
+    cursor: pointer;
+    vertical-align: top;
+}
+
+.tree_title img
+{
+    vertical-align: top;
+}

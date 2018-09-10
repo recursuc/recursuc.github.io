@@ -1,0 +1,172 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>���ݼ�����</title>
+     <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <style>
+        #tbHead td
+        {
+            border-right: 1px solid Black;
+            background-color:Gray;
+            font-weight:bold;
+            font-size:small;
+            height:19px;
+        }
+        
+        #tbDataSet td
+        {
+            border-right: 1px solid Black;
+            border-bottom: 1px solid Black;
+            font-size:small;
+            height:19px;
+        }
+  
+        body
+     {
+         background-color:#c8d9f0;
+         }
+ 
+    </style>
+     <script src="../js/public_function.js" type="text/javascript"></script>
+</head>
+<body>
+    <div>
+        <table>
+            <tr>
+                <td>
+                    <div id="divDatasetList" style="overflow: scroll; width:150px; height:200px">
+                    divDatasetList
+                    </div>
+                </td>
+                <td valign="top">
+                    <input type="button" id="Button1" value="���"  onclick="AddDataset()" />
+                    <input type="button" id="Button2" value="ɾ��" onclick="DelDataset()" />
+                    <input type="button" id="Button3" value="ȷ��" />
+                    <input type="button" id="Button4" value="ȡ��" />
+                    <input type="button" id="Button5" value="����" />
+
+                    <div id="RightDiv">
+                        <!--�������˵�
+                            <input type="button" id="btnAdd" value="���"  onclick="AddDataset()" />
+                            <input type="button" id="btnDel" value="ɾ��" onclick="DelDataset()" />
+                            <input type="button" id="btnSubmit" value="ȷ��" />
+                            <input type="button" id="btnCancel" value="ȡ��" />
+                            <input type="button" id="btnImport" value="����" />-->
+    
+                        <!--�б�����ͷ��ǩ-->
+                        <div id="divHead" style="top:40px; background-color: #D0D0C8; position: absolute;
+                                height: 19px; width: 610px; overflow: hidden">
+                            <table id="tbHead" cellpadding="0" cellspacing="0" style="table-layout: fixed;">
+                                <tr align="center">
+                                    <td style="width:10px">
+                        
+                                    </td>
+                                    <td style="width:80px">
+                                        ����
+                                    </td>
+                                    <td style="width:80px">
+                                        ����
+                                    </td>
+                                    <td style="width:360px">
+                                        SQL���
+                                    </td>
+                                    <td style="width:80px">
+                                        ����Դ
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <!--�б�����-->
+                        <div style="top:59px; width: 630px; height:150px; position: absolute; overflow: scroll; background-color: white; padding: 0px;
+                                border-left: 1px solid black; border-bottom: 1px solid black;" onclick="ChangeColor(event)">
+                            <table id="tbDataSet" cellpadding="0" cellspacing="0" style=";table-layout: fixed;">
+                                <colgroup>
+                                    <col style="width: 10px;" />
+                                    <col style="width: 80px;" />
+                                    <col style="width: 80px;" />
+                                    <col style="width: 360px;" />
+                                    <col style="width: 80px;" />
+                                </colgroup>
+                                <tr>
+                                    <td />
+                                    <td />
+                                    <td />
+                                    <td />
+                                    <td />
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+<script src="../js/datasource.js" type="text/javascript"></script>
+<script type="text/javascript">
+    var ds = new DataSet();
+    //����ѡ���еı���ɫ
+    function ChangeColor(event) {
+        var oTemp = document.getElementById("selected");
+        if (oTemp != null) {
+            oTemp.bgColor = "white";
+            oTemp.setAttribute("id", "");
+            oTemp.childNodes[0].innerText = "";
+        }
+        var oCell = event.srcElement;
+        if (oCell.nodeName.toLocaleLowerCase() != "td") {
+            return;
+        }
+
+        var oTr = oCell.parentNode;
+        oTr.bgColor = "#E6E6FA";
+        oTr.setAttribute("id", "selected");
+        oTr.childNodes[0].innerText = ">";
+    }
+
+    function AddDataset() {
+        var url = "datasetSet.htm";
+        var sReturn = showModalDialog(url, ds, 'dialogWidth:820px; dialogHeight:400px; help:no; center:yes; status:no; resizable:no; location:yes; scroll:no;');
+        if (sReturn != "true") {
+            return;
+        }
+        var oTable = document.getElementById("tbDataSet");
+        var rowsCount = oTable.rows.length;
+        var oTr = oTable.insertRow(rowsCount);
+        var oTd = oTr.insertCell(0);
+        
+        //����
+        oTd = oTr.insertCell(1);
+        oTd.innerText = ds.Type;
+
+        //����
+        oTd = oTr.insertCell(2);
+        oTd.innerText = ds.Name;
+
+        //SQL���
+        oTd = oTr.insertCell(3);
+
+        var mainTableName = ds.MainTable;
+        var len = ds.DataTables.length;
+        for (var i = 0; i < len; i++) {
+            if (ds.DataTables[i].TableName == mainTableName) {
+                oTd.innerText = ds.DataTables[i].sql;
+            }
+        }
+
+        //����Դ
+        oTd = oTr.insertCell(4);
+        oTd.innerText = "";
+    }
+
+    function DelDataset() {
+        var oTr = document.getElementById("selected");
+        if (oTr != null) {
+            oTr.removeNode(true);
+        }
+        else {
+            alert("����ǰû��ѡ����");
+        }
+    }
+</script>
+</html>

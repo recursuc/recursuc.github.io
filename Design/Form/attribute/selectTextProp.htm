@@ -1,0 +1,246 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+    <style type="text/css">
+        .x-tab-panel-body .x-panel-body
+        {
+            padding: 10px;
+        }
+    </style>
+    <link rel="Stylesheet" type="text/css" href="../css/form.css" />
+    <link rel="Stylesheet" type="text/css" href="../js/ext/resources/css/ext-all.css" />
+    <link rel="Stylesheet" type="text/css" href="../js/ext/resources/css/xtheme-gray.css" />
+    <link rel="Stylesheet" type="text/css" href="../js/ext/resources/css/tabs.css" />
+</head>
+<body onload="uf_open()" onkeydown="RunTabindex()" onkeypress="public_window_onkeypress()" onresize="public_window_onresize()" style="overflow:hidden; margin:3px;font-size:13px;padding:0px;">
+    <div id="SKbillsheet">
+        <div id="tabs">
+            <div id="ab">
+                <table style="font-size: 12px; width: 100%;">
+                    <tr>
+                        <td>
+                            字体
+                        </td>
+                        <td>
+                            大小
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <select id="SKDBListBox1" onresizeend="resizeEnd()" onresizestart="resizeStart()"
+                                onmoveend="moveEnd()" style="font-size: 12px; width: 100px; height: 132px" onmovestart="moveStart()"
+                                onchange="bill_onclick(&quot;uf_exec('FontName','false',SKDBListBox1.value)&quot;)"
+                                size="8" controltype="listbox">
+                                <option value="Arial">Arial</option>
+                                <option value="Arial Black">Arial Black</option>
+                                <option value="Arial Narrow">Arial Narrow</option>
+                                <option value="Basemic">Basemic</option>
+                                <option value="Basemic Symbol">Basemic Symbol</option>
+                                <option value="Basemic Times">Basemic Times</option>
+                                <option value="Book Antiaua">Book Antiaua</option>
+                                <option value="Bookman Old Style">Bookman Old Style</option>
+                                <option value="Cemtury Bothic">Cemtury Bothic</option>
+                                <option value="Comic sams MS">Comic sams MS</option>
+                                <option value="Copperplate ">Copperplate</option>
+                                <option value="Gothic">Gothic</option>
+                                <option value="Copperplate ">Copperplate</option>
+                                <option value="Gothic">Gothic</option>
+                                <option value="Courier">Courier</option>
+                                <option value="Courier New">Courier New</option>
+                                <option value="FixedSyS">FixedSyS</option>
+                                <option value="Garamond">Garamond</option>
+                                <option value="Ceorgia">Ceorgia</option>
+                                <option value="HarettemSchweiler">HarettemSchweiler</option>
+                                <option value="Impact">Impact</option>
+                                <option value="Kingsoft Phonetic">Kingsoft Phonetic</option>
+                                <option value="Lucida console">Lucida console</option>
+                                <option value="Lucida Sans ">Lucida Sans</option>
+                                <option value="Unicod">Unicod</option>
+                                <option value="Marlett">Marlett</option>
+                                <option value="Microsoft sans ">Microsoft sans</option>
+                                <option value="ser">ser</option>
+                                <option value="MingLiU">MingLiU</option>
+                                <option value="Modern">Modern</option>
+                                <option value="Monotype corsive">Monotype corsive</option>
+                                <option value="MS Sans serif">MS Sans serif</option>
+                                <option value="Ms Serif">Ms Serif</option>
+                                <option value="palatino Linotype">palatino Linotype</option>
+                                <option value="PMingLiU">PMingLiU</option>
+                                <option value="Roman">Roman</option>
+                                <option value="Script">Script</option>
+                                <option value="Small Fonts">Small Fonts</option>
+                                <option value="Symbol">Symbol</option>
+                                <option value="SyStem">SyStem</option>
+                                <option value="Tahoma">Tahoma</option>
+                                <option value="Terminal">Terminal</option>
+                                <option value="Times New Roman">Times New Roman</option>
+                                <option value="Trebucher MS">Trebucher MS</option>
+                                <option value="Verdana">Verdana</option>
+                                <option value="Webdings">Webdings</option>
+                                <option value="Wingdings">Wingdings</option>
+                                <option value="Wingdings 2">Wingdings 2</option>
+                                <option value="Wingdings 3">Wingdings 3</option>
+                                <option value="方正舒体">方正舒体</option>
+                                <option value="方正姚体">方正姚体</option>
+                                <option value="仿宋_GB2312">仿宋_GB2312</option>
+                                <option value="黑体">黑体</option>
+                                <option value="华文彩云">华文彩云</option>
+                                <option value="华文细黑">华文细黑</option>
+                                <option value="华文新魏">华文新魏</option>
+                                <option value="华文行楷">华文行楷</option>
+                                <option value="华文中宋">华文中宋</option>
+                                <option value="楷体_GB2312">楷体_GB2312</option>
+                                <option value="隶书">隶书</option>
+                                <option value="宋体">宋体</option>
+                                <option value="新宋体">新宋体</option>
+                                <option value="幼体">幼体</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select id="SKDBListBox2" onresizeend="resizeEnd()" onresizestart="resizeStart()"
+                                onmoveend="moveEnd()" style="display: block; font-size: 12px; width: 100px; height: 132px;
+                                " onmovestart="moveStart()" size="8" controltype="listbox"
+                                check="1" onclick="bill_onclick(&quot;uf_exec('FontSize','true',SKDBListBox2.value)&quot;);">
+                                <option value="3">默认</option>
+                                <option value="1">1(8pt)</option>
+                                <option value="2">2(10pt)</option>
+                                <option value="3">3(12pt)</option>
+                                <option value="4">4(14pt)</option>
+                                <option value="5">5(18pt)</option>
+                                <option value="6">6(24pt)</option>
+                                <option value="7">7(36pt)</option>
+                            </select>
+                        </td>
+                        <td>
+                            <table style="font-size: 12px; width: 100%; height: 132px;">
+                                <tr style=" height:30%;">
+                                    <td>
+                                        <button id="cmdB" onresizeend="resizeEnd()" onresizestart="resizeStart()" onmoveend="moveEnd()"
+                                            style=" width: 21px;height: 21px; background-color: #ffffff; border-style:none; border:0px;" 
+                                            onmovestart="moveStart()" controltype="button" dropstyle="否" onclick="bill_onclick(&quot;uf_exec('Bold')&quot;)">
+                                            </button>
+                                    </td>
+                                    <td>
+                                        <button id="FCButton5" onresizeend="resizeEnd()" onresizestart="resizeStart()" onmoveend="moveEnd()"
+                                            style="width: 21px;height: 21px; background-color: #ffffff; border-style:none; border:0px;" onmovestart="moveStart()"
+                                            controltype="button" dropstyle="否" onclick="bill_onclick(&quot;uf_exec('Italic')&quot;)">
+                                            </button>
+                                    </td>
+                                    <td>
+                                        <button id="FCButton4" onresizeend="resizeEnd()" onresizestart="resizeStart()" onmoveend="moveEnd()"
+                                            style="width: 21px;height: 21px; background-color: #ffffff; border-style:none; border:0px;" onmovestart="moveStart()"
+                                            controltype="button" dropstyle="否" onclick="bill_onclick(&quot;uf_exec('Underline')&quot;)">
+                                            </button>
+                                    </td>
+                                </tr>
+                                <tr style=" height:40%">
+                                    <td colspan="2" style="text-align:center">
+                                        <div id="Label3" onresizeend="resizeEnd()" onresizestart="resizeStart()" onmoveend="moveEnd()"
+                                            style="display: block; font-size: 12px; width:60px; height: 15px;" onmovestart="moveStart()"
+                                            nowrap controltype="label" value="Label3">字体颜色</div>
+                                    </td>
+                                    <td>
+                                        <button id="FCButton6" onresizeend="resizeEnd()" onresizestart="resizeStart()" onmoveend="moveEnd()"
+                                            style="display: block; font-weight: bold; font-size: 14px; width: 24px; height: 24px;border:0px; 
+                                            border-style:none;background-color:#ffffff; text-decoration: underline" onmovestart="moveStart()"
+                                            controltype="button" dropstyle="否" onclick='bill_onclick("fontColor()")'>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr style=" height:30%">
+                                    <td colspan="3" style=" text-align:center;">
+                                        <button id="FCButton3" onresizeend="resizeEnd()" onresizestart="resizeStart()" onmoveend="moveEnd()"
+                                            style="display: block; font-size: 12px; width: 65px;height: 21px; background-color: #ffffff; border-style:none; border:0px;"
+                                            onmovestart="moveStart()" controltype="button" dropstyle="否" onclick='bill_onclick("CloseBill()")'>
+                                            </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <object id="dlgHelper" classid="clsid:3050f819-98b5-11cf-bb82-00aa00bdce0b" width="0px"
+            height="0px" viewastext>
+        </object>
+        
+            
+   <script type="text/javascript" src="../../ext/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="../../ext/ext-all.js"></script>
+    <script type="text/javascript" src="../js/f_core.js"></script>
+     <script type="text/javascript" src="../../commonjs/design_operation.js"></script> 
+    <script type="text/javascript" src="../../commonjs/public_api.js"></script>  
+    <script type="text/javascript" src="../../commonjs/property.js"></script>    
+    <script type="text/javascript" src="../../commonjs/opencommonform.js"></script>
+    <script type="text/javascript" src="../../commonjs/sys_common_valid_library.js"></script>    
+
+
+    <script type="text/javascript" language="javascript">
+        Ext.onReady(function() {
+            var tabs = new Ext.TabPanel({
+                renderTo: 'tabs',
+                width: "100%",
+                height: ChangeTabsSize(),
+                activeTab: 0,
+                frame: true,
+                defaults: { autoHeight: "100%" },
+                items: [
+                    { contentEl: 'ab', title: '  字体属性  ' }
+                ]
+            });
+        });
+
+        //改变TAB的样式
+        function ChangeTabsSize() {
+            var PageWidth = document.body.clientWidth;
+            var PageHeight = 220;
+            var TabsHeight = PageHeight - 10;
+            return TabsHeight;
+        }
+
+        function uf_exec(sCommand, buserface, vValue) {
+            parent.designobj.document.execCommand(sCommand, buserface, vValue);
+        }
+
+        function uf_open() {
+            SKDBListBox1.value = "宋体";
+            SKDBListBox2.value = "3";
+            SetButtonImage(FCButton6, "../images/design/formDesign/button/ef_run_button_color.gif");
+            SetButtonImage(FCButton3, "../images/design/formDesign/button/ef_run_button_close2.gif");
+            SetButtonImage(cmdB, "../images/design/formDesign/button/eb_b1.gif");
+            SetButtonImage(FCButton5, "../images/design/formDesign/button/eb_i1.gif");
+            SetButtonImage(FCButton4, "../images/design/formDesign/button/eb_u1.gif");
+        }
+
+        function fontColor() {
+            var obj;
+            obj = parent.designobj;
+            var sColor;
+            var sInitColor = obj.color;
+            if (isSpace(sInitColor)) sInitColor = "white"
+            if (typeof sInitColor == "object") {
+                var s = sInitColor.value;
+            } else {
+                var s = sInitColor;
+            }
+            sColor = dlgHelper.ChooseColorDlg(s);
+            sColor = sColor.toString(16);
+            if (sColor.length < 6) {
+                var sTempString = "000000".substring(0, 6 - sColor.length);
+                sColor = sTempString.concat(sColor);
+            }
+            obj.color = "#" + sColor;
+            //	FCButton6.style.color = obj.color ;
+            //alert(FCButton6.style.color)
+            uf_exec('ForeColor', 'false', obj.color)
+        }
+    </script>
+
+    </div>
+</body>
+</html>

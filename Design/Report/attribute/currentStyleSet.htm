@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title></title>
+    <script src="../js/public_function.js" type="text/javascript"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <style>
+        table
+        {
+            table-layout: fixed;
+            font-size: 13px;
+            border: solid 0.08em gray;
+            border-collapse: collapse; /*默认为 separate*/
+            empty-cells: show;
+        }
+        
+        table td
+        {
+            text-align: center;
+            vertical-align: middle;
+            border-right: solid 0.08em gray;
+            border-bottom: solid 0.08em gray;
+        }
+        table tr
+        {
+            height: 19px;
+        }
+    </style>
+</head>
+<body>
+    <div id="divTab">
+    </div>
+    <div id="consult" align="center">
+    </div>
+    <script type="text/javascript">
+        window.onload = function () {
+            if (parent == null) {
+                return;
+            }
+            var oStyle = document.createStyleSheet();
+            var regCss = /border.*?([\d]+)(p\w)/gm;
+            var oCoustomCss = parent.oCssStyle.toString();
+//            oCoustomCss = oCoustomCss.replace(regCss, function (sMatch, $1, $2) {
+//                return sMatch.replace($1, parseInt($1) / 2 + "").replace($2, "pt");
+//            });
+            oStyle.cssText = oCoustomCss;
+
+            divTab.innerHTML = parent.document.getElementById('tbData').outerHTML;
+
+            var oTable = document.body.getElementsByTagName("table")[0];
+            if (oTable.style.position != "static") {
+                oTable.style.position = "static";
+            }
+            var arrRow = oTable.rows;
+            parent.sbRunStyle = new StringBuilder();
+            parent.sbRunStyle.append("table{");
+            var reg = /[A-Z]/g;
+            for (var sTbStyle in oTable.currentStyle) {
+                if (consult.currentStyle[sTbStyle] != oTable.currentStyle[sTbStyle]) {//去掉系统默认
+                    var sStyleAttName = sTbStyle.substr(0);
+                    sStyleAttName = sStyleAttName.replace(reg, function (sMatch) {
+                        return "-" + sMatch.toLowerCase();
+                    });
+                    parent.sbRunStyle.append(sStyleAttName + ":" + oTable.currentStyle[sTbStyle] + ";\n")
+                }
+            }
+            parent.sbRunStyle.append("}\n");
+            for (var i = 0; i < arrRow.length; i++) {
+                parent.sbRunStyle.append(".Tr" + i + "{");
+                for (var sTrName in arrRow[i].currentStyle) {
+                    if (consult.currentStyle[sTrName] != arrRow[i].currentStyle[sTrName]) {
+                        var sStyleAttName = sTrName.substr(0);
+                        sStyleAttName = sStyleAttName.replace(reg, function (sMatch) {
+                            return "-" + sMatch.toLowerCase();
+                        });
+                        parent.sbRunStyle.append(sStyleAttName + ":" + arrRow[i].currentStyle[sTrName] + ";\n")
+                    }
+                }
+                // parent.sbRunStyle.append("mso-number-format:'\@';\n");
+                parent.sbRunStyle.append("}\n");
+            }
+            for (var i = 0; i < arrRow.length; i++) {
+                for (var j = 0; j < arrRow[i].childNodes.length; j++) {
+                    var oTd = arrRow[i].childNodes[j];
+                    if (oTd.nodeName.toLocaleLowerCase() == "RAD") {
+                        continue;
+                    }
+                    if (oTd.className != undefined && oTd.className != "") {
+                        parent.sbRunStyle.append("." + oTd.className + "{");
+                    } else {
+                        parent.sbRunStyle.append("." + oTd.id + "{");
+                    }
+                    for (var sPropName in oTd.currentStyle) {
+                        if (sPropName == "textAlign") {
+                            var sStyleAttName = sPropName.substr(0);
+                            sStyleAttName = sStyleAttName.replace(reg, function (sMatch) {
+                                return "-" + sMatch.toLowerCase();
+                            });
+                            parent.sbRunStyle.append(sStyleAttName + ":" + oTd.currentStyle[sPropName] + ";\n");
+                        } else if (sPropName == "textAlign") {
+                        }
+                        else if (consult.currentStyle[sPropName] != oTd.currentStyle[sPropName]) {
+                            var sStyleAttName = sPropName.substr(0);
+                            sStyleAttName = sStyleAttName.replace(reg, function (sMatch) {
+                                return "-" + sMatch.toLowerCase();
+                            });
+                            parent.sbRunStyle.append(sStyleAttName + ":" + oTd.currentStyle[sPropName] + ";\n");
+                        }
+                    }
+                    parent.sbRunStyle.append("}\n");
+                }
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.1 Transitional//EN">
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=gb2312" />
+    <title>导入</title>
+</head>
+<body>
+    <iframe name="aa" id="aa" style="display: none;"></iframe>
+    <form name="f" id="f" method="post" enctype="multipart/form-data" action="../common/FileHandler.ashx"
+    target="aa" onsubmit="return loadXml();">
+    <input type="file" name="upfile" id="upfile" /><input type="submit" value="导入" />
+    </form>
+    <script src="../js/public_function.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        function callback(sRptDefine) {
+            try {
+                var xmlDoc = createXMLDOM();
+                // xmlDoc.loadXML(sRptDefine.replace(/&apos;/g,"'"));
+                sRptDefine = sRptDefine.indexOf("?") == 0 ? sRptDefine.substring(1) : sRptDefine;
+                xmlDoc.loadXML(sRptDefine);
+                window.returnValue = xmlDoc;
+                window.close();
+            } catch (e) {
+                throw e;
+            }
+        }
+        function loadXml() {
+            try {
+                var oFile = document.getElementById('upfile');
+                if (oFile.value != "") {
+                    var sExtensionName = oFile.value.substring(oFile.value.lastIndexOf(".") + 1);
+                    if (sExtensionName.toLowerCase() == "xml") {
+                        return true;
+                    } else {
+                        alert("文件类型必须为XML！");
+                    }
+                } else {
+                    alert("请选择要导入的报表模型文件！");
+                }
+            } catch (e) {
+                throw e;
+            }
+        }
+    </script>
+</body>
+</html>

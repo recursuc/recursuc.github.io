@@ -1,0 +1,152 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>新建表单状态</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="../../../SysAdmin/Style/Style_CustomizePage.css"
+	rel="stylesheet" type="text/css" />
+<link href="../../../SysAdmin/grid/css/jquery-ui-1.8.1.css"
+	rel="stylesheet" type="text/css" />
+<link href="../../../SysAdmin/grid/css/ui.jqgrid.css" rel="stylesheet"
+	type="text/css" />
+<link href="../../../SysAdmin/grid/css/ui.multiselect.css"
+	rel="stylesheet" type="text/css" />
+
+<script src="../../../../Javascripts/jquery/jquery-1.7.1.js"
+	type="text/javascript"></script>
+<script src="../../../SysAdmin/grid/js/jquery-ui-1.8.1.custom.min.js"
+	type="text/javascript"></script>
+<script src="../../../SysAdmin/grid/js/jquery.layout.js"
+	type="text/javascript"></script>
+<script src="../../../SysAdmin/grid/js/grid.locale-cn.js"
+	type="text/javascript"></script>
+<script src="../../../SysAdmin/grid/js/ui.multiselect.js"
+	type="text/javascript"></script>
+<script src="../../../SysAdmin/grid/js/jquery.jqGrid.js"
+	type="text/javascript"></script>
+<script src="../../../SysAdmin/grid/js/jquery.tablednd.js"
+	type="text/javascript"></script>
+<script src="../../../SysAdmin/grid/js/jquery.contextmenu.js"
+	type="text/javascript"></script>
+</head>
+<body>
+<form id="stateForm" method="post">
+    <input type="hidden" id="formId" />
+   
+    <table id="userlist">
+    </table>
+</form>
+    <div id="pagelist"></div>
+    
+    <script type="text/javascript">
+	    var queryStrings=function() {  //get url querystring
+	        var params=document.location.search,reg=/(?:^\?|&)(.*?)=(.*?)(?=&|$)/g,temp,args={};
+	        while((temp=reg.exec(params))!=null) 
+	        	args[temp[1]]=decodeURIComponent(temp[2]);
+	        return args;
+	    };
+	    var args = queryStrings();
+	    
+	    // 可不传 
+	    var formId = args.formId;
+	    
+        document.getElementById("formId").value = formId;
+		
+        jQuery("#userlist").jqGrid({
+            url: "formAction!getFormControls?formId="+formId,
+            datatype: "json",
+            height:  460,
+            width:800,
+            rowNum:  3000,
+//             rowList: [10, 20, 30],
+            colNames:  ['控件标识', '控件名称', '控件类型', '控件状态'],
+            colModel:   [
+   		        { name: 'controlId', index: 'controlId', width: 80, align: "center" },
+   		        { name: 'controlName', index: 'controlName', width: 100, align: "center" },
+   		        { name: 'controlType', index: 'controlType', width: 80, align: "center" },
+   		        { name: 'controlState', index: 'controlState', width: 90, align: "center"
+   		        ,
+//    		     formatter:'select',
+//    		  formatoptions:{value:{ '-1':'已取消' }},
+//    		  stype:'select',
+//    		  editoptions:{value:{ '-1':'已取消'} }
+   		        }
+   	        ],
+            multiselect: false,
+            pager: "#pagelist",
+            viewrecords: true,
+            caption: "控件列表 &nbsp;&nbsp; 状态名称: <input id='stateName' type='text' value='' />",
+            jsonReader: {
+                root: "rows",
+                page: "page",
+                total: "total",
+                records: "records",
+                repeatitems: false,
+                cell: "cell",
+                id: "id"
+            },
+            loadonce: false,
+            gridComplete: function () { $("#gbox_userlist").css("margin", "0 auto") }
+        });
+
+        jQuery("#userlist").jqGrid('navGrid', '#pagelist', 
+        		{add: false,del :false,  edit: false, searchtext: "查找", refreshtext: "刷新",
+        
+        	     addfunc: function () { saveState(); } }, {}, {}, {}, { multipleSearch: true });
+
+		function saveState() {
+			var stateName = $("#stateName").val(), flag;
+			var ss = document.getElementsByTagName("select");
+			if ("" == stateName) {
+				alert("请输入表单状态名称")
+				$("#stateName").focus();
+				return false;
+			}
+			var json = "{'rows' :[";
+			for ( var i = 0; i < ss.length; i++) {
+				var control = ss[i];
+				var cid = control.getAttribute("cid");
+				if (cid) {
+					var value = control.value;
+					json += "{'" + cid + "' : '" + value + "'}";
+				}
+				if (i != ss.length - 1) {
+					json += ",";
+				}
+			}
+			json += "]}";
+			$.ajax({
+				type : "post",
+				url : "formStateAction!saveFormState.action",
+// 				dataType : 'text/html',
+				data : {
+					"data" : json,
+					stateName : stateName,
+					formId : formId		
+				},
+				async: false,
+				success : function(data) {
+					if (data == "true") {
+						alert("保存成功!")
+						flag = true;
+					} else {
+						alert(data);
+						flag = false;
+					}					
+				},
+				error : function (data){ 
+					alert("保存失败!");
+					flag = false;
+				}
+			});
+			
+			return flag;
+		}
+	</script>
+	<script src="../../../../Javascripts/jqueryapp/lhgdialog/lhgdialog.js"
+		type="text/javascript"></script>
+	<script
+		src="../../../../Javascripts/jqueryapp/lhgdialog/showModalDialog.js"
+		type="text/javascript"></script>
+</body>
+</html>

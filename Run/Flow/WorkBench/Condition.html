@@ -1,0 +1,698 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>条件配置</title>
+<link rel="stylesheet" href="../style/Style.css" type="text/css" />
+<script src="../../../../Javascripts/jquery/jquery-1.7.1.js"
+	type="text/javascript"></script>
+<script type="text/javascript" src="../js/Node.js"></script>
+<script src="../js/FlowPublic.js" type="text/javascript"></script>
+<script type="text/javascript">
+    var queryStrings=function() {//get url querystring
+        var params=document.location.search,reg=/(?:^\?|&)(.*?)=(.*?)(?=&|$)/g,temp,args={};
+        while((temp=reg.exec(params))!=null) args[temp[1]]=decodeURIComponent(temp[2]);
+        return args;
+    };
+    var args = queryStrings();
+    var arrowName = args.arrowId;
+    var isUpdate = false;	// 是否本次配置是更新操作 
+    
+    var configId ; 
+    $(document).ready(function(){
+    	// 获取表单集 
+    	$.get("formAction!getAllForms.action",null,function(json){
+    		if(json != ""){
+    			createTabByJson(json);
+    		}
+    	});
+    	
+    	$.get("workFlowDefineAction!getAllArrowSelectors.action",null,
+    			function(json){
+    		if(json != ""){
+    			showSelectors(json);
+    			initialCondition();
+    		}
+    	});
+    });
+    
+    function showSelectors (json){
+    	var selectors = eval('('+ json +')');
+		var cbo = document.getElementById("arrowSelector");
+		for(var i = 0; i<selectors.length; i++) {
+			var map = selectors[i];
+			for(var key in map){
+				var selector = map[key];
+				cbo.options.add(new Option(selector.name,selector.id));
+			}
+		}
+    }
+    function initialCondition(){
+    	$.get("workFlowDefineAction!getConditionConfigByArrow.action?arrowName="+arrowName,null,function(config){
+    		if(config != "" && config != "null"){
+	    		isUpdate = true;
+	    		var configObj = eval('('+ config +')');
+    			$("#txtName").val(configObj.name);
+	    		$("#txtDescription").val(configObj.description);
+	    		$("#arrowSelector").val(configObj.arrowSelectorId);
+	    		configId = configObj.id; 
+	    		createConditions(configObj.conditions);
+    		} else {
+    			// 新创建 
+    			$.get("workFlowDefineAction!getNextFormConditionConfigId.action?arrowName="+ arrowName,null,function(data){
+    				if(data != ""){
+    					alert("新查询ID" + data);
+    					// 新id 
+    					configId = data;
+    				} else {
+    					alert("查询表单条件失败,不能创建条件!");
+    				}
+    			});
+    		}
+    	});
+    }
+    // 根据json 添加下拉框 
+    function createTabByJson(json){
+    	var arr = eval('('+json+')')
+    	for(var i =0 ;i <arr.length; i++){
+    		var formBook = arr[i];
+    		var formBookSelect = document.getElementById("SelectBusiForm");
+    		formBookSelect.options.add(new Option(formBook.name,formBook.id))
+    	}
+    }
+    
+    function createConditions(arr){
+    	for ( var i = 0; i < arr.length; i++) {
+    		 var jsonObj = arr[i];
+    		 var condition = new Condition();
+    	        condition.Serialid = jsonObj.serialID;
+    	        condition.BusiFormName =  jsonObj.busiFormName;
+    	        condition.BusiFormId = jsonObj.busiFormId
+    	        condition.FormName = jsonObj.formName
+    	        condition.FormId = jsonObj.formId
+    	        condition.ControlName = jsonObj.controlName
+    	        condition.ControlId = jsonObj.controlHtmlId
+    	        condition.LeftSigle = jsonObj.leftSinge == 1 ? "(" : "";
+    	        condition.RightSigle = jsonObj.rightSinge == 1 ? ")" : "";
+    	        condition.Operation = jsonObj.controlConditionOperation
+    	        condition.ConditionValue = jsonObj.controlConditionValue
+    	        condition.ConditionRelation = jsonObj.conditionReletion
+    	        conditions[i] = condition;
+    		 createTableByCondition(condition);
+		}
+    }
+    
+        Array.prototype.remove = function(dx) {
+            if (isNaN(dx) || dx > this.length) { return false; }
+            for (var i = 0, n = 0; i < this.length; i++) {
+                if (this[i] != this[dx]) {
+                    this[n++] = this[i];
+                }
+            }
+            this.length -= 1;
+        };
+        
+        // 返回
+        function ReturnValue() {
+			var objCondition = new NodeCondition();
+//			if (document.all.cbxIsDefault.checked)
+//				objCondition.ConditionNote = document.all("SelectForm").value + ":" + document.getElementById("txtRemark").value + ":Default";
+//			else
+//			    objCondition.ConditionNote = document.all("SelectForm").value + ":" + document.getElementById("txtRemark").value;
+			objCondition.Conditions = conditions;
+			submitConfig(objCondition);
+		}
+        // 提交
+        function submitConfig(config) {
+        	
+        	if(config.Conditions.length > 0){
+	            var name = $("#txtName").val();
+				var description = $("#txtDescription").val();
+				var arrowSelectorId = $("#arrowSelector").val();
+				if(arrowSelectorId == "-1"){
+					alert("请选择条件选择器");
+					return;
+				}
+	            if (name == "") {
+	                alert('条件名称必须填写。');
+	                $("#txtName").focus();
+	                return ;
+	            }
+	            else if (CheckSpecialChar(name)) {
+	                alert('节点名称中包含不合法字符。请重新输入。');
+	                $("#txtName").focus();
+	                return ;
+	            }
+        		var length = config.Conditions.length;
+        		if(length == 0){
+        			alert("还没有配置条件");
+        			return ;
+        		}
+        		if (!valiBrackets(conditions)) { 
+        			return;
+        		}
+				var json = '{"json" : [';
+	        	for(var i = 0; i< length; i++ ){
+	        		var condition = config.Conditions[i];
+	        		json += '{"formTabId" : "'+condition.BusiFormId+'", ' +
+	        			'"formTabName": "'+condition.BusiFormName+'" ,' +
+	        			'"ConditionRelation" : "'+condition.ConditionRelation+'",' + 
+	        			'"ConditionValue" : "'+condition.ConditionValue+'",' + 
+	        			'"ControlId" : "'+condition.ControlId + '",' +
+	        			'"ControlName" : "'+condition.ControlName+'",' + 
+	        			'"FormId" : "'+condition.FormId+'",' +
+	        			'"FormName" : "'+ condition.FormName+'",' + 
+	        			'"LeftSigle" : "'+condition.LeftSigle+'",' +
+	        			'"Operation": "'+condition.Operation+'",' +
+	        			'"RightSigle" : "'+condition.RightSigle+'",'+ 
+	        			'"Serialid" : "'+condition.Serialid+'"' + 
+	        			'}';
+	        		if(i < length - 1){
+	        			json += ",";
+	        		}
+	        	}
+	        	json += ']}';
+				if(isUpdate){
+					// 更新
+					$.ajax(
+							{
+								type : "post",
+								url : "workFlowDefineAction!saveOrUpdateConditions.action",
+								data :   {"data" : json, name : name, desc:description ,
+									configId : configId,arrowSelectorId : arrowSelectorId, arrowName : arrowName} ,
+								success : function(data){
+									alert(data);
+								}
+							}		
+						);
+				} else {
+					// 创建 
+					$.ajax(
+						{
+							type : "post",
+							url : "workFlowDefineAction!saveOrUpdateConditions.action",
+							data :   {"data" : json, name : name, desc:description ,
+								configId : configId,arrowSelectorId : arrowSelectorId, arrowName : arrowName ,
+								save : "true"} ,
+							success : function(data){
+								alert(data);
+							}
+						}		
+					);
+				}
+        	} else {
+        		alert("没有配置条件");
+        	}
+        }
+        
+        function valiBrackets(conditions){
+        	var leftBracketCount = 0;
+        	var rightBracketCount = 0;
+        	
+        	for ( var i = 0; i < conditions.length; i++) {
+				var condition = conditions[i];
+				if(condition.LeftSigle == "(") {
+					leftBracketCount++;
+				}
+				if(condition.RightSigle == ")"){
+					rightBracketCount++;
+				}
+			}
+        	if(leftBracketCount != rightBracketCount){
+        		alert("左括号与右括号的数量不匹配,请检查条件表达式")
+        		return false;
+        	}
+        	return true;
+        }
+        
+        function changeTabls(){
+            BindForm();
+            // 清空控件下拉列表的值
+            var objControl = document.getElementById("SelectControl");
+            ClearSelect(objControl);
+            objControl.options.add(new Option("", ""));
+        }
+    // 全局变量.当前条件节点下的条件表达式集合
+    var conditions = new Array;
+    var count = 0;
+    // 当前编辑行标示
+    var CurrentEditRow = null;
+    $(function() {
+
+        // 获取上一页面的条件节点信息
+        var objOpener = window.dialogArguments;
+        if (objOpener) {
+            var objCondition = objOpener.G_SelectCondition;
+            if (objCondition) {
+                conditions = objCondition.Conditions;
+                if (conditions) {
+                    for (var i = 0; i < conditions.length; i++) {
+                        createTableByCondition(conditions[i]);
+                    }
+                }
+            }
+        }
+    });
+    
+    function addCondition(){
+        var $update = $("#btnChange");
+        if ($update != null) {
+            $update.remove();
+
+        }
+        if (!IsValid()) {
+            window.alert("条件表达式格式不正确！请重新选择。");
+            return;
+        }
+        CreateConditions();
+    }
+    
+    // 表单事件
+    function formChange(){
+    	BindControl();
+    }
+    // 绑定表单
+    function BindForm() {
+        var objForm = document.getElementById("SelectForm");
+        ClearSelect(objForm);
+        objForm.options.add(new Option("-- 请选择表单 --", ""));
+
+        if ($("#SelectBusiForm").val() == "") return;
+        var formTabsId = $("#SelectBusiForm").val();
+        $.get("formAction!getFormsByFormBook.action?formTabId="+ formTabsId,null,function(forms){
+        	// 多个表单 
+        	if(forms!=""){
+        		var formArr = eval('(' + forms + ')');
+        		 for (var i = 0; i < formArr.length; i++) {
+        			 var form = formArr[i];
+	                  var optionTemp = document.createElement("option");
+	                  optionTemp.value = form.id;
+	                  optionTemp.text = form.name;
+	                  objForm.options.add(optionTemp);
+              }
+        	}
+        });
+    }
+    function BindControl (){
+    	var objControl = document.getElementById("SelectControl");
+        ClearSelect(objControl);
+        objControl.options.add(new Option("-- 请选择 -- ", "-1"));
+       	var formId = $("#SelectForm").val();
+        if (formId == "") return;
+        
+        $.get("formAction!getControlByForm.action?formId="+ formId,null,function(forms){
+        	// 多个表单 
+        	if(forms!=""){
+        		var formArr = eval('(' + forms + ')');
+        		 for (var i = 0; i < formArr.length; i++) {
+        			 var form = formArr[i];
+	                  var optionTemp = document.createElement("option");
+	                  optionTemp.value = form.controlId;
+	                  optionTemp.text = form.controlId;
+	                  objControl.options.add(optionTemp);
+              }
+        	}
+        });
+    }
+   
+    // 验证
+    function IsValid() {
+        if ($("#SelectBusiForm").val() == "" || $("#SelectForm").val() == "" || $("#SelectControl").val()
+        		== "" || $("#txtConditionValue").val() == "" || $("#SelectOperation").val() == "") {
+            if (!Valid($("#SelectBusiForm").val()) & !Valid($("#SelectForm").val()) & !Valid($("#SelectControl").val()) ) {
+                if ($("#SelectRightSigle").val() != "" || $("#SelectLeftSigle").val() != "") {
+                    return true;
+                }
+                return false;
+            }
+            return false;
+        } 
+        return true;
+
+    }
+    function Valid(ob) {
+        if (ob == null)
+            return false;
+        if (ob == "") return false;
+        return true;
+    }
+    
+    
+    // 建立条件表达式
+    function CreateConditions() {
+		var operater =  $("#SelectOperation").val();
+		var conditionValue = $("#txtConditionValue").val();
+		if("<=" == operater || ">=" == operater || "<"==operater || ">" == operater){
+			if(isNaN(conditionValue)){
+				alert("操作符为比较大小时,条件值必须为数字");
+				return;
+			}
+		}
+        var condition = new Condition();
+        condition.Serialid = conditions.length + 1;
+        condition.BusiFormName = $("#SelectBusiForm option:selected").text();
+        condition.BusiFormId = $("#SelectBusiForm").val();
+        
+        condition.FormName = $("#SelectForm option:selected").text();
+        condition.FormId = $("#SelectForm").val();
+        condition.ControlName = $("#SelectControl option:selected").text();
+        condition.ControlId = $("#SelectControl").val();
+        condition.LeftSigle = $("#SelectLeftSigle").val();
+        condition.RightSigle = $("#SelectRightSigle").val();
+        condition.Operation = $("#SelectOperation").val();
+        condition.ConditionValue = $("#txtConditionValue").val();
+        condition.ConditionRelation = $("#SelectRelation").val();
+        conditions[conditions.length] = condition;
+        count++;
+
+        createTableByCondition(condition);
+        ClearAll();
+    }
+    
+    // 从表达式集合中清理表达式和页面中清理表达式
+    function ClearCondition(serialId, obj) {
+    	// serialId 从 1 开始
+//         serialId--;	
+//         if (isNaN(index) || index >= conditions.length) { return false; }
+        for (var i = 0 ; i < conditions.length; i++) {
+        	if(conditions[i].Serialid == serialId){
+        		for(var pos = i; pos< conditions.length - 1; pos++){
+        			conditions[pos] = conditions[pos + 1];
+        		}
+        	}
+        }
+        conditions.length -= 1;
+        
+        var $o = $(obj);
+        $o.parents("tr").remove();
+    }
+    
+    
+    // 清空下拉列表
+    function ClearSelect(objSelect) {
+        for (var i = objSelect.options.length - 1; i >= 0; i--) {
+//             objSelect.remove(objSelect.options[i]);
+        	objSelect.options[i] = null;
+        }
+    }
+    // 更新条件表达式
+    function UpdateCondition(obj) {
+        // var $rd = $(obj);
+        var $update = $("#btnChange");
+        if ($update != null) {
+            $update.remove();
+            //$(this).parents("th").remove($update);
+        }
+       CurrentEditRow= $(obj).parents("tr");
+        var index = $(obj).val();
+        index = index - 1;
+        if (index >= conditions.length) return;
+        if (index < 0) return;
+        var condition = conditions[index];
+        if (condition) {
+            $("#SelectBusiForm").attr("text", condition.BusiFormName);
+            $("#SelectBusiForm").attr("value", condition.BusiFormId);
+//             BindForm();
+            $("#SelectForm").attr("text", condition.FormName);
+            $("#SelectForm").attr("value", condition.FormId);
+//             BindControl();
+            $("#SelectControl").attr("text", condition.ControlName);
+            $("#SelectControl").attr("value", condition.ControlId);
+            $("#SelectLeftSigle").attr("value", condition.LeftSigle);
+            $("#SelectRightSigle").attr("value", condition.RightSigle);
+            $("#SelectOperation").attr("value", condition.Operation);
+            $("#txtConditionValue").attr("value", condition.ConditionValue);
+            $("#SelectRelation").attr("value", condition.ConditionRelation);
+            var $UpdateControl = "<img src='../images/icon_modify1.gif' style='cursor:pointer' id='btnChange' "
+            		+"name='btnChange' onclick='UpdateConditionByIndex(" + condition.Serialid + ")' title='修改' />";
+            $("#controlCotainer").append($UpdateControl);
+        }
+    }
+    
+    //
+    function UpdateConditionByIndex(index) {
+        var $update = $("#btnChange");
+        if ($update != null) {
+            $update.remove();
+            //$(this).parents("th").remove($update);
+        }
+        if (!IsValid()) {
+            window.alert("条件表达式格式不正确！请重新选择。");
+            return;
+        }
+//        if (CurrentEditRow != $(CurrentEditRow)) {
+//            window.alert("编辑行已被删除！");
+//            ClearAll();
+//            return;
+//        }
+		
+        var condition = new Condition();
+        condition.Serialid = index;
+        condition.BusiFormName = $("#SelectBusiForm option:selected").text();
+        condition.BusiFormId = $("#SelectBusiForm").val();
+        condition.FormName = $("#SelectForm option:selected").text();
+        condition.FormId = $("#SelectForm").val();
+        condition.ControlName = $("#SelectControl option:selected").text();
+        condition.ControlId = $("#SelectControl").val();
+        condition.LeftSigle = $("#SelectLeftSigle").val();
+        condition.RightSigle = $("#SelectRightSigle").val();
+        condition.Operation = $("#SelectOperation").val();
+        condition.ConditionValue = $("#txtConditionValue").val();
+        condition.ConditionRelation = $("#SelectRelation").val();
+        
+        conditions[index - 1] = condition;
+        var $tr = CreateTrByCondition(condition);
+        if (CurrentEditRow) {
+            CurrentEditRow.before($tr);
+            CurrentEditRow.remove();
+        }
+        ClearAll();
+    }
+    
+    // 创建tr
+    function CreateTrByCondition(condition) {
+        var $html = "<tr>";
+        var $tdStart = "<td class='table_heading6' align=middle height=17>";
+        var $tdEnd = "</td>";
+//         $html += $tdStart; 
+//         $html += "<input id='Radio" + condition.Serialid +
+//         	"' type='radio' name='strPKey' value='" + condition.Serialid + "'/>";
+//         $html += "<input id='Radio" + condition.Serialid +
+//         	"' type='radio' name='strPKey' value='" + condition.Serialid + "'  onclick='UpdateCondition(this)' />";
+//         $html += $tdEnd;
+        $html += $tdStart;
+        $html += condition.LeftSigle;
+        $html += $tdEnd;
+        $html += $tdStart;
+        $html += condition.BusiFormName;
+        $html += $tdEnd;
+        $html += $tdStart;
+        $html += condition.FormName;
+        $html += $tdEnd;
+        $html += $tdStart;
+        $html += condition.ControlName;
+        $html += $tdEnd;
+
+        $html += $tdStart;
+        $html += condition.Operation;
+        $html += $tdEnd;
+        $html += $tdStart;
+        $html += condition.ConditionValue;
+        $html += $tdEnd;
+        $html += $tdStart;
+        $html += condition.RightSigle;
+        $html += $tdEnd;
+        $html += $tdStart;
+        $html += condition.ConditionRelation;
+        $html += $tdEnd;
+        $html += $tdStart;
+        $html += "<img src='../images/icon_del.gif' onclick='ClearCondition(" 
+        		+ condition.Serialid + ",this);' style='cursor: hand' alt='清空条件' />";
+        $html += $tdEnd;
+        $html += '</TR>\n';
+        return $html;
+    }
+    // 通过表达式创建页面
+    function createTableByCondition(condition) {
+        var $tr = CreateTrByCondition(condition);
+        $("#tableData > tbody").append($tr);
+    }
+
+    // 清空所有的值
+    function ClearAll() {
+        $("#SelectBusiForm").attr("text", "");
+        $("#SelectBusiForm").attr("value", "");
+        $("#SelectForm").attr("text", "");
+        $("#SelectForm").attr("value", "");
+        $("#SelectControl").attr("text", "");
+        $("#SelectControl").attr("value", "");
+        $("#SelectLeftSigle").attr("value", "");
+        $("#SelectRightSigle").attr("value", "");
+        $("#SelectOperation").attr("value", "");
+        $("#txtConditionValue").attr("value", "");
+        $("#SelectRelation").attr("value", "");
+    }
+    
+        function cancelConfig() {
+        	// 取消操作
+        	window.close();
+        }
+</script>
+<style type="text/css">
+.style1 {
+	height: 11px;
+}
+</style>
+</head>
+<body bgcolor="#FFFFFF" text="#000000" topmargin="0" bottommargin="0"
+	leftmargin="0" rightmargin="0">
+	<form id="form1">
+		<table width='98%' border='0' align='center' cellpadding='0'
+			cellspacing='0' class='table11'>
+			<tr>
+				<td align='center' class='table_heading'>条件配置信息</td>
+			</tr>
+		</table>
+		<table width='98%' border='0' align='center' cellpadding='0'
+			cellspacing='0' class='table11' id="TableGeneral">
+			<!--         <tr> -->
+			<!--             <td align="right" width="30%" class='table_heading6'> -->
+			<!--                 下一节点标识：</td> -->
+			<!--             <td align="left" width="30%" class='table_heading6'> -->
+			<!--                 <input type="text" value="" id="txtIdentify" name="txtIdentify" disabled style="width: 72px" /> -->
+			<!--             </td> -->
+
+			<!--             <td align="right" class='table_heading6'> -->
+			<!--                 条件描述：</td> -->
+			<!--             <td colspan="2" align="left" class='table_heading6'> -->
+			<!--                 <input type="text" id="txtConditionName" name="txtConditionName" style="width: 142px" /> -->
+			<!--             </td> -->
+			<!--         </tr> -->
+			<tr>
+				<td align="right" class='table_heading6'>&nbsp;&nbsp;名称：</td>
+				<td align="left" class='table_heading6'><input type="text"
+					id="txtName" name="txtName" maxlength="30" /></td>
+				<td align="right" class='table_heading6'>&nbsp;&nbsp;描述：</td>
+				<td align="left" class='table_heading6'><input
+					id="txtDescription" type="text" /></td>
+				<td align="right" class='table_heading6'>条件选择器</td>
+				<td align="left" class='table_heading6'>
+					<select style="width: 220px;" id="arrowSelector">
+						<option value="-1">-- 请选择 --</option>
+				</select></td>
+			</tr>
+			<!--         <tr> -->
+			<!--             <td align="right" class='table_heading6'>&nbsp;&nbsp;自动转向：</td> -->
+			<!--             <td align="left" class='table_heading6'> -->
+			<!--                  <input type="checkbox" id="cbxAuto" name="cbxAuto" class='input1' onpropertychange="ControlTable();" /> -->
+			<!--                 <input type="checkbox" id="cbxIsDefault" name="cbxIsDefault" class='input1' />默认转向 -->
+			<!--             </td> -->
+			<!--         </tr> -->
+			<!--         <tr> -->
+			<!--             修改条件 -->
+			<!--             <td colspan="2"> -->
+			<!--                 &nbsp;<img src='../images/icon_modify1.gif' style="cursor: hand" id="btnChange" name="btnChange" -->
+			<!--                     disabled onclick="ShowCondition();" alt="" /> -->
+			<!--             </td> -->
+			<!--         </tr> -->
+		</table>
+		<table width='98%' border='0' align='center' cellpadding='0'
+			cellspacing='0' class='table11' id="tableData">
+			<thead class='table_heading'>
+				<tr>
+					<!--          <th class='table_heading' rowspan="2">序号</th> -->
+					<th class='table_heading'>左括弧</th>
+					<th class='table_heading'>表单薄</th>
+					<th class='table_heading'>表单</th>
+					<th class='table_heading'>控件</th>
+					<th class='table_heading'>操作符</th>
+					<th class='table_heading'>比较值</th>
+					<th class='table_heading'>右括弧</th>
+					<th class='table_heading'>条件关系</th>
+					<th class='table_heading' id="controlCotainer" rowspan="2"><img
+						src='../images/icon_add.gif' onclick="addCondition()"
+						style="cursor: pointer" id="Add" title="添加条件表达式" />
+					</th>
+				</tr>
+				<tr>
+					<td class='table_heading'><select id="SelectLeftSigle"
+						class="selectgrey short">
+							<option value=""></option>
+							<option value="(">(</option>
+					</select>
+					</td>
+					<td class='table_heading'>
+						<!--              <asp:DropDownList ID="SelectBusiForm" CssClass="selectgrey thin" runat="server"> -->
+						<!--              </asp:DropDownList> --> <select
+						id="SelectBusiForm" onchange="changeTabls()">
+							<option id="-1">-- 请选择表单薄 --</option>
+					</select></td>
+					<td class='table_heading'><select id="SelectForm"
+						style="width: 150px;" onchange="formChange()">
+
+					</select></td>
+
+					<td class='table_heading'><select id="SelectControl"
+						class="selectgrey thin" style="width: 100px;">
+
+					</select>
+					</td>
+					<td class='table_heading'><select class="page_select1"
+						style="width: 80px;" id="SelectOperation" name="SelectOperation">
+							<option value=""></option>
+							<option value="=">等于&nbsp;</option>
+							<option value=">">大于&nbsp;</option>
+							<option value="<">小于&nbsp;</option>
+							<option value="&gt;=">大于等于&nbsp;</option>
+							<option value="<=">小于等于&nbsp;</option>
+							<option value="<>">不等于&nbsp;</option>
+					</select>
+					</td>
+					<td class='table_heading'><input id="txtConditionValue"
+						type="text" class="thin" />
+					</td>
+					<td class='table_heading'><select id="SelectRightSigle"
+						class="selectgrey short">
+							<option value=""></option>
+							<option value=")">)</option>
+					</select>
+					</td>
+					<td class='table_heading'><select style="width:50px;"
+						id="SelectRelation" name="SelectAndOr">
+							<option value=""></option>
+							<option value="And">And</option>
+							<option value="Or">Or</option>
+					</select>
+					</td>
+				</tr>
+			</thead>
+			<tbody style="background-color: #efefef; border: solid 2px #00ff00;">
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+			</tbody>
+		</table>
+		<input type="hidden" name="hiddenNodeName" id="hiddenNodeName"
+			value="" />
+		<table width='98%' border='0' align='center' cellpadding='0'
+			cellspacing='0' class='table11'>
+			<tr>
+				<td align='center' class='table_heading'><img
+					src='../images/icon_true.gif' style="cursor: hand"
+					onclick="ReturnValue();" alt="" />&nbsp;&nbsp;<img
+					src='../images/icon_cancel.gif' onclick="window.close();"
+					style="cursor: hand" alt="" />&nbsp;&nbsp;&nbsp;</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

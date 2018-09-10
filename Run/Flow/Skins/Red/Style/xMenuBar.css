@@ -1,0 +1,13 @@
+body{ font-size:12px;}
+
+.topbg{ background:url(../Image/xMenuBar/005.gif) top repeat-x;}
+.leftbg{ background:url(../Image/xMenuBar/007.gif) right repeat-y;}
+.rightbg{ background:url(../Image/xMenuBar/008.gif) left repeat-y;}
+.bottombg{ background:url(../Image/xMenuBar/006.gif) top repeat-x;}
+
+.topbgB{ background:url(../Image/xMenuBar/013.gif) top repeat-x;}
+.leftbgB{ background:url(../Image/xMenuBar/015.gif) right repeat-y;}
+.rightbgB{ background:url(../Image/xMenuBar/016.gif) left repeat-y;}
+.bottombgB{ background:url(../Image/xMenuBar/014.gif) top repeat-x;}
+
+.content{ height:200px;overflow-y:auto;}

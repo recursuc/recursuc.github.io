@@ -1,0 +1,266 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+    <style type="text/css">
+        .x-tab-panel-body .x-panel-body 
+        {
+            padding:10px;
+        }
+    </style>
+    <link rel="Stylesheet" type="text/css" href="../skins/blue/css/form.css" />
+    <link rel="Stylesheet" type="text/css" href="../../ext/resources/css/ext-all.css" />
+    <link rel="Stylesheet" type="text/css" href="../../ext/resources/css/xtheme-gray.css" />
+    <link rel="Stylesheet" type="text/css" href="../../ext/resources/css/tabs.css" />
+</head>
+
+<body onload="uf_open();" style="overflow:hidden; margin:3px;font-size:13px;padding:0px;">
+    <div id="SKbillsheet" >
+        <div id="tabs" >
+            <div id="ab" class="x-hide-display">
+                 <table style="font-size: 12px; width:100%;">
+                    <tr>
+                        <td colspan= "2" style="font-weight:bold; color:#15428b;">选择事件</td>
+                    </tr>
+                    <tr>
+                        <td colspan= "2"><hr style=" color:#8db2e3; width:100%; height:1px;" /></td>
+                    </tr>
+                    <tr>
+                        <td style="width:45%;">
+                            <table style="font-size: 12px; width:100%;">
+                                <tr>
+                                    <td>
+                                        分类:
+                                    </td>
+                                    <td>
+                                        <select id="cboType" style="display: block; font-size: 12px; width: 113px; height: 25px; 
+                                            ACKGROUND-COLOR: #ffffff" onmovestart="moveStart()" onchange='uf_seltype()'>                                            
+                                            <option value="自定义函数">自定义函数</option> 
+                                            <option value="校验函数">校验函数</option>                                        
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan=2>
+                                        <select id="lstFunc" style="font-size: 12px; width: 153px; height: 230px; 
+                                            scrollbar-face-color: #9EBFE8; scrollbar-shadow-color: #FFFFFF; 
+                                            scrollbar-highlight-color: #FFFFFF; scrollbar-3dlight-color: #9EBFE8; 
+                                            scrollbar-darkshadow-color: #9EBFE8; scrollbar-track-color: #FFFFFF; 
+                                            scrollbar-arrow-color: #FFFFFF; background-color: #ffffff; border-color:#9EBFE8; display:block;" 
+                                            onmovestart=moveStart() onchange='uf_selfunc()' size="8" 
+                                            ondblclick="uf_ok()">
+                                        </select>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td style="width:55%;">
+                            <table style="font-size: 12px; width:100%;">
+                                <tr>
+                                    <td style="width:100%;"colspan="2">说明:</td>
+                                </tr>
+                                <tr>
+                                    <td style="width:100%;" colspan="2">
+                                        <div id="divDesc" style=" border-right: #8db2e3 1px solid; border-top: #8db2e3 1px solid; OVERFLOW-Y: auto; display: block; 
+                                            font-size: 12px; color:#15428b; OVERFLOW-X: auto; OVERFLOW: auto; border-left: #8db2e3 1px solid; width: 216px; 
+                                            border-bottom: #8db2e3 1px solid; height: 159px; background-color: #ffffff;" 
+                                            onmovestart="moveStart()"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:100%;" colspan=2>返回的内容:</td>
+                                </tr>
+                                <tr>
+                                    <td style="width:100%;" colspan=2>
+                                        <input id="txtRet" style=" font-size: 12px; width: 215px; height: 20px;color:#15428b;  
+                                            text-align: left" onmovestart="moveStart()" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:50%;text-align:right;">
+                                        <!-- 确定按钮 -->
+                                        <button id="cmdOk" style="display: block; font-size: 12px; width: 65px;height: 21px; background-color: #ffffff; 
+                                            border-style:none; border:0px;" onclick='uf_ok()'>
+                                        </button>
+                                    </td>
+                                    <td style="width:50%; text-align:right;">
+                                        <!-- 取消按钮 -->
+                                        <button id="cmdClose" style="display: block; font-size: 12px; width: 65px;height: 21px; background-color: #ffffff; 
+                                            border-style:none; border:0px;" onclick="CloseBill()">
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    
+    <script type="text/javascript" src="../../ext/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="../../ext/ext-all.js"></script>
+    <script type="text/javascript" src="../../commonjs/public_api.js"></script>   
+    <script type="text/javascript" src="../js/f_core.js"></script>  
+    <script type="text/javascript" src="../../commonjs/design_operation.js"></script> 
+    <script type="text/javascript" src="../../commonjs/property.js"></script>    
+    <script type="text/javascript" src="../../commonjs/opencommonform.js"></script>
+    <script  type="text/javascript" src="../../commonjs/browser_version.js"></script>
+    <script type="text/javascript" src="../../commonjs/sys_common_valid_library.js"></script>   
+    
+    <script type="text/javascript" language="javascript">
+        Ext.onReady(function() {
+            var tabs = new Ext.TabPanel({
+                renderTo: 'tabs',
+                width: "100%",
+                height: 345,
+                activeTab: 0,
+                frame: true,
+                defaults: { autoHeight: "100%" },
+                items: [
+                    { contentEl: 'ab', title: '  事件  ' }
+                ]
+            });
+        });
+
+        public_Form();
+
+     
+        //效验函数
+        var arrCheckFunc = [
+		["校验函数", "整数", "SysF_IsPositive(this.value,'整数');", "描述：<br/>SysF_IsInt(sValue,alertMsg) <br/> 校验控件的值是否是合法整数，适用于text、textarea、dropdownlist等控件的属性改变或失去焦点事件。<br/> 输入参数：<br/> sValue：要验证的值；<br/> alertMsg：为可选参数，验证不通过时的提示信息。"],
+	["校验函数", "小数", "SysF_IsDecimal(this.value, '小数');", "描述：<br/>SysF_IsDecimal(sValue,alertMsg) <br/> 校验控件的值是否是合法小数，适用于text、textarea、dropdownlist等控件的属性改变或失去焦点事件。<br/> 输入参数：<br/> sValue：要验证的值；<br/> alertMsg：为可选参数，验证不通过时的提示信息。"],
+	["校验函数", "日期", "SysF_IsDateByFormat(this.value,'YYYY-MM-DD', '日期');", "描述：<br/>SysF_IsDateByFormat(sValue,dateformat,alertMsg) <br/> 校验控件的值是否是合法日期，适用于text、textarea、dropdownlist等控件的属性改变或失去焦点事件。<br/> 输入参数：<br/> sValue：要验证的值；<br/> dateformat：日期格式，可选格式：YYYY-MM-DD、YY-MM-DD、<br>DD-MM-YYYY、YYYY年MM月DD日;<br/> alertMsg：为可选参数，验证不通过时的提示信息。"],
+	["校验函数", "QQ", "SysF_IsQQ(this.value, 'QQ');", "描述：<br/>SysF_IsQQ(sValue,alertMsg) <br/> 校验控件的值是否是合法QQ，适用于text、textarea、dropdownlist等控件的属性改变或失去焦点事件。<br/> 输入参数：<br/> sValue：要验证的值；<br/> alertMsg：为可选参数，验证不通过时的提示信息。"],
+	["校验函数", "身份证号", "SysF_IsIdcard(this.value, '身份证号');", "描述：<br/>SysF_IsIdcard(sValue,alertMsg) <br/> 校验控件的值是否是合法身份证号，适用于text、textarea、dropdownlist等控件的属性改变或失去焦点事件。<br/> 输入参数：<br/> sValue：要验证的值；<br/> alertMsg： 为可选参数，验证不通过时的提示信息。"],
+	["校验函数", "Email", "SysF_IsEmail(this.value, 'Email');", "描述：<br/>SysF_IsEmail(sValue,alertMsg) <br/> 校验控件的值是否是合法Email地址，适用于text、textarea、dropdownlist等控件的属性改变或失去焦点事件。<br/> 输入参数：<br/> sValue：要验证的值；<br/> alertMsg： 为可选参数，验证不通过时的提示信息。"],
+	["校验函数", "电话号码", "SysF_IsPhone(this.value, '电话号码');", "描述：<br/>SysF_IsPhone(sValue,alertMsg) <br/> 校验控件的值是否是合法电话号码，适用于text、textarea、dropdownlist等控件的属性改变或失去焦点事件。<br/> 输入参数：<br/> sValue：要验证的值；<br/> alertMsg： 为可选参数，验证不通过时的提示信息。"],
+	["校验函数", "手机", "SysF_IsMobile(this.value, '手机');", "描述：<br/>SysF_IsMobile(sValue,alertMsg) <br/> 校验控件的值是否是合法手机，适用于text、textarea、dropdownlist等控件的属性改变或失去焦点事件。<br/> 输入参数：<br/> sValue：要验证的值；<br/> alertMsg： 为可选参数，验证不通过时的提示信息。"],
+	["校验函数", "邮政编号", "SysF_IsPostcode(this.value, '邮政编号');", "描述：<br/>SysF_IsPostcode(sValue,alertMsg) <br/> 校验控件的值是否是合法邮政编号，适用于text、textarea、dropdownlist等控件的属性改变或失去焦点事件。<br/> 输入参数：<br/> sValue：要验证的值；<br/> alertMsg： 为可选参数，验证不通过时的提示信息。"],
+
+	["校验函数", "正数", "SysF_IsPositive(this.value, '正数');", "描述：<br/>SysF_IsPositive(sValue,alertMsg) <br/> 校验控件的值是否是合法正数，适用于text、textarea、dropdownlist等控件的属性改变或失去焦点事件。<br/> 输入参数：<br/> sValue：要验证的值；<br/> alertMsg： 为可选参数，验证不通过时的提示信息。"],
+	["校验函数", "正整数", "SysF_IsPositiveInt(this.value, '正整数');", "描述：<br/>SysF_IsPositiveInt(sValue,alertMsg) <br/> 校验控件的值是否是合法正整数，适用于text、textarea、dropdownlist等控件的属性改变或失去焦点事件。<br/> 输入参数：<br/> sValue：要验证的值；<br/> alertMsg： 为可选参数，验证不通过时的提示信息。"],
+	["校验函数", "负数", "SysF_IsNegative(this.value, '负数');", "描述：<br/>SysF_IsNegative(sValue,alertMsg) <br/> 校验控件的值是否是合法负数，适用于text、textarea、dropdownlist等控件的属性改变或失去焦点事件。<br/> 输入参数：<br/> sValue：要验证的值；<br/> alertMsg： 为可选参数，验证不通过时的提示信息。"],
+	["校验函数", "负整数", "SysF_IsNegativeInt(this.value, '负整数');", "描述：<br/>SysF_IsNegativeInt(sValue,alertMsg) <br/> 校验控件的值是否是合法负整数，适用于text、textarea、dropdownlist等控件的属性改变或失去焦点事件。<br/> 输入参数：<br/> sValue：要验证的值；<br/> alertMsg： 为可选参数，验证不通过时的提示信息。"],
+	["校验函数", "零或正数", "SysF_IsZeroOrPositive(this.value, '零或正数');", "描述：<br/>SysF_IsZeroOrPositive(sValue,alertMsg) <br/> 校验控件的值是否是合法零或正数，适用于text、textarea、dropdownlist等控件的属性改变或失去焦点事件。<br/> 输入参数：<br/> sValue：要验证的值；<br/> alertMsg： 为可选参数，验证不通过时的提示信息。"],
+	["校验函数", "零或负数", "SysF_IsZeroOrNegative(this.value, '零或负数');", "描述：<br/>SysF_IsZeroOrNegative(sValue,alertMsg) <br/> 校验控件的值是否是合法零或负数，适用于text、textarea、dropdownlist等控件的属性改变或失去焦点事件。<br/> 输入参数：<br/> sValue：要验证的值；<br/> alertMsg： 为可选参数，验证不通过时的提示信息。"],
+
+	["校验函数", "零或正整数", "SysF_IsZeroOrPositiveInt(this.value, '零或正整数');", "描述：<br/>SysF_IsZeroOrPositiveInt(sValue,alertMsg) <br/> 校验控件的值是否是合法零或正整数，适用于text、textarea、dropdownlist等控件的属性改变或失去焦点事件。<br/> 输入参数：<br/> sValue：要验证的值；<br/> alertMsg： 为可选参数，验证不通过时的提示信息。"],
+	["校验函数", "零或负整数", "SysF_IsZeroOrNegativeInt(this.value, '零或负整数');", "描述：<br/>SysF_IsZeroOrNegativeInt(sValue,alertMsg) <br/> 校验控件的值是否是合法零或负整数，适用于text、textarea、dropdownlist等控件的属性改变或失去焦点事件。<br/> 输入参数：<br/> sValue：要验证的值；<br/> alertMsg： 为可选参数，验证不通过时的提示信息。"],
+	["校验函数", "字母、数字或_", "SysF_IsCommonChar(this.value, '字母、数字或_');", "描述：<br/>SysF_IsCommonChar(sValue,alertMsg) <br/> 校验控件的值只能是字母、数字或_，适用于text、textarea、dropdownlist等控件的属性改变或失去焦点事件。<br/> 输入参数：<br/> sValue：要验证的值；<br/> alertMsg： 为可选参数，验证不通过时的提示信息。"],
+	["校验函数", "不含汉字", "SysF_IsContainChineseChar(this.value, '不含汉字');", "描述：<br/>SysF_IsCommonChar(sValue,alertMsg) <br/> 校验控件的值是否含有汉字，适用于text、textarea、dropdownlist等控件的属性改变或失去焦点事件。<br/> 输入参数：<br/> sValue：要验证的值；<br/> alertMsg： 为可选参数，验证不通过时的提示信息。"],
+	["校验函数", "不含双引号", "SysF_IsContainDoubleQuote(this.value, '不含双引号');", "描述：<br/>SysF_IsContainDoubleQuote(sValue,alertMsg) <br/> 校验控件的值是否含有双引号，适用于text、textarea、dropdownlist等控件的属性改变或失去焦点事件。<br/> 输入参数：<br/> sValue：要验证的值；<br/> alertMsg： 为可选参数，验证不通过时的提示信息。"],
+	["校验函数", "不含单引号", "SysF_IsContainSingleQuote(this.value, '不含单引号');", "描述：<br/>SysF_IsContainSingleQuote(sValue,alertMsg) <br/> 校验控件的值是否含有单引号，适用于text、textarea、dropdownlist等控件的属性改变或失去焦点事件。<br/> 输入参数：<br/> sValue：要验证的值；<br/> alertMsg： 为可选参数，验证不通过时的提示信息。"]
+
+];
+
+        var arrUserFunc = new Array();
+        var arrRegFunc;
+
+        /******************** 打开函数选择页面 *******************/
+        function uf_open() {
+
+            if (publicform.obj != null) {
+                PropWinOnload.loadButtonImg();
+      
+                //获得当前控件对象
+                var sFunc = publicform.obj[0];
+
+                var re = new RegExp();
+                re.compile("(function )(.[^(]*)(\(.[^)]*\))", "g");
+                var arr;
+                i = 0;
+
+                //用正则表达式模式在字符串中运行查找，并返回包含该查找结果的一个数组(查找自定义函数)
+                while (re.exec(sFunc) != null) {
+                    var s1 = RegExp.$2 + RegExp.$3 + ")";
+                    arrUserFunc[i] = s1;
+                    i++;
+                }
+                //用户注册的函数
+                arrRegFunc = publicform.obj[1];
+                if (typeof arrRegFunc != "undefined") {
+                    var l = arrRegFunc.length;
+                    for (var i = 0; i < l; i++) {
+                        //加上函数分类
+                        if (cboType.innerText.indexOf(arrRegFunc[i][0]) < 0) {
+                            var oOpt = document.createElement("option");
+                            oOpt.text = arrRegFunc[i][0];
+                            oOpt.value = oOpt.text;
+                            cboType.add(oOpt);
+                        }
+                    }
+                }
+            }
+            //加载函数列表
+            uf_seltype();
+        }
+
+        /**************** 加载各类型的函数列表 *******************/
+        function uf_seltype() {
+            var sOpt = new StringBuilder();
+          
+            //加载自定义函数列表
+           if (cboType.value == "自定义函数") {
+                for (var i = 0; i < arrUserFunc.length; i++) {
+                    sOpt.append("<option>" + arrUserFunc[i] + "</option>");
+                }
+            }
+            //加载效验函数列表
+            else {
+                if (cboType.value == "校验函数") {
+                    for (var i = 0; i < arrCheckFunc.length; i++) {
+                        sOpt.append("<option>" + arrCheckFunc[i][1] + "</option>");
+                    }
+                }
+            }
+            lstFunc.options.length = 0;
+            //将列表加载到页面中
+            lstFunc.outerHTML = SelectAddOption(lstFunc, sOpt.toString());
+            txtRet.value = "";
+            divDesc.innerHTML = "";
+        }
+
+        function SelectAddOption(obj, sHtml) {
+            var ss = obj.outerHTML;
+            return ss.substring(0, ss.length - 9) + sHtml + "</select>";
+        }
+
+        /********************** 选择事件 ***********************/
+        function uf_selfunc() {
+            //获取函数列表选中的函数索引
+            var ipos = lstFunc.selectedIndex;
+            if (ipos < 0) return;
+           
+            //自定义函数
+            if (cboType.value == "自定义函数") {
+                txtRet.value = arrUserFunc[ipos];
+            }
+            //效验函数
+            else {
+                if (cboType.value == "校验函数" && ipos < arrCheckFunc.length) {
+                    txtRet.value = arrCheckFunc[ipos][2];
+                    divDesc.innerHTML = arrCheckFunc[ipos][3];
+                    return;
+                }
+                for (var i = 0; i < arrRegFunc.length; i++) {
+                    if (arrRegFunc[i][0] == cboType.value && arrRegFunc[i][1] == lstFunc.options[ipos].text) {
+                        txtRet.value = arrRegFunc[i][2];
+                        divDesc.innerHTML = arrRegFunc[i][3];
+                    }
+                }
+
+            }
+        }
+
+        /********************** 点击确定 ***********************/
+        function uf_ok() {
+            //返回选择的方法
+            window.returnValue = txtRet.value;
+            window.close();
+        }
+</script>
+</body>
+</html>
