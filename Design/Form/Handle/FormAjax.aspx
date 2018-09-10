@@ -1,1 +1,0 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="FormAjax.aspx.cs" Inherits="FrameWorkPage.Application.Design.Form.Handle.FormAjax" %>

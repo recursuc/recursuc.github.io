@@ -1,1 +1,0 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="xml_request_handler.aspx.cs" Inherits="ReportSystem.Application.Design.Form.Handle.xml_request_handler" %>
