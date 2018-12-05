@@ -57,10 +57,10 @@
                     }
                 } else {
                     var hide = false, heTt = this.heTarget, heNSN = heTt.nextSibling, dispaly = null, shwoDiv = null;
-                    while ($ET.getStyle(heTt, "display") != "none") {
+                    while (heTt && heTt.nodeName != "BODY" && $ET.getStyle(heTt, "display") != "none") {
                         heTt = heTt.parentNode;
                     }
-                    if (heTt.nodeName != "BODY") {
+                    if (heTt && heTt.nodeName != "BODY") {
                         hide = true;
                     }
                     if (hide) {
