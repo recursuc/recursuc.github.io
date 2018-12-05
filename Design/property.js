@@ -23,9 +23,9 @@
 
         },
         start: function (operType) {
-            this.onload && this.onload();
+            this.onBeforeHandle && this.onBeforeHandle();
             this.walkDOM(this.target, !operType ? this.load : this.save);
-            this.unload && this.unload();
+            this.onHandled && this.onHandled();
             return this;
         },
         load: function (elem) {
